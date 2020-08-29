@@ -3,9 +3,9 @@ title: NSObject.23786's Blog
 SEOTitle: NSObject.23786 的博客
 header-img: img/home-bg.png
 email: yixuanzhuzhuzhu123@163.com
-description: "Every failure is leading towards success."
+description: "Welcome to visit my blog."
 keyword: "23786, macOS, Cocoa, NSObject的博客, 23786的博客, NSObject, iOS, Apple, iPhone"
-url: "https://23786.github.io"          # your host, for absolute URL
+url: "http://www.nsobjectzyx.tk"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/23786/23786.github.io.git" # you code repository
 
@@ -58,8 +58,8 @@ kramdown:
 # Gitalk
 gitalk:
   enable: true    #是否开启Gitalk评论
-  clientID: f2c84e7629bb1446c1a4                            #生成的clientID
-  clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    #生成的clientSecret
+  clientID: bc532076915510449c64                            #生成的clientID
+  clientSecret: 7f4f2ccea715cfd33d81db313c250348467fc586    #生成的clientSecret
   repo: 23786.github.io    #仓库名称
   owner: 23786    #github用户名
   admin: 23786
