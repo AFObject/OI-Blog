@@ -123,22 +123,22 @@
 	font-weight: 700
 }
 .side-catalog .catalog-body .h1_nav {
-    margin-left: 0;
+    margin-left: 0px;
 }
 .side-catalog .catalog-body .h2_nav {
-    margin-left: 3;
+    margin-left: 5px;
 }
 .side-catalog .catalog-body .h3_nav {
-    margin-left: 6;
+    margin-left: 10px;
 }
 .side-catalog .catalog-body .h4_nav {
-    margin-left: 9;
+    margin-left: 15px;
 }
 .side-catalog .catalog-body .h5_nav {
-    margin-left: 12;
+    margin-left: 20px;
 }
 .side-catalog .catalog-body .h6_nav {
-    margin-left: 15;
+    margin-left: 25px;
 }
 
 .side-catalog .catalog-body .h4_nav,.side-catalog .catalog-body .h5_nav,.side-catalog .catalog-body .h6_nav {
