@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[OI Blog]]></title>
+  <link href="oi.afobject.ml/atom.xml" rel="self"/>
+  <link href="oi.afobject.ml/"/>
+  <updated>2022-01-09T11:36:25+08:00</updated>
+  <id>oi.afobject.ml/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[<tit>0xff 算法竞赛进阶指南</tit>]]></title>
+    <link href="oi.afobject.ml/overview.html"/>
+    <updated>2022-01-07T23:06:53+08:00</updated>
+    <id>oi.afobject.ml/overview.html</id>
+    <content type="html"><![CDATA[
+<hr />
+<ul>
+<li><c>0x0101</c> 表示题目编号。根据书后索引编号或直接写题目来源。</li>
+<li><e>Easy</e> 我能很快做出来的题目。<br />
+大约对应红 ～ 黄，典型题目：NOIP 2021 A。</li>
+<li><m>Medium</m> 我需要充足的思考才能做出来或者能想出大部分思路的题目。<br />
+大约对应思维黄 ～ 下位蓝，典型题目：CSP-S 2021 A。</li>
+<li><h>Hard</h> 我最多想出 1/2 的思路的题目。<br />
+大约对应上位蓝到黑。</li>
+</ul>
+<hr />
+<ul>
+<li>0x00 基本算法</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[<sh0>0x00 基本算法</sh0>]]></title>
+    <link href="oi.afobject.ml/0x00.html"/>
+    <updated>2022-01-07T23:05:09+08:00</updated>
+    <id>oi.afobject.ml/0x00.html</id>
+    <content type="html"><![CDATA[
+<ul>
+<li>0x01 位运算</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[<sh1>0x01 位运算</sh1>]]></title>
+    <link href="oi.afobject.ml/0x01.html"/>
+    <updated>2022-01-08T11:01:10+08:00</updated>
+    <id>oi.afobject.ml/0x01.html</id>
+    <content type="html"><![CDATA[
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x011 位运算基础]]></title>
+    <link href="oi.afobject.ml/0x011.html"/>
+    <updated>2022-01-07T22:44:17+08:00</updated>
+    <id>oi.afobject.ml/0x011.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%BF%AB%E9%80%9F%E5%B9%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>快速幂</h2>
+<p><tc><c>0x0101</c><e>Easy-</e></tc></p>
+<pre class="line-numbers"><code class="language-cpp">int a;
+cin &gt;&gt; a;
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x012 二进制状态压缩]]></title>
+    <link href="oi.afobject.ml/0x012.html"/>
+    <updated>2022-01-07T22:44:57+08:00</updated>
+    <id>oi.afobject.ml/0x012.html</id>
+    <content type="html"><![CDATA[
+
+]]></content>
+  </entry>
+  
+</feed>
