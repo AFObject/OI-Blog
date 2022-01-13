@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-01-09T11:39:07+08:00</updated>
+  <updated>2022-01-13T23:26:31+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -55,6 +55,12 @@
     <updated>2022-01-08T11:01:10+08:00</updated>
     <id>oi.afobject.ml/0x01.html</id>
     <content type="html"><![CDATA[
+<h2><a id="%E8%A1%A5%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>补码</h2>
+<ul>
+<li>对于 <code>unsigned int</code>：补码等于原码。</li>
+<li>对于 <code>signed int</code>：正数部分补码等于原码，负数部分 \([-2^{31}, -1]\) 相当于 <code>unsigned int</code> \([2^{31}+1, 2^{32}]\)。即原来的<strong>负数的绝对值减去 1 后取反</strong>。<br />
+\(-45 \to -(00101101)_2 \to \operatorname{rev}(00101101-1)_2 \to (11010011)_2\)。</li>
+</ul>
 
 ]]></content>
   </entry>
@@ -66,9 +72,45 @@
     <id>oi.afobject.ml/0x011.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E5%BF%AB%E9%80%9F%E5%B9%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>快速幂</h2>
-<p><tc><c>0x0101</c><e>Easy-</e></tc></p>
-<pre class="line-numbers"><code class="language-cpp">int a;
-cin &gt;&gt; a;
+<p><tc><c>0x0101</c><e>Easy-</e><t>快速幂</t></tc></p>
+<p>求 \(a^b \bmod p\) 的值。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>\(b\) 可以拆分为这样的二进制：\(b=\sum\limits_{i=0}^{n-1} k_i \times 2^i\)（\(k_i \in \{0, 1\}\)）。</p>
+<p>因此 \(a^b = \prod\limits_{i=0}^{n-1} a^{k_i \times 2^{i}}\)。</p>
+<p>可以看成递推：\(p_i=a^{2^i}\)，则 \(a^b = \prod\limits_{i=0}^{n-1} p_{i}^{k_i}\)，其中 \(p_{i}= p_{i-1}^2\)。</p>
+<p>做的时候直接把数组免了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int pow(int a, int b, int p) {
+	int ans = 1 % p;
+	while (b) {
+		if (b &amp; 1)
+			ans = (ans * a) % p;
+		a = (a * a) % p;
+		b &gt;&gt;= 1;
+	}
+	return ans;
+}
+</code></pre>
+<hr />
+<h2><a id="raising-modulo-numbers" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raising Modulo Numbers</h2>
+<p><tc><c>0x0102</c><e>Easy-</e><t>快速幂</t></tc></p>
+<p>给你几组数，让你求 \(\sum a_i^{b_i} \bmod M\)（\(N, M \le 4.5 \times 10^4\)）。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>暴力。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, p, a, b, T;
+signed main() {
+	T = read();
+	while (T--) {
+		p = read(), n = read();
+		int ans = 0;
+		while (n--) {
+			a = read(), b = read();
+			ans = (ans + pow(a, b, p)) % p;
+		}
+		printf(&quot;%lld\n&quot;, ans);
+	}
+}
 </code></pre>
 
 ]]></content>
