@@ -126,6 +126,15 @@
 <li>对于 <code>signed int</code>：正数部分补码等于原码，负数部分 \([-2^{31}, -1]\) 相当于 <code>unsigned int</code> \([2^{31}+1, 2^{32}]\)。即原来的<strong>负数的绝对值减去 1 后取反</strong>。<br />
 \(-45 \to -(00101101)_2 \to \operatorname{rev}(00101101-1)_2 \to (11010011)_2\)。</li>
 </ul>
+<hr />
+<h2><a id="%E6%88%90%E5%AF%B9%E5%8F%98%E6%8D%A2" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>成对变换</h2>
+<p>\((0,1), (2,3), (4,5)\) 这些二元组中的一个数可以通过 <code>xor</code> 运算得到另一个数。应用：双向边邻接表。</p>
+<hr />
+<h2><a id="lowbit%E8%BF%90%E7%AE%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>lowbit 运算</h2>
+<p>lowbit 是<strong>二进制下最低位的 1 及其右边的所有 0 构成的数值</strong>。</p>
+\[\operatorname{lowbit}(n)=n\ \&amp;\ (-n)
+\]
+<p>应用：哈希、树状数组等。</p>
 
                   </article>
                   <div class="comments-wrap">
@@ -172,6 +181,8 @@
 
 
 
+
+<script src="asset/prism.js"></script>
 
 
 
