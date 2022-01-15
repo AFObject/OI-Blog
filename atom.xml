@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-01-14T21:55:25+08:00</updated>
+  <updated>2022-01-15T21:31:28+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -13,7 +13,7 @@
   <generator uri="http://www.mweb.im/">MWeb</generator>
   
   <entry>
-    <title type="html"><![CDATA[<tit>0xff 算法竞赛进阶指南</tit>]]></title>
+    <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
     <link href="oi.afobject.ml/overview.html"/>
     <updated>2022-01-07T23:06:53+08:00</updated>
     <id>oi.afobject.ml/overview.html</id>
@@ -37,7 +37,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[<sh0>0x00 基本算法</sh0>]]></title>
+    <title type="html"><![CDATA[0x00 基本算法]]></title>
     <link href="oi.afobject.ml/0x00.html"/>
     <updated>2022-01-07T23:05:09+08:00</updated>
     <id>oi.afobject.ml/0x00.html</id>
@@ -50,7 +50,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[<sh1>0x01 位运算</sh1>]]></title>
+    <title type="html"><![CDATA[0x01 位运算]]></title>
     <link href="oi.afobject.ml/0x01.html"/>
     <updated>2022-01-08T11:01:10+08:00</updated>
     <id>oi.afobject.ml/0x01.html</id>
@@ -145,13 +145,34 @@ signed main() {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[0x02 递推与递归]]></title>
+    <link href="oi.afobject.ml/16422139834989.html"/>
+    <updated>2022-01-15T10:33:03+08:00</updated>
+    <id>oi.afobject.ml/16422139834989.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%AE%8F%E8%A7%82%E6%8F%8F%E8%BF%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>宏观描述</h2>
+<h3><a id="%E9%80%92%E5%BD%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归</h3>
+<p>从原大问题出发到小问题，然后将小问题推广到大问题。</p>
+<p>缩小、求解、扩展。</p>
+<p>Key Points：</p>
+<ul>
+<li>自身调用自身</li>
+<li>回溯时还原现场。</li>
+</ul>
+<h3><a id="%E9%80%92%E6%8E%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递推</h3>
+<p>正向，由小问题直接推到大问题。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[0x012 二进制状态压缩]]></title>
     <link href="oi.afobject.ml/0x012.html"/>
     <updated>2022-01-07T22:44:57+08:00</updated>
     <id>oi.afobject.ml/0x012.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E6%9C%80%E7%9F%ADhamilton%E8%B7%AF%E5%BE%84" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>最短 Hamilton 路径</h2>
-<p><tc><c>0x0104</c><m>Medium</m><t>状压</t><t>DP</t></tc></p>
+<p><tc><c>0x0104</c><c>LG1171</c><m>Medium</m><t>状压</t><t>DP</t></tc></p>
 <p>在一张点数小于等于 \(20\) 的带权无向图中找出一条从 \(0\) 到 \(n-1\) <strong>不重不漏地经过每一个点</strong>且<strong>边权和最短</strong>的路径。</p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>很容易想到用一个二进制数来表示已路过的点的状态（路径状态）。</p>
@@ -219,6 +240,133 @@ int main() {
 			ans += (1 &lt;&lt; i);
 	}
 	printf(&quot;%d\n&quot;, ans);
+	return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x021 递推与递归的简单应用]]></title>
+    <link href="oi.afobject.ml/16422141961714.html"/>
+    <updated>2022-01-15T10:36:36+08:00</updated>
+    <id>oi.afobject.ml/16422141961714.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%8C%87%E6%95%B0%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现指数型枚举</h2>
+<p><tc><c>0x0201</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
+<pre class="line-numbers"><code class="language-cpp">bool c[21];
+void recursive(int t) {
+	if (t == n + 1) {
+		for (int i = 1; i &lt;= n; ++i)
+			if (c[i])
+				printf(&quot;%d &quot;, i);
+		putchar('\n');
+		return;
+	}
+	c[t] = true;
+	recursive(t + 1);
+	c[t] = false;
+	recursive(t + 1);
+}
+</code></pre>
+<h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E7%BB%84%E5%90%88%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现组合型枚举</h2>
+<p><tc><c>0x0202</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
+<pre class="line-numbers"><code class="language-cpp">bool c[21];
+void recursive(int t, int sel) {
+	if (sel &gt; m || sel + n - t + 1 &lt; m)
+		return;
+	if (t == n + 1) {
+		for (int i = 1; i &lt;= n; ++i)
+			if (c[i])
+				printf(&quot;%d &quot;, i);
+		putchar('\n');
+		return;
+	}
+	c[t] = true;
+	recursive(t + 1, sel + 1);
+	c[t] = false;
+	recursive(t + 1, sel);
+}
+</code></pre>
+<h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%8E%92%E5%88%97%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现排列型枚举</h2>
+<p><tc><c>0x0203</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
+<pre class="line-numbers"><code class="language-cpp">bool c[21];
+int sel[21];
+void recursive(int t) {
+	if (t == n + 1) {
+		for (int i = 1; i &lt;= n; ++i)
+			printf(&quot;%d &quot;, sel[i]);
+		putchar('\n');
+		return;
+	}
+	for (int i = 1; i &lt;= n; ++i) {
+		if (!c[i]) {
+			sel[t] = i;
+			c[i] = true;
+			recursive(t +  1);c[i] = false;
+		}
+	}
+}
+</code></pre>
+<hr />
+<h2><a id="%E8%B4%B9%E8%A7%A3%E7%9A%84%E5%BC%80%E5%85%B3" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>费解的开关</h2>
+<p><tc><c>0x0204</c><m>Medium</m><t>结论</t><t>贪心</t></tc></p>
+<p>\(5\times 5\) 的 01 矩阵中，点击一个位置，它上下左右格内的数都会变化，最少多少次点击变成全 0？</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p><strong>考虑特殊情况：</strong> 假如不能动第一行，则对于第一行的任意一个数，如果它是 1，那么只能点击它下面的那个格子。</p>
+<p>又有：<strong>点击的顺序不影响最终的结果。</strong> 一个格子被翻转的次数等于它四周的格子被点按次数之和。所以可以以任意顺序考虑点击的位置。</p>
+<p>因此只用枚举第一行的 \(2^5\) 种状态即可。后面的方案都是确定的。假如最后不都为 0 那么这种做法就是寄的，继续搜索求解。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>第一次在 OI 里写异常处理。</p>
+<pre class="line-numbers"><code class="language-cpp">int T;
+int m[7][7];
+int t[7][7];
+
+int cnt = 0;
+void doOper(int x, int y) {
+	t[x][y] ^= 1;
+	t[x - 1][y] ^= 1;
+	t[x + 1][y] ^= 1;
+	t[x][y - 1] ^= 1;
+	t[x][y + 1] ^= 1;
+	++cnt;
+	if (cnt &gt; 6)
+		throw -1;
+}
+
+int main() {
+	scanf(&quot;%d&quot;, &amp;T);
+	while (T--) {
+		for (int i = 1; i &lt;= 5; ++i)
+			for (int j = 1; j &lt;= 5; ++j)
+				scanf(&quot;%1d&quot;, &amp;m[i][j]);
+		int ans = 0x3f3f3f3f;
+		for (int s = 0; s &lt; 32; ++s) {
+			cnt = 0;
+			try {
+				for (int i = 1; i &lt;= 5; ++i)
+					for (int j = 1; j &lt;= 5; ++j)
+						t[i][j] = m[i][j];
+				for (int i = 1, s0 = s; s0; s0 &gt;&gt;= 1, ++i)
+					if (s0 &amp; 1)
+						doOper(1, i);
+				for (int r = 2; r &lt;= 5; ++r) {
+					for (int c = 1; c &lt;= 5; ++c)
+						if (!t[r - 1][c])
+							doOper(r, c);
+				}
+			} catch (int e) {
+				continue;
+			}
+			int sum = 1;
+			for (int i = 1; i &lt;= 5; ++i)
+				sum &amp;= t[5][i];
+			if (sum)
+				ans = std::min(ans, cnt);
+		}
+		printf(&quot;%d\n&quot;, (ans == 0x3f3f3f3f) ? -1 : ans);
+	}
 	return 0;
 }
 </code></pre>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    贪心 - OI Blog
+    0x02 递推与递归 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gy6mxph0ofj301s01s3y9.jpg" type="image/png" />
@@ -73,115 +73,83 @@
             </nav>
       </div>
 
- 
- <div class="hero-body ct-body">
-    <div class="container">
-          <h1 class="title-only">
-                <span>#贪心</span>
-          </h1>
-    </div>
-  </div>
-</section>
-<section class="ct-body">
+ <div class="hero-body ct-body"></div>
+      
+    </section>
+    <section class="ct-body">
       <div class="container">
-          <div class="columns is-variable bd-klmn-columns is-4">
-              <div class="column is-two-thirds">
-               <div class="post-body">
-                  <div class="card archives">
+          <div class="columns is-variable bd-klmn-columns is-4 is-centered">
+              <div class="column is-four-fifths">
+                  <div class="post-body single-content">
                     
+                    <h1 class="title">
+                            0x02 递推与递归   
+                      </h1>
+                     
                     
-                        
-                       <div class="card-content">
-                         <div class="content">
-                          <a href="0x012.html">
-                            <h2 class="title">0x012 二进制状态压缩</h2>
-                          </a>
-                             <p class="des">
-                             <span class="date">2022/01/14</span>
-                              <span class="tran-posted-in">posted in</span>&nbsp; 
-                              
-                                  <span class="posted-in"><a href='0x01.html'>0x01 位运算</a></span>
-                                     
-                             
-                              &nbsp;
-                                  
-                              <span class="tran-tags">Tags:</span>&nbsp;
-                              
-                                <c><a href='tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html'>#位运算</a></c>
-                              
-                                <c><a href='tag_DP.html'>#DP</a></c>
-                              
-                                <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
+                      <div class="media">
+                            
+                            <figure class="media-left">
+                              <p class="image is-48x48">
                                 
-                           </p>
-                          </div>
-                       </div>
-                     
-          </div><!-- end card -->
-        </div><!-- end post body -->
+                                  <img class="is-rounded" src="https://tva1.sinaimg.cn/large/008i3skNgy1gy6myceaevj306o06o0sl.jpg">
+                                
+                              </p>
+                            </figure>
+                            
+                            <div class="media-content">
+                              <div class="content">
+                                <p>
+                                 <span class="date">2022/01/15</span>
+                                  <span class="tran-posted-in">posted in</span>&nbsp; 
+                                  
+                                      <span class="posted-in"><a href='0x02.html'>0x02 递推与递归</a></span>
+                                         
+                                  
 
-              </div><!-- end column -->
-              <div class="column">
-                    <div class="card">
-                      <header class="card-header">
-                        <p class="card-header-title">
-                           <span class="tran-site-categories">Categories</span> 
-                        </p>
-                     
-                      </header>
-                      <div class="card-content site-categories">
-                        <div class="content"> 
-                          <ul>
-                          
-                                <li><a href="0x00.html">0x00 基本算法</a>
-                                   <ul> 
-                                  
-                                        <li><a href="0x01.html">0x01 位运算</a></li>
-                                  
-                                        <li><a href="0x02.html">0x02 递推与递归</a></li>
-                                  
-                                   </ul> 
-                                </li> 
-                          
-                          </ul>
-                        </div>
-                      </div>
-                     
+                                   
+                                      
+                                  <br />
+                                  <span class="tran-tags">Tags:</span>&nbsp;
+                                     
+
+                                </p>
+                              </div>
+                            </div>
+                         
                     </div>
+                </div>
+                  <article class="markdown-body single-content">
+                    <h2><a id="%E5%AE%8F%E8%A7%82%E6%8F%8F%E8%BF%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>宏观描述</h2>
+<h3><a id="%E9%80%92%E5%BD%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归</h3>
+<p>从原大问题出发到小问题，然后将小问题推广到大问题。</p>
+<p>缩小、求解、扩展。</p>
+<p>Key Points：</p>
+<ul>
+<li>自身调用自身</li>
+<li>回溯时还原现场。</li>
+</ul>
+<h3><a id="%E9%80%92%E6%8E%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递推</h3>
+<p>正向，由小问题直接推到大问题。</p>
 
-                    <div class="card">
-                        <header class="card-header">
-                          <p class="card-header-title">
-                              <span class="tran-site-tags">Tags</span> 
-                          </p>
-                       
-                        </header>
-                        <div class="card-content site-tags">
-                          <div class="content">
-                           <div class="tags">
-                            
-                              <a class="tag is-link is-light" href="tag_DP.html">#DP</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html">#位运算</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E6%90%9C%E7%B4%A2.html">#搜索</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E8%B4%AA%E5%BF%83.html">#贪心</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E9%80%92%E5%BD%92.html">#递归</a> 
-                            
-                           </div>
-                             
-                          </div>
-                        </div>
-                       
-                      </div>
+                  </article>
+                  <div class="comments-wrap">
+                    <div class="share-comments">
+                      
+
+                      
+
+                      
+                    </div>
+                  </div><!-- end comments wrap -->
               </div>
-            </div>
+            </div><!-- end columns -->
+      </div><!-- end container -->
+    </section>
 
-          
-      </div>
-    </section>    <footer class="footer">
+
+
+    <footer class="footer">
         <div class="content has-text-centered">
           <p>
               Copyright &copy; 2019
