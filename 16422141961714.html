@@ -183,7 +183,7 @@ void recursive(int t) {
 <hr />
 <h2><a id="%E8%B4%B9%E8%A7%A3%E7%9A%84%E5%BC%80%E5%85%B3" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>费解的开关</h2>
 <p><tc><c>0x0204</c><m>Medium</m><t>结论</t><t>贪心</t></tc></p>
-<p>\(5\times 5\) 的 01 矩阵中，点击一个位置，它上下左右格内的数都会变化，最少多少次点击变成全 0？</p>
+<p>\(5\times 5\) 的 01 矩阵中，点击一个位置，它及它上下左右格内的数都会变化，最少多少次点击变成全 0？</p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p><strong>考虑特殊情况：</strong> 假如不能动第一行，则对于第一行的任意一个数，如果它是 1，那么只能点击它下面的那个格子。</p>
 <p>又有：<strong>点击的顺序不影响最终的结果。</strong> 一个格子被翻转的次数等于它四周的格子被点按次数之和。所以可以以任意顺序考虑点击的位置。</p>
@@ -239,6 +239,40 @@ int main() {
 		printf(&quot;%d\n&quot;, (ans == 0x3f3f3f3f) ? -1 : ans);
 	}
 	return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="strange-towers-of-hanoi" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Strange Towers of Hanoi</h2>
+<p><tc><c>0x0205</c><m>Medium</m><t>递推</t><t>DP</t></tc></p>
+<p>求 \(n\) 盘 4 塔的汉诺塔步数。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑 \(n\) 盘 3 塔：</p>
+<ul>
+<li>\(n-1\) 盘：A \(\to\) B</li>
+<li>第 \(n\) 盘：A \(\to\) C</li>
+<li>\(n-1\) 盘：B \(\to\) C</li>
+</ul>
+<p>因此 \(f_3(n)=2 \times f_3(n-1) + 1\)，其中 \(f_3(1)=1\)。可以知道 \(f_3(n)=2^n-1\)。</p>
+<p>再考虑 \(n\) 盘 4 塔：</p>
+\[f_4(n) \le \min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}
+\]
+<p>注意此处使用小于等于号。</p>
+<p>参照具体数学上证明等于的方法：</p>
+<p>我们迟早都必须要移动最下面的那 \(n-i\) 个盘子移动到 D 柱，当我们这么做的时候，上面 \(i\) 个必须已经在某个柱子上。而把下面的这 \(n-i\) 个盘子摆好以后，又要用 \(f_4(i)\) 次移动将上面的盘子放置在它上方（胡言乱语 /tuu）。因此至少需要有 \(\min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}\) 次移动。</p>
+\[\therefore f_4(n) = \min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}
+\]
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define f3(x) ((1 &lt;&lt; (x)) - 1)
+
+int f4[13];
+
+int main() {
+    f4[1] = 1;
+    for (int x = 2; x &lt;= 12; ++x) {
+    	f4[x] = 0x3f3f3f3f;
+    	for (int i = 1; i &lt; x; ++i)
+    		f4[x] = std::min(f4[x], 2 * f4[i] + f3(x - i));
+    }
 }
 </code></pre>
 
