@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-01-16T13:55:55+08:00</updated>
+  <updated>2022-01-18T11:35:54+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -50,31 +50,6 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x01 位运算]]></title>
-    <link href="oi.afobject.ml/0x01.html"/>
-    <updated>2022-01-08T11:01:10+08:00</updated>
-    <id>oi.afobject.ml/0x01.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E8%A1%A5%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>补码</h2>
-<ul>
-<li>对于 <code>unsigned int</code>：补码等于原码。</li>
-<li>对于 <code>signed int</code>：正数部分补码等于原码，负数部分 \([-2^{31}, -1]\) 相当于 <code>unsigned int</code> \([2^{31}+1, 2^{32}]\)。即原来的<strong>负数的绝对值减去 1 后取反</strong>。<br />
-\(-45 \to -(00101101)_2 \to \operatorname{rev}(00101101-1)_2 \to (11010011)_2\)。</li>
-</ul>
-<hr />
-<h2><a id="%E6%88%90%E5%AF%B9%E5%8F%98%E6%8D%A2" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>成对变换</h2>
-<p>\((0,1), (2,3), (4,5)\) 这些二元组中的一个数可以通过 <code>xor</code> 运算得到另一个数。应用：双向边邻接表。</p>
-<hr />
-<h2><a id="lowbit%E8%BF%90%E7%AE%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>lowbit 运算</h2>
-<p>lowbit 是<strong>二进制下最低位的 1 及其右边的所有 0 构成的数值</strong>。</p>
-\[\operatorname{lowbit}(n)=n\ \&amp;\ (-n)
-\]
-<p>应用：哈希、树状数组等。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[0x02 递推与递归]]></title>
     <link href="oi.afobject.ml/16422139834989.html"/>
     <updated>2022-01-15T10:33:03+08:00</updated>
@@ -96,71 +71,26 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x011 位运算基础]]></title>
-    <link href="oi.afobject.ml/0x011.html"/>
-    <updated>2022-01-07T22:44:17+08:00</updated>
-    <id>oi.afobject.ml/0x011.html</id>
+    <title type="html"><![CDATA[0x01 位运算]]></title>
+    <link href="oi.afobject.ml/0x01.html"/>
+    <updated>2022-01-08T11:01:10+08:00</updated>
+    <id>oi.afobject.ml/0x01.html</id>
     <content type="html"><![CDATA[
-<h2><a id="%E5%BF%AB%E9%80%9F%E5%B9%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>快速幂</h2>
-<p><tc><c>0x0101</c><e>Easy-</e><t>快速幂</t></tc></p>
-<p>求 \(a^b \bmod p\) 的值。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>\(b\) 可以拆分为这样的二进制：\(b=\sum\limits_{i=0}^{n-1} k_i \times 2^i\)（\(k_i \in \{0, 1\}\)）。</p>
-<p>因此 \(a^b = \prod\limits_{i=0}^{n-1} a^{k_i \times 2^{i}}\)。</p>
-<p>可以看成递推：\(p_i=a^{2^i}\)，则 \(a^b = \prod\limits_{i=0}^{n-1} p_{i}^{k_i}\)，其中 \(p_{i}= p_{i-1}^2\)。</p>
-<p>做的时候直接把数组免了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int pow(int a, int b, int p) {
-	int ans = 1 % p;
-	while (b) {
-		if (b &amp; 1)
-			ans = (ans * a) % p;
-		a = (a * a) % p;
-		b &gt;&gt;= 1;
-	}
-	return ans;
-}
-</code></pre>
+<h2><a id="%E8%A1%A5%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>补码</h2>
+<ul>
+<li>对于 <code>unsigned int</code>：补码等于原码。</li>
+<li>对于 <code>signed int</code>：正数部分补码等于原码，负数部分 \([-2^{31}, -1]\) 相当于 <code>unsigned int</code> \([2^{31}+1, 2^{32}]\)。即原来的<strong>负数的绝对值减去 1 后取反</strong>。<br />
+\(-45 \to -(00101101)_2 \to \operatorname{rev}(00101101-1)_2 \to (11010011)_2\)。</li>
+</ul>
 <hr />
-<h2><a id="raising-modulo-numbers" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raising Modulo Numbers</h2>
-<p><tc><c>0x0102</c><e>Easy-</e><t>快速幂</t></tc></p>
-<p>给你 \(N\) 组数，让你求 \(\sum a_i^{b_i} \bmod M\)（\(N, M \le 4.5 \times 10^4\)）。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>暴力。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, p, a, b, T;
-signed main() {
-	T = read();
-	while (T--) {
-		p = read(), n = read();
-		int ans = 0;
-		while (n--) {
-			a = read(), b = read();
-			ans = (ans + pow(a, b, p)) % p;
-		}
-		printf(&quot;%lld\n&quot;, ans);
-	}
-}
-</code></pre>
+<h2><a id="%E6%88%90%E5%AF%B9%E5%8F%98%E6%8D%A2" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>成对变换</h2>
+<p>\((0,1), (2,3), (4,5)\) 这些二元组中的一个数可以通过 <code>xor</code> 运算得到另一个数。应用：双向边邻接表。</p>
 <hr />
-<h2><a id="64%E4%BD%8D%E6%95%B4%E6%95%B0%E4%B9%98%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>64 位整数乘法</h2>
-<p><tc><c>0x0103</c><e>Easy-</e><t>快速幂</t></tc></p>
-<p>求 \(a \times b \bmod p\) 的值。\(1 \le a,b,p \le 10^{18}\)。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>除非用 <code>__int128</code>，否则必须要将 \(a,b\) 拆分成更小的数再合并求积。这时就可以用到位运算了。</p>
-<p>和快速幂几乎完全一样，改几个符号而已。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int mul(int a, int b, int p) {
-	int ans = 0;
-	while (b) {
-		if (b &amp; 1)
-			ans = (ans + a) % p;
-		a = (a &lt;&lt; 1) % p;
-		b &gt;&gt;= 1;
-	}
-	return ans;
-}
-</code></pre>
+<h2><a id="lowbit%E8%BF%90%E7%AE%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>lowbit 运算</h2>
+<p>lowbit 是<strong>二进制下最低位的 1 及其右边的所有 0 构成的数值</strong>。</p>
+\[\operatorname{lowbit}(n)=n\ \&amp;\ (-n)
+\]
+<p>应用：哈希、树状数组等。</p>
 
 ]]></content>
   </entry>
@@ -327,6 +257,162 @@ int main() {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[0x011 位运算基础]]></title>
+    <link href="oi.afobject.ml/0x011.html"/>
+    <updated>2022-01-07T22:44:17+08:00</updated>
+    <id>oi.afobject.ml/0x011.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%BF%AB%E9%80%9F%E5%B9%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>快速幂</h2>
+<p><tc><c>0x0101</c><e>Easy-</e><t>快速幂</t></tc></p>
+<p>求 \(a^b \bmod p\) 的值。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>\(b\) 可以拆分为这样的二进制：\(b=\sum\limits_{i=0}^{n-1} k_i \times 2^i\)（\(k_i \in \{0, 1\}\)）。</p>
+<p>因此 \(a^b = \prod\limits_{i=0}^{n-1} a^{k_i \times 2^{i}}\)。</p>
+<p>可以看成递推：\(p_i=a^{2^i}\)，则 \(a^b = \prod\limits_{i=0}^{n-1} p_{i}^{k_i}\)，其中 \(p_{i}= p_{i-1}^2\)。</p>
+<p>做的时候直接把数组免了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int pow(int a, int b, int p) {
+	int ans = 1 % p;
+	while (b) {
+		if (b &amp; 1)
+			ans = (ans * a) % p;
+		a = (a * a) % p;
+		b &gt;&gt;= 1;
+	}
+	return ans;
+}
+</code></pre>
+<hr />
+<h2><a id="raising-modulo-numbers" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raising Modulo Numbers</h2>
+<p><tc><c>0x0102</c><e>Easy-</e><t>快速幂</t></tc></p>
+<p>给你 \(N\) 组数，让你求 \(\sum a_i^{b_i} \bmod M\)（\(N, M \le 4.5 \times 10^4\)）。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>暴力。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, p, a, b, T;
+signed main() {
+	T = read();
+	while (T--) {
+		p = read(), n = read();
+		int ans = 0;
+		while (n--) {
+			a = read(), b = read();
+			ans = (ans + pow(a, b, p)) % p;
+		}
+		printf(&quot;%lld\n&quot;, ans);
+	}
+}
+</code></pre>
+<hr />
+<h2><a id="64%E4%BD%8D%E6%95%B4%E6%95%B0%E4%B9%98%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>64 位整数乘法</h2>
+<p><tc><c>0x0103</c><e>Easy-</e><t>快速幂</t></tc></p>
+<p>求 \(a \times b \bmod p\) 的值。\(1 \le a,b,p \le 10^{18}\)。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>除非用 <code>__int128</code>，否则必须要将 \(a,b\) 拆分成更小的数再合并求积。这时就可以用到位运算了。</p>
+<p>和快速幂几乎完全一样，改几个符号而已。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int mul(int a, int b, int p) {
+	int ans = 0;
+	while (b) {
+		if (b &amp; 1)
+			ans = (ans + a) % p;
+		a = (a &lt;&lt; 1) % p;
+		b &gt;&gt;= 1;
+	}
+	return ans;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x022 分治]]></title>
+    <link href="oi.afobject.ml/16422572946324.html"/>
+    <updated>2022-01-15T22:34:54+08:00</updated>
+    <id>oi.afobject.ml/16422572946324.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="sumdiv" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sumdiv</h2>
+<p><tc><c>0x0206</c><c>LG1593</c><m>Medium</m><t>数论</t><t>分治</t><t>快速幂</t></tc></p>
+<p>求 \(a^b\) 的因子和 \(\bmod 9901\)。\(a, b \le 5 \times 10^7\)。</p>
+<h2><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h2>
+<p>假设 \(a = \prod p_i^{c_i}\)，则 \(a^b=\prod p_i^{c_i \times b}\) 因子和为</p>
+\[\prod{\sum_{k=0}^{c_i \times b} {p_i}^k}
+\]
+<p>求个 \(p\) 是 \(\sqrt a\) 级别的，现在要快速求 \(\sum_{k=0}^{c_i \times b} {p_i}^k\)。</p>
+<p>考虑使用等比数列求和公式：</p>
+\[\begin{aligned}
+S&amp;=1+p+p^2+p^3+\cdots+p^k\\
+p\cdot S&amp;=p+p^2+p^3+\cdots+p^k+p^{k+1}\\
+S&amp;=\frac{p^{k+1}-1}{p-1}
+\end{aligned}
+\]
+<p>但要取模所以不能除啊……</p>
+<p>于是，开始分治（\(k \in \mathbb N\)）！</p>
+\[\begin{aligned}
+\sum_{i=0}^{2k+1}p^i &amp;= \sum_{i=0}^k p^i+ p^{k+1} \cdot \sum_{i=0}^k p^i \\
+&amp;=(1+p^{k+1}) \cdot\sum_{i=0}^k p^i\\
+
+\sum_{i=0}^{2k}p^i &amp;= \sum_{i=0}^{k-1} p^i+ p^{k} \cdot \sum_{i=0}^{k-1} p^i+p^{2k} \\
+&amp;=(1+p^k) \cdot\sum_{i=0}^{k-1} p^i+p^{2k}
+\end{aligned}
+\]
+<p>拆完了！\(\log\) 时间内可以求到结果。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>随时取模；特判个 \(0\)。</p>
+<pre class="line-numbers"><code class="language-cpp">#define MOD 9901
+
+int a, b;
+std::map&lt;int, int&gt; m;
+
+int pow(int a, int b, int p = MOD) {
+	int ans = 1 % MOD;
+	while (b) {
+		if (b &amp; 1)
+			ans = (ans * a) % MOD;
+		a = (a * a) % MOD;
+		b &gt;&gt;= 1;
+	}
+	return ans;
+}
+
+int sum(int p, int c) {
+	if (c == 0) return 1;
+	if (c == 1) return p + 1;
+	const int k = c / 2;
+	if (c &amp; 1) {
+		const int t = (1 + pow(p, k + 1)) % MOD;
+		return (t * sum(p, k)) % MOD;
+	} else {
+		const int t = (1 + pow(p, k)) % MOD;
+		return (t * sum(p, k - 1) + pow(p, 2 * k)) % MOD; 
+	}
+}
+
+int main() {
+	a = read(), b = read();
+	for (int i = 2; i * i &lt;= a; ) {
+		if (a % i == 0)
+			++m[i], a /= i;
+		else
+			++i;
+	}
+	if (a != 1)
+		++m[a];
+    if (!a) return puts(&quot;0&quot;), 0;
+	int ans = 1;
+	for (auto [p, k] : m) {
+		ans = (ans * sum(p % MOD, k * b)) % MOD;
+	}
+	printf(&quot;%d\n&quot;, ans);
+	return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[0x012 二进制状态压缩]]></title>
     <link href="oi.afobject.ml/0x012.html"/>
     <updated>2022-01-07T22:44:57+08:00</updated>
@@ -409,85 +495,89 @@ int main() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x022 分治]]></title>
-    <link href="oi.afobject.ml/16422572946324.html"/>
-    <updated>2022-01-15T22:34:54+08:00</updated>
-    <id>oi.afobject.ml/16422572946324.html</id>
+    <title type="html"><![CDATA[0x023 分形]]></title>
+    <link href="oi.afobject.ml/16424644153749.html"/>
+    <updated>2022-01-18T08:06:55+08:00</updated>
+    <id>oi.afobject.ml/16424644153749.html</id>
     <content type="html"><![CDATA[
-<h2><a id="sumdiv" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sumdiv</h2>
-<p><tc><c>0x0206</c><c>LG1593</c><m>Medium+</m><t>数论</t><t>分治</t><t>快速幂</t></tc></p>
-<p>求 \(a^b\) 的因子和 \(\bmod 9901\)。\(a, b \le 5 \times 10^7\)。</p>
-<h2><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h2>
-<p>假设 \(a = \prod p_i^{c_i}\)，则 \(a^b=\prod p_i^{c_i \times b}\) 因子和为</p>
-\[\prod{\sum_{k=0}^{c_i \times b} {p_i}^k}
-\]
-<p>求个 \(p\) 是 \(\sqrt a\) 级别的，现在要快速求 \(\sum_{k=0}^{c_i \times b} {p_i}^k\)。</p>
-<p>考虑使用等比数列求和公式：</p>
-\[\begin{aligned}
-S&amp;=1+p+p^2+p^3+\cdots+p^k\\
-p\cdot S&amp;=p+p^2+p^3+\cdots+p^k+p^{k+1}\\
-S&amp;=\frac{p^{k+1}-1}{p-1}
-\end{aligned}
-\]
-<p>但要取模所以不能除啊……</p>
-<p>于是，开始分治（\(k \in \mathbb N\)）！</p>
-\[\begin{aligned}
-\sum_{i=0}^{2k+1}p^i &amp;= \sum_{i=0}^k p^i+ p^{k+1} \cdot \sum_{i=0}^k p^i \\
-&amp;=(1+p^{k+1}) \cdot\sum_{i=0}^k p^i\\
-
-\sum_{i=0}^{2k}p^i &amp;= \sum_{i=0}^{k-1} p^i+ p^{k} \cdot \sum_{i=0}^{k-1} p^i+p^{2k} \\
-&amp;=(1+p^k) \cdot\sum_{i=0}^{k-1} p^i+p^{2k}
-\end{aligned}
-\]
-<p>拆完了！\(\log\) 时间内可以求到结果。</p>
+<h2><a id="fractal-streets" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal Streets</h2>
+<p><tc><c>0x0207</c><e>Easy+</e><t>递归</t><t>模拟</t><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>一个 \(N\) 级城市可以分为 4 个 \(N-1\) 级小城市。以此为依据进行递推。</p>
+<p><strong>以城市的中心为原点，建立平面直角坐标系。</strong></p>
+<p>首先我们令 \(k = \lfloor \frac {i-1} {4^{n-1}} \rfloor\)（实现的时候所有 \(i\) 自动减一）。\(k=0\) 在第二象限，\(k=1\) 在第一象限，\(k=2\) 在第四象限，\(k=3\) 在第三象限。</p>
+<p>以第一、四象限的城市为标准图形。<strong>第二象限的是把标准图形沿 \(y\) 轴翻折然后逆时针旋转 \(90^{\circ}\)</strong>，就能把编号顺序和标准图形对应上，第三象限同理，是<strong>沿 \(y\) 轴翻折然后顺时针旋转 \(90^{\circ}\)</strong>。</p>
+<p>设以标准图形求出来的是 \((x,y)\)，\(\Delta = 2^{N-2}\)。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center">\(k\)</th>
+<th style="text-align: center">坐标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center">\(\quad0\quad\)</td>
+<td style="text-align: center">\((-y-\Delta,-x+\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad1\quad\)</td>
+<td style="text-align: center">\((x+\Delta,y+\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad2\quad\)</td>
+<td style="text-align: center">\((x+\Delta,y-\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad3\quad\)</td>
+<td style="text-align: center">\((y-\Delta,x-\Delta)\)</td>
+</tr>
+</tbody>
+</table>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>随时取模；特判个 \(0\)。</p>
-<pre class="line-numbers"><code class="language-cpp">#define MOD 9901
+<p>退钱，精度问题卡了巨久，，，</p>
+<p>「所有房屋在格子中间」这条有点烦，可以把每个格子长度设为 2，然后房屋在正中间。最后答案乘以 5。</p>
+<p>虽然开了 <code>__int128</code> 以后大概不用这样。</p>
+<pre class="line-numbers"><code class="language-cpp">#define sq(x) ((x) * (x))
+#define int __int128
+#define x first
+#define y second
 
-int a, b;
-std::map&lt;int, int&gt; m;
+int T, n, s, d;
 
-int pow(int a, int b, int p = MOD) {
-	int ans = 1 % MOD;
-	while (b) {
-		if (b &amp; 1)
-			ans = (ans * a) % MOD;
-		a = (a * a) % MOD;
-		b &gt;&gt;= 1;
-	}
-	return ans;
+int read() {
+    int ans = 0, neg = 1; char ch = getchar();
+    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
+    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
+    return ans * neg;
 }
 
-int sum(int p, int c) {
-	if (c == 0) return 1;
-	if (c == 1) return p + 1;
-	const int k = c / 2;
-	if (c &amp; 1) {
-		const int t = (1 + pow(p, k + 1)) % MOD;
-		return (t * sum(p, k)) % MOD;
-	} else {
-		const int t = (1 + pow(p, k)) % MOD;
-		return (t * sum(p, k - 1) + pow(p, 2 * k)) % MOD; 
+std::pair&lt;int, int&gt; solve(int n, int i) {
+	if (n == 0) return std::make_pair(0, 0);
+	if (n == 1) {
+		if (i == 0) return std::make_pair(-1, 1);
+		if (i == 1) return std::make_pair(1, 1);
+		if (i == 2) return std::make_pair(1, -1);
+		if (i == 3) return std::make_pair(-1, -1);
 	}
+	const int k = i / (1ll &lt;&lt; (2 * n - 2)),
+				 r = i % (1ll &lt;&lt; (2 * n - 2)),
+				 d = (1ll &lt;&lt; (n - 2)) * 2ll;
+	auto a = solve(n - 1, r);
+	if (k == 0) return std::make_pair(-a.y - d, -a.x + d);
+	if (k == 1) return std::make_pair(a.x + d, a.y + d);
+	if (k == 2) return std::make_pair(a.x + d, a.y - d);
+	if (k == 3) return std::make_pair(a.y - d, a.x - d);
+	return std::make_pair(0, 0);
 }
 
-int main() {
-	a = read(), b = read();
-	for (int i = 2; i * i &lt;= a; ) {
-		if (a % i == 0)
-			++m[i], a /= i;
-		else
-			++i;
+signed main() {
+	T = read();
+	while (T--) {
+		n = read(), s = read(), d = read();
+		auto l = solve(n, s - 1), r = solve(n, d - 1);
+		printf(&quot;%.0lf\n&quot;, (double)sqrt(sq(r.x - l.x) + sq(r.y - l.y)) * 5);
 	}
-	if (a != 1)
-		++m[a];
-    if (!a) return puts(&quot;0&quot;), 0;
-	int ans = 1;
-	for (auto [p, k] : m) {
-		ans = (ans * sum(p % MOD, k * b)) % MOD;
-	}
-	printf(&quot;%d\n&quot;, ans);
-	return 0;
 }
 </code></pre>
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x022 分治 - OI Blog
+    0x023 分形 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gy6mxph0ofj301s01s3y9.jpg" type="image/png" />
@@ -83,7 +83,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x022 分治   
+                            0x023 分形   
                       </h1>
                      
                     
@@ -100,7 +100,7 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/01/16</span>
+                                 <span class="date">2022/01/18</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
                                       <span class="posted-in"><a href='0x02.html'>0x02 递推与递归</a></span>
@@ -112,9 +112,9 @@
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
                                   
-                                    <c><a href='tag_%E5%88%86%E6%B2%BB.html'>#分治</a></c>
+                                    <c><a href='tag_%E9%80%92%E5%BD%92.html'>#递归</a></c>
                                   
-                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
+                                    <c><a href='tag_%E6%A8%A1%E6%8B%9F.html'>#模拟</a></c>
                                      
 
                                 </p>
@@ -124,80 +124,84 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <h2><a id="sumdiv" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sumdiv</h2>
-<p><tc><c>0x0206</c><c>LG1593</c><m>Medium</m><t>数论</t><t>分治</t><t>快速幂</t></tc></p>
-<p>求 \(a^b\) 的因子和 \(\bmod 9901\)。\(a, b \le 5 \times 10^7\)。</p>
-<h2><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h2>
-<p>假设 \(a = \prod p_i^{c_i}\)，则 \(a^b=\prod p_i^{c_i \times b}\) 因子和为</p>
-\[\prod{\sum_{k=0}^{c_i \times b} {p_i}^k}
-\]
-<p>求个 \(p\) 是 \(\sqrt a\) 级别的，现在要快速求 \(\sum_{k=0}^{c_i \times b} {p_i}^k\)。</p>
-<p>考虑使用等比数列求和公式：</p>
-\[\begin{aligned}
-S&amp;=1+p+p^2+p^3+\cdots+p^k\\
-p\cdot S&amp;=p+p^2+p^3+\cdots+p^k+p^{k+1}\\
-S&amp;=\frac{p^{k+1}-1}{p-1}
-\end{aligned}
-\]
-<p>但要取模所以不能除啊……</p>
-<p>于是，开始分治（\(k \in \mathbb N\)）！</p>
-\[\begin{aligned}
-\sum_{i=0}^{2k+1}p^i &amp;= \sum_{i=0}^k p^i+ p^{k+1} \cdot \sum_{i=0}^k p^i \\
-&amp;=(1+p^{k+1}) \cdot\sum_{i=0}^k p^i\\
-
-\sum_{i=0}^{2k}p^i &amp;= \sum_{i=0}^{k-1} p^i+ p^{k} \cdot \sum_{i=0}^{k-1} p^i+p^{2k} \\
-&amp;=(1+p^k) \cdot\sum_{i=0}^{k-1} p^i+p^{2k}
-\end{aligned}
-\]
-<p>拆完了！\(\log\) 时间内可以求到结果。</p>
+                    <h2><a id="fractal-streets" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal Streets</h2>
+<p><tc><c>0x0207</c><e>Easy+</e><t>递归</t><t>模拟</t><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>一个 \(N\) 级城市可以分为 4 个 \(N-1\) 级小城市。以此为依据进行递推。</p>
+<p><strong>以城市的中心为原点，建立平面直角坐标系。</strong></p>
+<p>首先我们令 \(k = \lfloor \frac {i-1} {4^{n-1}} \rfloor\)（实现的时候所有 \(i\) 自动减一）。\(k=0\) 在第二象限，\(k=1\) 在第一象限，\(k=2\) 在第四象限，\(k=3\) 在第三象限。</p>
+<p>以第一、四象限的城市为标准图形。<strong>第二象限的是把标准图形沿 \(y\) 轴翻折然后逆时针旋转 \(90^{\circ}\)</strong>，就能把编号顺序和标准图形对应上，第三象限同理，是<strong>沿 \(y\) 轴翻折然后顺时针旋转 \(90^{\circ}\)</strong>。</p>
+<p>设以标准图形求出来的是 \((x,y)\)，\(\Delta = 2^{N-2}\)。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center">\(k\)</th>
+<th style="text-align: center">坐标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center">\(\quad0\quad\)</td>
+<td style="text-align: center">\((-y-\Delta,-x+\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad1\quad\)</td>
+<td style="text-align: center">\((x+\Delta,y+\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad2\quad\)</td>
+<td style="text-align: center">\((x+\Delta,y-\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad3\quad\)</td>
+<td style="text-align: center">\((y-\Delta,x-\Delta)\)</td>
+</tr>
+</tbody>
+</table>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>随时取模；特判个 \(0\)。</p>
-<pre class="line-numbers"><code class="language-cpp">#define MOD 9901
+<p>退钱，精度问题卡了巨久，，，</p>
+<p>「所有房屋在格子中间」这条有点烦，可以把每个格子长度设为 2，然后房屋在正中间。最后答案乘以 5。</p>
+<p>虽然开了 <code>__int128</code> 以后大概不用这样。</p>
+<pre class="line-numbers"><code class="language-cpp">#define sq(x) ((x) * (x))
+#define int __int128
+#define x first
+#define y second
 
-int a, b;
-std::map&lt;int, int&gt; m;
+int T, n, s, d;
 
-int pow(int a, int b, int p = MOD) {
-	int ans = 1 % MOD;
-	while (b) {
-		if (b &amp; 1)
-			ans = (ans * a) % MOD;
-		a = (a * a) % MOD;
-		b &gt;&gt;= 1;
-	}
-	return ans;
+int read() {
+    int ans = 0, neg = 1; char ch = getchar();
+    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
+    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
+    return ans * neg;
 }
 
-int sum(int p, int c) {
-	if (c == 0) return 1;
-	if (c == 1) return p + 1;
-	const int k = c / 2;
-	if (c &amp; 1) {
-		const int t = (1 + pow(p, k + 1)) % MOD;
-		return (t * sum(p, k)) % MOD;
-	} else {
-		const int t = (1 + pow(p, k)) % MOD;
-		return (t * sum(p, k - 1) + pow(p, 2 * k)) % MOD; 
+std::pair&lt;int, int&gt; solve(int n, int i) {
+	if (n == 0) return std::make_pair(0, 0);
+	if (n == 1) {
+		if (i == 0) return std::make_pair(-1, 1);
+		if (i == 1) return std::make_pair(1, 1);
+		if (i == 2) return std::make_pair(1, -1);
+		if (i == 3) return std::make_pair(-1, -1);
 	}
+	const int k = i / (1ll &lt;&lt; (2 * n - 2)),
+				 r = i % (1ll &lt;&lt; (2 * n - 2)),
+				 d = (1ll &lt;&lt; (n - 2)) * 2ll;
+	auto a = solve(n - 1, r);
+	if (k == 0) return std::make_pair(-a.y - d, -a.x + d);
+	if (k == 1) return std::make_pair(a.x + d, a.y + d);
+	if (k == 2) return std::make_pair(a.x + d, a.y - d);
+	if (k == 3) return std::make_pair(a.y - d, a.x - d);
+	return std::make_pair(0, 0);
 }
 
-int main() {
-	a = read(), b = read();
-	for (int i = 2; i * i &lt;= a; ) {
-		if (a % i == 0)
-			++m[i], a /= i;
-		else
-			++i;
+signed main() {
+	T = read();
+	while (T--) {
+		n = read(), s = read(), d = read();
+		auto l = solve(n, s - 1), r = solve(n, d - 1);
+		printf(&quot;%.0lf\n&quot;, (double)sqrt(sq(r.x - l.x) + sq(r.y - l.y)) * 5);
 	}
-	if (a != 1)
-		++m[a];
-    if (!a) return puts(&quot;0&quot;), 0;
-	int ans = 1;
-	for (auto [p, k] : m) {
-		ans = (ans * sum(p % MOD, k * b)) % MOD;
-	}
-	printf(&quot;%d\n&quot;, ans);
-	return 0;
 }
 </code></pre>
 
