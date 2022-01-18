@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    DP - OI Blog
+    0x031 前缀和 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gy6mxph0ofj301s01s3y9.jpg" type="image/png" />
@@ -73,125 +73,133 @@
             </nav>
       </div>
 
- 
- <div class="hero-body ct-body">
-    <div class="container">
-          <h1 class="title-only">
-                <span>#DP</span>
-          </h1>
-    </div>
-  </div>
-</section>
-<section class="ct-body">
+ <div class="hero-body ct-body"></div>
+      
+    </section>
+    <section class="ct-body">
       <div class="container">
-          <div class="columns is-variable bd-klmn-columns is-4">
-              <div class="column is-two-thirds">
-               <div class="post-body">
-                  <div class="card archives">
+          <div class="columns is-variable bd-klmn-columns is-4 is-centered">
+              <div class="column is-four-fifths">
+                  <div class="post-body single-content">
                     
+                    <h1 class="title">
+                            0x031 前缀和   
+                      </h1>
+                     
                     
-                        
-                       <div class="card-content">
-                         <div class="content">
-                          <a href="0x012.html">
-                            <h2 class="title">0x012 二进制状态压缩</h2>
-                          </a>
-                             <p class="des">
-                             <span class="date">2022/01/14</span>
-                              <span class="tran-posted-in">posted in</span>&nbsp; 
-                              
-                                  <span class="posted-in"><a href='0x01.html'>0x01 位运算</a></span>
-                                     
-                             
-                              &nbsp;
-                                  
-                              <span class="tran-tags">Tags:</span>&nbsp;
-                              
-                                <c><a href='tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html'>#位运算</a></c>
-                              
-                                <c><a href='tag_DP.html'>#DP</a></c>
-                              
-                                <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
+                      <div class="media">
+                            
+                            <figure class="media-left">
+                              <p class="image is-48x48">
                                 
-                           </p>
-                          </div>
-                       </div>
-                     
-          </div><!-- end card -->
-        </div><!-- end post body -->
+                                  <img class="is-rounded" src="https://tva1.sinaimg.cn/large/008i3skNgy1gy6myceaevj306o06o0sl.jpg">
+                                
+                              </p>
+                            </figure>
+                            
+                            <div class="media-content">
+                              <div class="content">
+                                <p>
+                                 <span class="date">2022/01/18</span>
+                                  <span class="tran-posted-in">posted in</span>&nbsp; 
+                                  
+                                      <span class="posted-in"><a href='0x03%20%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86.html'>0x03 前缀和与差分</a></span>
+                                         
+                                  
 
-              </div><!-- end column -->
-              <div class="column">
-                    <div class="card">
-                      <header class="card-header">
-                        <p class="card-header-title">
-                           <span class="tran-site-categories">Categories</span> 
-                        </p>
-                     
-                      </header>
-                      <div class="card-content site-categories">
-                        <div class="content"> 
-                          <ul>
-                          
-                                <li><a href="0x00.html">0x00 基本算法</a>
-                                   <ul> 
+                                   
+                                      
+                                  <br />
+                                  <span class="tran-tags">Tags:</span>&nbsp;
                                   
-                                        <li><a href="0x01.html">0x01 位运算</a></li>
-                                  
-                                        <li><a href="0x02.html">0x02 递推与递归</a></li>
-                                  
-                                        <li><a href="0x03%20%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86.html">0x03 前缀和与差分</a></li>
-                                  
-                                   </ul> 
-                                </li> 
-                          
-                          </ul>
-                        </div>
-                      </div>
-                     
+                                    <c><a href='tag_%E5%89%8D%E7%BC%80%E5%92%8C.html'>#前缀和</a></c>
+                                     
+
+                                </p>
+                              </div>
+                            </div>
+                         
                     </div>
+                </div>
+                  <article class="markdown-body single-content">
+                    <h2><a id="%E6%BF%80%E5%85%89%E7%82%B8%E5%BC%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>激光炸弹</h2>
+<p><tc><c>0x0301</c><c>HNOI 2003</c><e>Easy</e><t>前缀和</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>使用二维前缀和。</p>
+\[\begin{aligned}
+&amp;\operatorname{sum}((x_1,y_1),(x_2,y_2)) \\
+&amp; =
+\operatorname{pre}(x_2,y_2) -
+\operatorname{pre}(x_1-1,y_2) -\operatorname{pre}(x_2,y_1-1) +
+\operatorname{pre}(x_1-1,y_1-1)
+\end{aligned}
+\]
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>思维没有任何难度，主要是实现上。题意不清楚，也没解释是什么坐标系。</p>
+<ol>
+<li>
+<blockquote>
+<p>若目标位于爆破正方形的边上，该目标不会被摧毁。</p>
+</blockquote>
+<p>显然对于 \(m\) 没有任何影响。因为目标在整点处，正方形相当于包围着它们的边，只不过加了 \(0.5\) 的 padding。</p>
+</li>
+<li>
+<blockquote>
+<p>\(0 \le x_i, y_i \le 5 \times 10^3\)。</p>
+</blockquote>
+<p>所以区域范围是 \((0,0)\) 到 \((5\times 10^3, 5 \times 10^3)\)。</p>
+</li>
+</ol>
+<p>因此遍历正方形左上角的范围应该是 \((0,0)\) 到 \((5\times10^3-m+1,5\times10^3-m+1)\)。</p>
+<p>细节挺多的，除了数组边界问题（其实全 +1 更方便但忘了懒得改了），还有尤其是关于 \(m\) 的那条一开始想对就对了，一开始想错很难发现。所以避免在脑子不清醒时做题！</p>
+<pre class="line-numbers"><code class="language-cpp">int n, m;
+int pre[5001][5001];
 
-                    <div class="card">
-                        <header class="card-header">
-                          <p class="card-header-title">
-                              <span class="tran-site-tags">Tags</span> 
-                          </p>
-                       
-                        </header>
-                        <div class="card-content site-tags">
-                          <div class="content">
-                           <div class="tags">
-                            
-                              <a class="tag is-link is-light" href="tag_DP.html">#DP</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html">#位运算</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E5%88%86%E6%B2%BB.html">#分治</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E5%89%8D%E7%BC%80%E5%92%8C.html">#前缀和</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E6%90%9C%E7%B4%A2.html">#搜索</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E6%95%B0%E5%AD%A6.html">#数学</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E6%A8%A1%E6%8B%9F.html">#模拟</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E8%B4%AA%E5%BF%83.html">#贪心</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E9%80%92%E5%BD%92.html">#递归</a> 
-                            
-                           </div>
-                             
-                          </div>
-                        </div>
-                       
-                      </div>
+int sum(int x1, int y1, int x2, int y2) {
+	return pre[x2][y2] - (x1 ? pre[x1 - 1][y2] : 0) - (y1 ? pre[x2][y1 - 1] : 0) + ((x1 &amp;&amp; y1) ? pre[x1 - 1][y1 - 1] : 0);
+}
+
+int main() {
+	n = read(), m = read();
+	int max = 0;
+	while (n--) {
+		int x = read(), y = read();
+		pre[x][y] += read();
+		max = std::max(max, pre[x][y]);
+	}
+	for (int r = 0; r &lt;= 5000; ++r)
+		for (int c = 0; c &lt;= 5000; ++c) {
+			if (!r &amp;&amp; !c) continue;
+			else if (!r) pre[r][c] += pre[r][c - 1];
+			else if (!c) pre[r][c] += pre[r - 1][c];
+			else pre[r][c] += pre[r - 1][c] + pre[r][c - 1] - pre[r - 1][c - 1];
+		}
+	for (int x = 0; x + m - 1 &lt;= 5000; ++x)
+		for (int y = 0; y + m - 1 &lt;= 5000; ++y)
+			max = std::max(max, sum(x, y, x + m - 1, y + m - 1));
+	printf(&quot;%d\n&quot;, max);
+	return 0;
+}
+</code></pre>
+
+                  </article>
+                  <div class="comments-wrap">
+                    <div class="share-comments">
+                      
+
+                      
+
+                      
+                    </div>
+                  </div><!-- end comments wrap -->
               </div>
-            </div>
+            </div><!-- end columns -->
+      </div><!-- end container -->
+    </section>
 
-          
-      </div>
-    </section>    <footer class="footer">
+
+
+    <footer class="footer">
         <div class="content has-text-centered">
           <p>
               Copyright &copy; 2019
@@ -202,6 +210,9 @@
       </footer>
 
 
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
 
   
 
@@ -216,6 +227,8 @@
 
 
 
+
+<script src="asset/prism.js"></script>
 
 
 
