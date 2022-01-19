@@ -4,82 +4,13 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-01-19T00:03:07+08:00</updated>
+  <updated>2022-01-19T17:21:56+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
-  
-  <entry>
-    <title type="html"><![CDATA[0x031 前缀和]]></title>
-    <link href="oi.afobject.ml/16424780591373.html"/>
-    <updated>2022-01-18T11:54:19+08:00</updated>
-    <id>oi.afobject.ml/16424780591373.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E6%BF%80%E5%85%89%E7%82%B8%E5%BC%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>激光炸弹</h2>
-<p><tc><c>0x0301</c><c>HNOI 2003</c><e>Easy</e><t>前缀和</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>使用二维前缀和。</p>
-\[\begin{aligned}
-&amp;\operatorname{sum}((x_1,y_1),(x_2,y_2)) \\
-&amp; =
-\operatorname{pre}(x_2,y_2) -
-\operatorname{pre}(x_1-1,y_2) -\operatorname{pre}(x_2,y_1-1) +
-\operatorname{pre}(x_1-1,y_1-1)
-\end{aligned}
-\]
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>思维没有任何难度，主要是实现上。题意不清楚，也没解释是什么坐标系。</p>
-<ol>
-<li>
-<blockquote>
-<p>若目标位于爆破正方形的边上，该目标不会被摧毁。</p>
-</blockquote>
-<p>显然对于 \(m\) 没有任何影响。因为目标在整点处，正方形相当于包围着它们的边，只不过加了 \(0.5\) 的 padding。</p>
-</li>
-<li>
-<blockquote>
-<p>\(0 \le x_i, y_i \le 5 \times 10^3\)。</p>
-</blockquote>
-<p>所以区域范围是 \((0,0)\) 到 \((5\times 10^3, 5 \times 10^3)\)。</p>
-</li>
-</ol>
-<p>因此遍历正方形左上角的范围应该是 \((0,0)\) 到 \((5\times10^3-m+1,5\times10^3-m+1)\)。</p>
-<p>细节挺多的，除了数组边界问题（其实全 +1 更方便但忘了懒得改了），还有尤其是关于 \(m\) 的那条一开始想对就对了，一开始想错很难发现。所以避免在脑子不清醒时做题！</p>
-<pre class="line-numbers"><code class="language-cpp">int n, m;
-int pre[5001][5001];
-
-int sum(int x1, int y1, int x2, int y2) {
-	return pre[x2][y2] - (x1 ? pre[x1 - 1][y2] : 0) - (y1 ? pre[x2][y1 - 1] : 0) + ((x1 &amp;&amp; y1) ? pre[x1 - 1][y1 - 1] : 0);
-}
-
-int main() {
-	n = read(), m = read();
-	int max = 0;
-	while (n--) {
-		int x = read(), y = read();
-		pre[x][y] += read();
-		max = std::max(max, pre[x][y]);
-	}
-	for (int r = 0; r &lt;= 5000; ++r)
-		for (int c = 0; c &lt;= 5000; ++c) {
-			if (!r &amp;&amp; !c) continue;
-			else if (!r) pre[r][c] += pre[r][c - 1];
-			else if (!c) pre[r][c] += pre[r - 1][c];
-			else pre[r][c] += pre[r - 1][c] + pre[r][c - 1] - pre[r - 1][c - 1];
-		}
-	for (int x = 0; x + m - 1 &lt;= 5000; ++x)
-		for (int y = 0; y + m - 1 &lt;= 5000; ++y)
-			max = std::max(max, sum(x, y, x + m - 1, y + m - 1));
-	printf(&quot;%d\n&quot;, max);
-	return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
@@ -564,6 +495,75 @@ int main() {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[0x031 前缀和]]></title>
+    <link href="oi.afobject.ml/16424780591373.html"/>
+    <updated>2022-01-18T11:54:19+08:00</updated>
+    <id>oi.afobject.ml/16424780591373.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E6%BF%80%E5%85%89%E7%82%B8%E5%BC%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>激光炸弹</h2>
+<p><tc><c>0x0301</c><c>HNOI 2003</c><e>Easy</e><t>前缀和</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>使用二维前缀和。</p>
+\[\begin{aligned}
+&amp;\operatorname{sum}((x_1,y_1),(x_2,y_2)) \\
+&amp; =
+\operatorname{pre}(x_2,y_2) -
+\operatorname{pre}(x_1-1,y_2) -\operatorname{pre}(x_2,y_1-1) +
+\operatorname{pre}(x_1-1,y_1-1)
+\end{aligned}
+\]
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>思维没有任何难度，主要是实现上。题意不清楚，也没解释是什么坐标系。</p>
+<ol>
+<li>
+<blockquote>
+<p>若目标位于爆破正方形的边上，该目标不会被摧毁。</p>
+</blockquote>
+<p>显然对于 \(m\) 没有任何影响。因为目标在整点处，正方形相当于包围着它们的边，只不过加了 \(0.5\) 的 padding。</p>
+</li>
+<li>
+<blockquote>
+<p>\(0 \le x_i, y_i \le 5 \times 10^3\)。</p>
+</blockquote>
+<p>所以区域范围是 \((0,0)\) 到 \((5\times 10^3, 5 \times 10^3)\)。</p>
+</li>
+</ol>
+<p>因此遍历正方形左上角的范围应该是 \((0,0)\) 到 \((5\times10^3-m+1,5\times10^3-m+1)\)。</p>
+<p>细节挺多的，除了数组边界问题（其实全 +1 更方便但忘了懒得改了），还有尤其是关于 \(m\) 的那条一开始想对就对了，一开始想错很难发现。所以避免在脑子不清醒时做题！</p>
+<pre class="line-numbers"><code class="language-cpp">int n, m;
+int pre[5001][5001];
+
+int sum(int x1, int y1, int x2, int y2) {
+	return pre[x2][y2] - (x1 ? pre[x1 - 1][y2] : 0) - (y1 ? pre[x2][y1 - 1] : 0) + ((x1 &amp;&amp; y1) ? pre[x1 - 1][y1 - 1] : 0);
+}
+
+int main() {
+	n = read(), m = read();
+	int max = 0;
+	while (n--) {
+		int x = read(), y = read();
+		pre[x][y] += read();
+		max = std::max(max, pre[x][y]);
+	}
+	for (int r = 0; r &lt;= 5000; ++r)
+		for (int c = 0; c &lt;= 5000; ++c) {
+			if (!r &amp;&amp; !c) continue;
+			else if (!r) pre[r][c] += pre[r][c - 1];
+			else if (!c) pre[r][c] += pre[r - 1][c];
+			else pre[r][c] += pre[r - 1][c] + pre[r][c - 1] - pre[r - 1][c - 1];
+		}
+	for (int x = 0; x + m - 1 &lt;= 5000; ++x)
+		for (int y = 0; y + m - 1 &lt;= 5000; ++y)
+			max = std::max(max, sum(x, y, x + m - 1, y + m - 1));
+	printf(&quot;%d\n&quot;, max);
+	return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[0x023 分形]]></title>
     <link href="oi.afobject.ml/16424644153749.html"/>
     <updated>2022-01-18T08:06:55+08:00</updated>
@@ -647,6 +647,110 @@ signed main() {
 		auto l = solve(n, s - 1), r = solve(n, d - 1);
 		printf(&quot;%.0lf\n&quot;, (double)sqrt(sq(r.x - l.x) + sq(r.y - l.y)) * 5);
 	}
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x032 差分]]></title>
+    <link href="oi.afobject.ml/16425501421616.html"/>
+    <updated>2022-01-19T07:55:42+08:00</updated>
+    <id>oi.afobject.ml/16425501421616.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="incdec-sequence" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>IncDec Sequence</h2>
+<p><tc><c>0x0302</c><e>Easy</e><t>差分</t></tc></p>
+<p>给定个长度为 \(n\) 的数列，每次可以选择一个区间同加 \(1\) 或减 \(1\)，要求最终所有数一样，求最小操作次数和满足最小操作次数的方案数。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>比较显然的差分：每次操作是对差分数列 \(c\) 中任两个数一个加 \(1\)，一个减 \(1\)。最终要求差分数组的除第一项、末项均为 \(0\)。</p>
+<p>分析一下样例：<code>1 1 2 2 (0)</code></p>
+<p>差分数组为：<code>1 0 1 0 -2</code></p>
+<p>两种方案为：</p>
+<ul>
+<li>\(c_1 \gets c_1+1\)，\(c_3 \gets c_3-1\)：<code>2 0 0 0 -2</code></li>
+<li>\(c_3 \gets c_3-1,c_5 \gets c_5+1\)：<code>1  0 0 0 -1</code></li>
+</ul>
+<p>观察到：</p>
+<ul>
+<li><strong>差分数组的第一个数的种数就是最后数列的种数</strong>；</li>
+<li>差分数组的和始终保持为 \(0\)。</li>
+</ul>
+<h4><a id="%E7%AC%AC%E4%B8%80%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%9C%80%E5%B0%8F%E6%93%8D%E4%BD%9C%E6%AC%A1%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第一小问：最小操作次数</h4>
+<p>那就是<strong>尽量在 \([2,n]\) 中正、负配对</strong>，配对不过来再考虑用上首项和末项。</p>
+<p>令 \(p = \sum_{c=2}^{n} \vert c_i \vert [c_i &lt; 0]\)，\(q = \sum_{c=2}^{n} c_i[c_i &gt;0]\)。</p>
+<ol>
+<li>能正负配对的对数应该是 \(\min\{p,q\}\)。还不够的，就要拿首、末来凑了。</li>
+<li>所以还需要的操作次数是此时的 \(\sum_{c=2}^{n} \vert c_i \vert\)，即 \(\vert p-q \vert\)。</li>
+</ol>
+<h4><a id="%E7%AC%AC%E4%BA%8C%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%95%B0%E5%88%97%E7%A7%8D%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第二小问：数列种数</h4>
+<p>上述第 1 步不会对 \(c_1\) 产生影响，关键是第二步如何消灭中间的数。</p>
+<p>其实很容易发现，最终 \(c_1\) 的值域范围是：</p>
+<ul>
+<li>如果 \([2,n]\) 留下的数全是正数
+<ul>
+<li>最小：\(c_1-\vert p-q \vert\)。全拿 \(c_1\) 来抵了。</li>
+<li>最大：\(c_1\)。不会更多。</li>
+</ul>
+</li>
+<li>如果 \([2,n]\) 留下的全是负数
+<ul>
+<li>最小：\(c_1\)。</li>
+<li>最大：\(c_1+ \vert p-q \vert\)。</li>
+</ul>
+</li>
+</ul>
+<p>因此数列种数就是第一小问求得的 \(\vert p-q \vert +1\)。</p>
+<p>这波啊，之前为了方便在差分数组末尾加的数也没必要了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>时间 \(\Theta(n)\)，空间 \(\Theta(1)\)。</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n;
+signed main() {
+	n = read();
+	int p = 0, q = 0, last = 0, c;
+	for (int i = 1; i &lt;= n; ++i) {
+		c = read() - last, last += c;
+		if (i &gt; 1) {
+			if (c &gt; 0) p += c;
+			else q -= c;
+		}
+	}
+	printf(&quot;%lld\n%lld\n&quot;, std::min(p, q) + abs(p - q), abs(p - q) + 1);
+	return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="tallest-cow" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tallest Cow</h2>
+<p><tc><c>0x0303</c><c>USACO</c><c>LG2879</c><e>Easy</e><t>差分</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>sb 诈骗题，假设所有牛都最高，然后把每个区间内的牛砍一刀就行了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>判重。</p>
+<pre class="line-numbers"><code class="language-cpp">#define MP std::make_pair
+
+int n, h, r;
+int c[100001];
+
+std::set&lt;std::pair&lt;int, int&gt;&gt; s;
+
+signed main() {
+	n = read(), h = read(), h = read(), r = read();
+	while (r--) {
+		int x = read(), y = read();
+		if (x &gt; y) std::swap(x, y);
+		if (s.find(MP(x, y)) == s.end()) {
+			--c[x + 1], ++c[y];
+			s.insert(MP(x, y));
+		}
+	}
+	int a = h;
+	for (int i = 1; i &lt;= n; ++i) {
+		a += c[i];
+		printf(&quot;%d\n&quot;, a);
+	}
+	return 0;
 }
 </code></pre>
 
