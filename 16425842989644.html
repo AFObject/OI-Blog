@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x032 差分 - OI Blog
+    0x04 二分 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gy6mxph0ofj301s01s3y9.jpg" type="image/png" />
@@ -83,7 +83,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x032 差分   
+                            0x04 二分   
                       </h1>
                      
                     
@@ -103,7 +103,7 @@
                                  <span class="date">2022/01/19</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
-                                      <span class="posted-in"><a href='0x03%20%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86.html'>0x03 前缀和与差分</a></span>
+                                      <span class="posted-in"><a href='0x04%20%E4%BA%8C%E5%88%86.html'>0x04 二分</a></span>
                                          
                                   
 
@@ -112,7 +112,9 @@
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
                                   
-                                    <c><a href='tag_%E5%B7%AE%E5%88%86.html'>#差分</a></c>
+                                    <c><a href='tag_%E4%BA%8C%E5%88%86.html'>#二分</a></c>
+                                  
+                                    <c><a href='tag_%E4%B8%89%E5%88%86.html'>#三分</a></c>
                                      
 
                                 </p>
@@ -122,99 +124,129 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <h2><a id="incdec-sequence" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>IncDec Sequence</h2>
-<p><tc><c>0x0302</c><e>Easy</e><t>差分</t></tc></p>
-<p>给定个长度为 \(n\) 的数列，每次可以选择一个区间同加 \(1\) 或减 \(1\)，要求最终所有数一样，求最小操作次数和满足最小操作次数的方案数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>比较显然的差分：每次操作是对差分数列 \(c\) 中任两个数一个加 \(1\)，一个减 \(1\)。最终要求差分数组的除第一项、末项均为 \(0\)。</p>
-<p>分析一下样例：<code>1 1 2 2 (0)</code></p>
-<p>差分数组为：<code>1 0 1 0 -2</code></p>
-<p>两种方案为：</p>
-<ul>
-<li>\(c_1 \gets c_1+1\)，\(c_3 \gets c_3-1\)：<code>2 0 0 0 -2</code></li>
-<li>\(c_3 \gets c_3-1,c_5 \gets c_5+1\)：<code>1  0 0 0 -1</code></li>
-</ul>
-<p>观察到：</p>
-<ul>
-<li><strong>差分数组的第一个数的种数就是最后数列的种数</strong>；</li>
-<li>差分数组的和始终保持为 \(0\)。</li>
-</ul>
-<h4><a id="%E7%AC%AC%E4%B8%80%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%9C%80%E5%B0%8F%E6%93%8D%E4%BD%9C%E6%AC%A1%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第一小问：最小操作次数</h4>
-<p>那就是<strong>尽量在 \([2,n]\) 中正、负配对</strong>，配对不过来再考虑用上首项和末项。</p>
-<p>令 \(p = \sum_{c=2}^{n} \vert c_i \vert [c_i &lt; 0]\)，\(q = \sum_{c=2}^{n} c_i[c_i &gt;0]\)。</p>
-<ol>
-<li>能正负配对的对数应该是 \(\min\{p,q\}\)。还不够的，就要拿首、末来凑了。</li>
-<li>所以还需要的操作次数是此时的 \(\sum_{c=2}^{n} \vert c_i \vert\)，即 \(\vert p-q \vert\)。</li>
-</ol>
-<h4><a id="%E7%AC%AC%E4%BA%8C%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%95%B0%E5%88%97%E7%A7%8D%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第二小问：数列种数</h4>
-<p>上述第 1 步不会对 \(c_1\) 产生影响，关键是第二步如何消灭中间的数。</p>
-<p>其实很容易发现，最终 \(c_1\) 的值域范围是：</p>
-<ul>
-<li>如果 \([2,n]\) 留下的数全是正数
-<ul>
-<li>最小：\(c_1-\vert p-q \vert\)。全拿 \(c_1\) 来抵了。</li>
-<li>最大：\(c_1\)。不会更多。</li>
-</ul>
-</li>
-<li>如果 \([2,n]\) 留下的全是负数
-<ul>
-<li>最小：\(c_1\)。</li>
-<li>最大：\(c_1+ \vert p-q \vert\)。</li>
-</ul>
-</li>
-</ul>
-<p>因此数列种数就是第一小问求得的 \(\vert p-q \vert +1\)。</p>
-<p>这波啊，之前为了方便在差分数组末尾加的数也没必要了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>时间 \(\Theta(n)\)，空间 \(\Theta(1)\)。</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
+                    <p><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gymucbb50ej30wc0dkabf.jpg" alt="" /></p>
+<h2><a id="%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88%E4%B8%8A%E7%9A%84%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>整数集合上的二分</h2>
+<p>现在开始更换成主流二分写法：</p>
+<pre class="line-numbers"><code class="language-cpp">int l, r;
+while (l &lt; r) {
+    int mid = (l + r) &gt;&gt; 1;
+    if (check(mid)) r = mid;
+    else l = mid + 1;
+}
 
-int n;
-signed main() {
-	n = read();
-	int p = 0, q = 0, last = 0, c;
+while (l &lt; r) {
+    int mid = (l + r + 1) &gt;&gt; 1;
+    if (check(mid)) l = mid;
+    else r = mid - 1;
+}
+</code></pre>
+<p>两种写法中 \(mid\) 部分不同。</p>
+<p>我们一定要选取一个正确的 \(mid\) 值，使得<strong>二分过程中任何一组 \((l, r)\) 都不同</strong>。否则，就会陷入死循环。</p>
+<p>例如，在 \([2, 3]\) 进行二分：</p>
+<ul>
+<li>如果我们把 \(mid\) 选在 \(2\)（<code>(2 + 3) &gt;&gt; 1</code>），并且转移是 \(l \gets mid\) 的话，就会陷入死循环；</li>
+<li>如果选在 \(3\)（<code>(2 + 3 + 1) &gt;&gt; 1</code>），且转移是 \(r \gets mid\) 的话，也会陷入死循环。</li>
+</ul>
+<p>因此：</p>
+<ul>
+<li>但凡选择了 \(l \gets mid + 1\)，\(r \gets mid\)，就必须选择 <code>(l + r) &gt;&gt; 1</code>；</li>
+<li>但凡选择了 \(l \gets mid\)，\(r \gets mid - 1\)，就必须选择 <code>(l + r + 1) &gt;&gt; 1</code>。</li>
+</ul>
+<p>至于转移方式的选择，就要看 \(mid\) 算在右半边还是算在左半边了。</p>
+<hr />
+<h2><a id="%E4%BA%8C%E5%88%86%E7%9A%84%E9%BB%98%E8%AE%A4%E5%80%BC" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>二分的默认值</h2>
+<ul>
+<li><code>(l + r) &gt;&gt; 1</code> 型二分不会搜到 \(r\)，可以把默认值放在 \(r\) 处。</li>
+<li><code>(l + r + 1) &gt;&gt; 1</code> 型二分不会搜到 \(l\)，可以把默认值放在 \(l\) 处。</li>
+</ul>
+<hr />
+<h2><a id="%E5%AE%9E%E6%95%B0%E5%9F%9F%E4%B8%8A%E7%9A%84%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实数域上的二分</h2>
+<p>可以采取这种方便的写法：</p>
+<pre class="line-numbers"><code class="language-cpp">for (int i = 0; i &lt; 100; ++i) {
+    double mid = (l + r) / 2;
+    if (check(mid)) r = mid;
+    else l = mid;
+}
+</code></pre>
+<hr />
+<h2><a id="%E4%B8%89%E5%88%86%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>三分法</h2>
+<p><tc><c>LG3382</c></tc></p>
+<p>在 \([l, r]\) 内任意取两个点 \(mid_l, mid_r\)。</p>
+<ul>
+<li>若前者小于后者，则要么最高点在它们中间，要么在它们右边。\(l \gets mid_l\)。</li>
+<li>反之，则 \(r \gets mid_r\)。</li>
+</ul>
+<p>注意实现时的数据类型应为 <code>double</code>。</p>
+<pre class="line-numbers"><code class="language-cpp">for (int i = 1; i &lt;= 1000000; ++i) {
+	double lMid = (r - l) / 3 + l;
+	double rMid = r - (r - l) / 3;
+	if (f(lMid) &lt; f(rMid)) l = lMid;
+	else r = rMid;
+}
+</code></pre>
+<hr />
+<h2><a id="best-cow-fences" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Best Cow Fences</h2>
+<p><tc><c>0x0401</c><c>USACO</c><e>Easy</e><t>二分答案</t><t>前缀和</t></tc></p>
+<p>给定正整数数列 \(A\)（\(N \le 10^5\)），求一个平均数最大的、长度不小于 \(L\) 的连续子段。</p>
+<h2><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h2>
+<p>平均数最大是 naive 套路了，每个数都减去平均数数列和就是 \(0\)。二分的过程中全部减去二分值 \(x\)，如果有区间和是 \(\ge 0\) 的，就说明存在平均数大于 \(\ge x\) 的区间。</p>
+<p>然后来个最大子段和（前缀和求法，其中求 \(\max_{j=1}^{i}\operatorname{pre}(j)\) 改为 \(\max_{j=1}^{i-L}\operatorname{pre}(j)\)）操作操作就行了。</p>
+<h2><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h2>
+<p>卡精度屑题属实没什么意思 /qd</p>
+<pre class="line-numbers"><code class="language-cpp">int n, len;
+double a[100001], sum[100001];
+
+bool check(double x) {
+	double ans = -1e10, min = 1e10;
 	for (int i = 1; i &lt;= n; ++i) {
-		c = read() - last, last += c;
-		if (i &gt; 1) {
-			if (c &gt; 0) p += c;
-			else q -= c;
-		}
+		sum[i] = sum[i - 1] + a[i] - x;
+		if (i &gt;= len)
+			min = std::min(min, sum[i - len]),
+			ans = std::max(ans, sum[i] - min);
 	}
-	printf(&quot;%lld\n%lld\n&quot;, std::min(p, q) + abs(p - q), abs(p - q) + 1);
+	return ans &gt;= 0;
+}
+
+signed main() {
+	std::cin &gt;&gt; n &gt;&gt; len;
+	for (int i = 1; i &lt;= n; ++i)
+		std::cin &gt;&gt; a[i];
+	double l = -20000001, r = 20000001;
+	while (r - l &gt; 1e-5) {
+		double mid = (l + r) / 2;
+		if (check(mid)) l = mid;
+		else r = mid;
+	}
+	std::cout &lt;&lt; int(r * 1000) &lt;&lt; std::endl;
 	return 0;
 }
 </code></pre>
 <hr />
-<h2><a id="tallest-cow" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tallest Cow</h2>
-<p><tc><c>0x0303</c><c>USACO</c><c>LG2879</c><e>Easy</e><t>差分</t></tc></p>
+<h2><a id="innovative-business" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Innovative Business</h2>
+<p><tc><c>0x0402</c><e>Easy+</e><t>交互</t><t>二分</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>sb 诈骗题，假设所有牛都最高，然后把每个区间内的牛砍一刀就行了。</p>
+<p>虽然原图不具有传递性但最后的结果具有传递性。所以可以进行二分。二分插入排序的方式。</p>
+<p>诈骗题。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>判重。</p>
-<pre class="line-numbers"><code class="language-cpp">#define MP std::make_pair
-
-int n, h, r;
-int c[100001];
-
-std::set&lt;std::pair&lt;int, int&gt;&gt; s;
-
-signed main() {
-	n = read(), h = read(), h = read(), r = read();
-	while (r--) {
-		int x = read(), y = read();
-		if (x &gt; y) std::swap(x, y);
-		if (s.find(MP(x, y)) == s.end()) {
-			--c[x + 1], ++c[y];
-			s.insert(MP(x, y));
+<p>二分没复习到位，调了巨久（悲</p>
+<pre class="line-numbers"><code class="language-cpp">
+class Solution {
+public:
+	std::vector&lt;int&gt; specialSort(int n) {
+		std::vector&lt;int&gt; ans = {-1, 1}; // -1 占位符。
+		for (int i = 2; i &lt;= n; ++i) {
+			int l = 0, r = i - 1; // 搜到谁代表插在谁后面。(l + r + 1) &gt;&gt; 1 型二分不会搜到 l，所以用 l 当默认值。
+			while (l &lt; r) {
+				const int mid = (l + r + 1) &gt;&gt; 1;
+				if (compare(i, ans[mid])) r = mid - 1; // i &lt; mid，i 不可能插在 mid 后面，mid 不可能是答案。
+				else l = mid; // i &gt; mid，i 可能插在 mid 后面。
+			}
+			ans.insert(ans.begin() + l + 1, i);
 		}
+		ans.erase(ans.begin());
+		return ans;
 	}
-	int a = h;
-	for (int i = 1; i &lt;= n; ++i) {
-		a += c[i];
-		printf(&quot;%d\n&quot;, a);
-	}
-	return 0;
-}
+} s;
 </code></pre>
 
                   </article>
