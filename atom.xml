@@ -4,37 +4,13 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-01-22T23:40:26+08:00</updated>
+  <updated>2022-01-22T23:46:35+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
-  
-  <entry>
-    <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
-    <link href="oi.afobject.ml/overview.html"/>
-    <updated>2022-01-07T23:06:53+08:00</updated>
-    <id>oi.afobject.ml/overview.html</id>
-    <content type="html"><![CDATA[
-<hr />
-<ul>
-<li><c>0x0101</c> 表示题目编号。根据书后索引编号。如果有明确来源则会标注，如果是 CCF 系列比赛则标注赛事和年份，除此之外的题目如果在洛谷上有题号会标注洛谷题号（因为洛谷评测比较方便）。</li>
-<li><e>Easy</e> 我能很快做出来的题目。<br />
-大约对应红 ～ 黄，典型题目：NOIP 2021 A。</li>
-<li><m>Medium</m> 我需要充足的思考才能做出来或者能轻易理解思路的题目。<br />
-大约对应思维黄 ～ 下位蓝，典型题目：CSP-S 2021 A。</li>
-<li><h>Hard</h> 我看题解都蚌埠住的那种。<br />
-大约对应上位蓝到黑。</li>
-</ul>
-<hr />
-<ul>
-<li>0x00 基本算法</li>
-</ul>
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[0x00 基本算法]]></title>
@@ -140,6 +116,30 @@ signed main() {
 	return ans;
 }
 </code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
+    <link href="oi.afobject.ml/overview.html"/>
+    <updated>2022-01-07T23:06:53+08:00</updated>
+    <id>oi.afobject.ml/overview.html</id>
+    <content type="html"><![CDATA[
+<hr />
+<ul>
+<li><c>0x0101</c> 表示题目编号。根据书后索引编号。如果有明确来源则会标注，如果是 CCF 系列比赛则标注赛事和年份，除此之外的题目如果在洛谷上有题号会标注洛谷题号（因为洛谷评测比较方便）。</li>
+<li><e>Easy</e> 我能很快做出来的题目。<br />
+大约对应红 ～ 黄，典型题目：NOIP 2021 A。</li>
+<li><m>Medium</m> 我需要充足的思考才能做出来或者能轻易理解思路的题目。<br />
+大约对应思维黄 ～ 下位蓝，典型题目：CSP-S 2021 A。</li>
+<li><h>Hard</h> 我看题解都蚌埠住的那种。<br />
+大约对应上位蓝到黑。</li>
+</ul>
+<hr />
+<ul>
+<li>0x00 基本算法</li>
+</ul>
 
 ]]></content>
   </entry>
@@ -495,6 +495,96 @@ int main() {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[0x023 分形]]></title>
+    <link href="oi.afobject.ml/16424644153749.html"/>
+    <updated>2022-01-18T08:06:55+08:00</updated>
+    <id>oi.afobject.ml/16424644153749.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="fractal-streets" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal Streets</h2>
+<p><tc><c>0x0207</c><e>Easy+</e><t>递归</t><t>模拟</t><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>一个 \(N\) 级城市可以分为 4 个 \(N-1\) 级小城市。以此为依据进行递推。</p>
+<p><strong>以城市的中心为原点，建立平面直角坐标系。</strong></p>
+<p>首先我们令 \(k = \lfloor \frac {i-1} {4^{n-1}} \rfloor\)（实现的时候所有 \(i\) 自动减一）。\(k=0\) 在第二象限，\(k=1\) 在第一象限，\(k=2\) 在第四象限，\(k=3\) 在第三象限。</p>
+<p>以第一、四象限的城市为标准图形。<strong>第二象限的是把标准图形沿 \(y\) 轴翻折然后逆时针旋转 \(90^{\circ}\)</strong>，就能把编号顺序和标准图形对应上，第三象限同理，是<strong>沿 \(y\) 轴翻折然后顺时针旋转 \(90^{\circ}\)</strong>。</p>
+<p>设以标准图形求出来的是 \((x,y)\)，\(\Delta = 2^{N-2}\)。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center">\(k\)</th>
+<th style="text-align: center">坐标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center">\(\quad0\quad\)</td>
+<td style="text-align: center">\((-y-\Delta,-x+\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad1\quad\)</td>
+<td style="text-align: center">\((x+\Delta,y+\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad2\quad\)</td>
+<td style="text-align: center">\((x+\Delta,y-\Delta)\)</td>
+</tr>
+<tr>
+<td style="text-align: center">\(\quad3\quad\)</td>
+<td style="text-align: center">\((y-\Delta,x-\Delta)\)</td>
+</tr>
+</tbody>
+</table>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>退钱，精度问题卡了巨久，，，</p>
+<p>「所有房屋在格子中间」这条有点烦，可以把每个格子长度设为 2，然后房屋在正中间。最后答案乘以 5。</p>
+<p>虽然开了 <code>__int128</code> 以后大概不用这样。</p>
+<pre class="line-numbers"><code class="language-cpp">#define sq(x) ((x) * (x))
+#define int __int128
+#define x first
+#define y second
+
+int T, n, s, d;
+
+int read() {
+    int ans = 0, neg = 1; char ch = getchar();
+    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
+    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
+    return ans * neg;
+}
+
+std::pair&lt;int, int&gt; solve(int n, int i) {
+	if (n == 0) return std::make_pair(0, 0);
+	if (n == 1) {
+		if (i == 0) return std::make_pair(-1, 1);
+		if (i == 1) return std::make_pair(1, 1);
+		if (i == 2) return std::make_pair(1, -1);
+		if (i == 3) return std::make_pair(-1, -1);
+	}
+	const int k = i / (1ll &lt;&lt; (2 * n - 2)),
+				 r = i % (1ll &lt;&lt; (2 * n - 2)),
+				 d = (1ll &lt;&lt; (n - 2)) * 2ll;
+	auto a = solve(n - 1, r);
+	if (k == 0) return std::make_pair(-a.y - d, -a.x + d);
+	if (k == 1) return std::make_pair(a.x + d, a.y + d);
+	if (k == 2) return std::make_pair(a.x + d, a.y - d);
+	if (k == 3) return std::make_pair(a.y - d, a.x - d);
+	return std::make_pair(0, 0);
+}
+
+signed main() {
+	T = read();
+	while (T--) {
+		n = read(), s = read(), d = read();
+		auto l = solve(n, s - 1), r = solve(n, d - 1);
+		printf(&quot;%.0lf\n&quot;, (double)sqrt(sq(r.x - l.x) + sq(r.y - l.y)) * 5);
+	}
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[0x031 前缀和]]></title>
     <link href="oi.afobject.ml/16424780591373.html"/>
     <updated>2022-01-18T11:54:19+08:00</updated>
@@ -556,6 +646,110 @@ int main() {
 		for (int y = 0; y + m - 1 &lt;= 5000; ++y)
 			max = std::max(max, sum(x, y, x + m - 1, y + m - 1));
 	printf(&quot;%d\n&quot;, max);
+	return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x032 差分]]></title>
+    <link href="oi.afobject.ml/16425501421616.html"/>
+    <updated>2022-01-19T07:55:42+08:00</updated>
+    <id>oi.afobject.ml/16425501421616.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="incdec-sequence" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>IncDec Sequence</h2>
+<p><tc><c>0x0302</c><e>Easy</e><t>差分</t></tc></p>
+<p>给定个长度为 \(n\) 的数列，每次可以选择一个区间同加 \(1\) 或减 \(1\)，要求最终所有数一样，求最小操作次数和满足最小操作次数的方案数。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>比较显然的差分：每次操作是对差分数列 \(c\) 中任两个数一个加 \(1\)，一个减 \(1\)。最终要求差分数组的除第一项、末项均为 \(0\)。</p>
+<p>分析一下样例：<code>1 1 2 2 (0)</code></p>
+<p>差分数组为：<code>1 0 1 0 -2</code></p>
+<p>两种方案为：</p>
+<ul>
+<li>\(c_1 \gets c_1+1\)，\(c_3 \gets c_3-1\)：<code>2 0 0 0 -2</code></li>
+<li>\(c_3 \gets c_3-1,c_5 \gets c_5+1\)：<code>1  0 0 0 -1</code></li>
+</ul>
+<p>观察到：</p>
+<ul>
+<li><strong>差分数组的第一个数的种数就是最后数列的种数</strong>；</li>
+<li>差分数组的和始终保持为 \(0\)。</li>
+</ul>
+<h4><a id="%E7%AC%AC%E4%B8%80%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%9C%80%E5%B0%8F%E6%93%8D%E4%BD%9C%E6%AC%A1%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第一小问：最小操作次数</h4>
+<p>那就是<strong>尽量在 \([2,n]\) 中正、负配对</strong>，配对不过来再考虑用上首项和末项。</p>
+<p>令 \(p = \sum_{c=2}^{n} \vert c_i \vert [c_i &lt; 0]\)，\(q = \sum_{c=2}^{n} c_i[c_i &gt;0]\)。</p>
+<ol>
+<li>能正负配对的对数应该是 \(\min\{p,q\}\)。还不够的，就要拿首、末来凑了。</li>
+<li>所以还需要的操作次数是此时的 \(\sum_{c=2}^{n} \vert c_i \vert\)，即 \(\vert p-q \vert\)。</li>
+</ol>
+<h4><a id="%E7%AC%AC%E4%BA%8C%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%95%B0%E5%88%97%E7%A7%8D%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第二小问：数列种数</h4>
+<p>上述第 1 步不会对 \(c_1\) 产生影响，关键是第二步如何消灭中间的数。</p>
+<p>其实很容易发现，最终 \(c_1\) 的值域范围是：</p>
+<ul>
+<li>如果 \([2,n]\) 留下的数全是正数
+<ul>
+<li>最小：\(c_1-\vert p-q \vert\)。全拿 \(c_1\) 来抵了。</li>
+<li>最大：\(c_1\)。不会更多。</li>
+</ul>
+</li>
+<li>如果 \([2,n]\) 留下的全是负数
+<ul>
+<li>最小：\(c_1\)。</li>
+<li>最大：\(c_1+ \vert p-q \vert\)。</li>
+</ul>
+</li>
+</ul>
+<p>因此数列种数就是第一小问求得的 \(\vert p-q \vert +1\)。</p>
+<p>这波啊，之前为了方便在差分数组末尾加的数也没必要了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>时间 \(\Theta(n)\)，空间 \(\Theta(1)\)。</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n;
+signed main() {
+	n = read();
+	int p = 0, q = 0, last = 0, c;
+	for (int i = 1; i &lt;= n; ++i) {
+		c = read() - last, last += c;
+		if (i &gt; 1) {
+			if (c &gt; 0) p += c;
+			else q -= c;
+		}
+	}
+	printf(&quot;%lld\n%lld\n&quot;, std::min(p, q) + abs(p - q), abs(p - q) + 1);
+	return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="tallest-cow" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tallest Cow</h2>
+<p><tc><c>0x0303</c><c>USACO</c><c>LG2879</c><e>Easy</e><t>差分</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>sb 诈骗题，假设所有牛都最高，然后把每个区间内的牛砍一刀就行了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>判重。</p>
+<pre class="line-numbers"><code class="language-cpp">#define MP std::make_pair
+
+int n, h, r;
+int c[100001];
+
+std::set&lt;std::pair&lt;int, int&gt;&gt; s;
+
+signed main() {
+	n = read(), h = read(), h = read(), r = read();
+	while (r--) {
+		int x = read(), y = read();
+		if (x &gt; y) std::swap(x, y);
+		if (s.find(MP(x, y)) == s.end()) {
+			--c[x + 1], ++c[y];
+			s.insert(MP(x, y));
+		}
+	}
+	int a = h;
+	for (int i = 1; i &lt;= n; ++i) {
+		a += c[i];
+		printf(&quot;%d\n&quot;, a);
+	}
 	return 0;
 }
 </code></pre>
@@ -692,200 +886,6 @@ public:
 		return ans;
 	}
 } s;
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x023 分形]]></title>
-    <link href="oi.afobject.ml/16424644153749.html"/>
-    <updated>2022-01-18T08:06:55+08:00</updated>
-    <id>oi.afobject.ml/16424644153749.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="fractal-streets" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal Streets</h2>
-<p><tc><c>0x0207</c><e>Easy+</e><t>递归</t><t>模拟</t><t>数学</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>一个 \(N\) 级城市可以分为 4 个 \(N-1\) 级小城市。以此为依据进行递推。</p>
-<p><strong>以城市的中心为原点，建立平面直角坐标系。</strong></p>
-<p>首先我们令 \(k = \lfloor \frac {i-1} {4^{n-1}} \rfloor\)（实现的时候所有 \(i\) 自动减一）。\(k=0\) 在第二象限，\(k=1\) 在第一象限，\(k=2\) 在第四象限，\(k=3\) 在第三象限。</p>
-<p>以第一、四象限的城市为标准图形。<strong>第二象限的是把标准图形沿 \(y\) 轴翻折然后逆时针旋转 \(90^{\circ}\)</strong>，就能把编号顺序和标准图形对应上，第三象限同理，是<strong>沿 \(y\) 轴翻折然后顺时针旋转 \(90^{\circ}\)</strong>。</p>
-<p>设以标准图形求出来的是 \((x,y)\)，\(\Delta = 2^{N-2}\)。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: center">\(k\)</th>
-<th style="text-align: center">坐标</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center">\(\quad0\quad\)</td>
-<td style="text-align: center">\((-y-\Delta,-x+\Delta)\)</td>
-</tr>
-<tr>
-<td style="text-align: center">\(\quad1\quad\)</td>
-<td style="text-align: center">\((x+\Delta,y+\Delta)\)</td>
-</tr>
-<tr>
-<td style="text-align: center">\(\quad2\quad\)</td>
-<td style="text-align: center">\((x+\Delta,y-\Delta)\)</td>
-</tr>
-<tr>
-<td style="text-align: center">\(\quad3\quad\)</td>
-<td style="text-align: center">\((y-\Delta,x-\Delta)\)</td>
-</tr>
-</tbody>
-</table>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>退钱，精度问题卡了巨久，，，</p>
-<p>「所有房屋在格子中间」这条有点烦，可以把每个格子长度设为 2，然后房屋在正中间。最后答案乘以 5。</p>
-<p>虽然开了 <code>__int128</code> 以后大概不用这样。</p>
-<pre class="line-numbers"><code class="language-cpp">#define sq(x) ((x) * (x))
-#define int __int128
-#define x first
-#define y second
-
-int T, n, s, d;
-
-int read() {
-    int ans = 0, neg = 1; char ch = getchar();
-    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
-    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
-    return ans * neg;
-}
-
-std::pair&lt;int, int&gt; solve(int n, int i) {
-	if (n == 0) return std::make_pair(0, 0);
-	if (n == 1) {
-		if (i == 0) return std::make_pair(-1, 1);
-		if (i == 1) return std::make_pair(1, 1);
-		if (i == 2) return std::make_pair(1, -1);
-		if (i == 3) return std::make_pair(-1, -1);
-	}
-	const int k = i / (1ll &lt;&lt; (2 * n - 2)),
-				 r = i % (1ll &lt;&lt; (2 * n - 2)),
-				 d = (1ll &lt;&lt; (n - 2)) * 2ll;
-	auto a = solve(n - 1, r);
-	if (k == 0) return std::make_pair(-a.y - d, -a.x + d);
-	if (k == 1) return std::make_pair(a.x + d, a.y + d);
-	if (k == 2) return std::make_pair(a.x + d, a.y - d);
-	if (k == 3) return std::make_pair(a.y - d, a.x - d);
-	return std::make_pair(0, 0);
-}
-
-signed main() {
-	T = read();
-	while (T--) {
-		n = read(), s = read(), d = read();
-		auto l = solve(n, s - 1), r = solve(n, d - 1);
-		printf(&quot;%.0lf\n&quot;, (double)sqrt(sq(r.x - l.x) + sq(r.y - l.y)) * 5);
-	}
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x032 差分]]></title>
-    <link href="oi.afobject.ml/16425501421616.html"/>
-    <updated>2022-01-19T07:55:42+08:00</updated>
-    <id>oi.afobject.ml/16425501421616.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="incdec-sequence" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>IncDec Sequence</h2>
-<p><tc><c>0x0302</c><e>Easy</e><t>差分</t></tc></p>
-<p>给定个长度为 \(n\) 的数列，每次可以选择一个区间同加 \(1\) 或减 \(1\)，要求最终所有数一样，求最小操作次数和满足最小操作次数的方案数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>比较显然的差分：每次操作是对差分数列 \(c\) 中任两个数一个加 \(1\)，一个减 \(1\)。最终要求差分数组的除第一项、末项均为 \(0\)。</p>
-<p>分析一下样例：<code>1 1 2 2 (0)</code></p>
-<p>差分数组为：<code>1 0 1 0 -2</code></p>
-<p>两种方案为：</p>
-<ul>
-<li>\(c_1 \gets c_1+1\)，\(c_3 \gets c_3-1\)：<code>2 0 0 0 -2</code></li>
-<li>\(c_3 \gets c_3-1,c_5 \gets c_5+1\)：<code>1  0 0 0 -1</code></li>
-</ul>
-<p>观察到：</p>
-<ul>
-<li><strong>差分数组的第一个数的种数就是最后数列的种数</strong>；</li>
-<li>差分数组的和始终保持为 \(0\)。</li>
-</ul>
-<h4><a id="%E7%AC%AC%E4%B8%80%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%9C%80%E5%B0%8F%E6%93%8D%E4%BD%9C%E6%AC%A1%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第一小问：最小操作次数</h4>
-<p>那就是<strong>尽量在 \([2,n]\) 中正、负配对</strong>，配对不过来再考虑用上首项和末项。</p>
-<p>令 \(p = \sum_{c=2}^{n} \vert c_i \vert [c_i &lt; 0]\)，\(q = \sum_{c=2}^{n} c_i[c_i &gt;0]\)。</p>
-<ol>
-<li>能正负配对的对数应该是 \(\min\{p,q\}\)。还不够的，就要拿首、末来凑了。</li>
-<li>所以还需要的操作次数是此时的 \(\sum_{c=2}^{n} \vert c_i \vert\)，即 \(\vert p-q \vert\)。</li>
-</ol>
-<h4><a id="%E7%AC%AC%E4%BA%8C%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%95%B0%E5%88%97%E7%A7%8D%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第二小问：数列种数</h4>
-<p>上述第 1 步不会对 \(c_1\) 产生影响，关键是第二步如何消灭中间的数。</p>
-<p>其实很容易发现，最终 \(c_1\) 的值域范围是：</p>
-<ul>
-<li>如果 \([2,n]\) 留下的数全是正数
-<ul>
-<li>最小：\(c_1-\vert p-q \vert\)。全拿 \(c_1\) 来抵了。</li>
-<li>最大：\(c_1\)。不会更多。</li>
-</ul>
-</li>
-<li>如果 \([2,n]\) 留下的全是负数
-<ul>
-<li>最小：\(c_1\)。</li>
-<li>最大：\(c_1+ \vert p-q \vert\)。</li>
-</ul>
-</li>
-</ul>
-<p>因此数列种数就是第一小问求得的 \(\vert p-q \vert +1\)。</p>
-<p>这波啊，之前为了方便在差分数组末尾加的数也没必要了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>时间 \(\Theta(n)\)，空间 \(\Theta(1)\)。</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int n;
-signed main() {
-	n = read();
-	int p = 0, q = 0, last = 0, c;
-	for (int i = 1; i &lt;= n; ++i) {
-		c = read() - last, last += c;
-		if (i &gt; 1) {
-			if (c &gt; 0) p += c;
-			else q -= c;
-		}
-	}
-	printf(&quot;%lld\n%lld\n&quot;, std::min(p, q) + abs(p - q), abs(p - q) + 1);
-	return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="tallest-cow" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tallest Cow</h2>
-<p><tc><c>0x0303</c><c>USACO</c><c>LG2879</c><e>Easy</e><t>差分</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>sb 诈骗题，假设所有牛都最高，然后把每个区间内的牛砍一刀就行了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>判重。</p>
-<pre class="line-numbers"><code class="language-cpp">#define MP std::make_pair
-
-int n, h, r;
-int c[100001];
-
-std::set&lt;std::pair&lt;int, int&gt;&gt; s;
-
-signed main() {
-	n = read(), h = read(), h = read(), r = read();
-	while (r--) {
-		int x = read(), y = read();
-		if (x &gt; y) std::swap(x, y);
-		if (s.find(MP(x, y)) == s.end()) {
-			--c[x + 1], ++c[y];
-			s.insert(MP(x, y));
-		}
-	}
-	int a = h;
-	for (int i = 1; i &lt;= n; ++i) {
-		a += c[i];
-		printf(&quot;%d\n&quot;, a);
-	}
-	return 0;
-}
 </code></pre>
 
 ]]></content>
