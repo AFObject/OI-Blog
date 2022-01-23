@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-01-22T23:47:45+08:00</updated>
+  <updated>2022-01-23T19:42:27+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -121,30 +121,6 @@ signed main() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
-    <link href="oi.afobject.ml/overview.html"/>
-    <updated>2022-01-07T23:06:53+08:00</updated>
-    <id>oi.afobject.ml/overview.html</id>
-    <content type="html"><![CDATA[
-<hr />
-<ul>
-<li><c>0x0101</c> 表示题目编号。根据书后索引编号。如果有明确来源则会标注，如果是 CCF 系列比赛则标注赛事和年份，除此之外的题目如果在洛谷上有题号会标注洛谷题号（因为洛谷评测比较方便）。</li>
-<li><e>Easy</e> 我能很快做出来的题目。<br />
-大约对应红 ～ 黄，典型题目：NOIP 2021 A。</li>
-<li><m>Medium</m> 我需要充足的思考才能做出来或者能轻易理解思路的题目。<br />
-大约对应思维黄 ～ 下位蓝，典型题目：CSP-S 2021 A。</li>
-<li><h>Hard</h> 我看题解都蚌埠住的那种。<br />
-大约对应上位蓝到黑。</li>
-</ul>
-<hr />
-<ul>
-<li>0x00 基本算法</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[0x012 二进制状态压缩]]></title>
     <link href="oi.afobject.ml/0x012.html"/>
     <updated>2022-01-07T22:44:57+08:00</updated>
@@ -222,6 +198,30 @@ int main() {
 	return 0;
 }
 </code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
+    <link href="oi.afobject.ml/overview.html"/>
+    <updated>2022-01-07T23:06:53+08:00</updated>
+    <id>oi.afobject.ml/overview.html</id>
+    <content type="html"><![CDATA[
+<hr />
+<ul>
+<li><c>0x0101</c> 表示题目编号。根据书后索引编号。如果有明确来源则会标注，如果是 CCF 系列比赛则标注赛事和年份，除此之外的题目如果在洛谷上有题号会标注洛谷题号（因为洛谷评测比较方便）。</li>
+<li><e>Easy</e> 我能很快做出来的题目。<br />
+大约对应红 ～ 黄，典型题目：NOIP 2021 A。</li>
+<li><m>Medium</m> 我需要充足的思考才能做出来或者能轻易理解思路的题目。<br />
+大约对应思维黄 ～ 下位蓝，典型题目：CSP-S 2021 A。</li>
+<li><h>Hard</h> 我看题解都蚌埠住的那种。<br />
+大约对应上位蓝到黑。</li>
+</ul>
+<hr />
+<ul>
+<li>0x00 基本算法</li>
+</ul>
 
 ]]></content>
   </entry>
@@ -886,6 +886,194 @@ public:
 		return ans;
 	}
 } s;
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x051 离散化]]></title>
+    <link href="oi.afobject.ml/16429063772357.html"/>
+    <updated>2022-01-23T10:52:57+08:00</updated>
+    <id>oi.afobject.ml/16429063772357.html</id>
+    <content type="html"><![CDATA[
+<p>即把一堆值域巨大的数映射到更小的有限集合中。</p>
+<p>一般有以下几个步骤：</p>
+<ul>
+<li>排序；</li>
+<li>去重；</li>
+<li>得到原数在去重数组中的排名（第几小）。</li>
+</ul>
+<pre class="line-numbers"><code class="language-cpp">for (int i = 1; i &lt;= n; ++i)
+    b[i] = a[i];
+std::sort(b + 1, b + n + 1);
+const int c = std::unique(b + 1, b + n + 1) - b;
+for (int i = 1; i &lt;= n; ++i)
+    printf(&quot;%d &quot;, (int)(std::lower_bound(b + 1, b + c + 1, a[i]) - b));
+</code></pre>
+<hr />
+<h2><a id="cinema" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cinema</h2>
+<p><tc><c>0x0501</c><c>CF670C</c><e>Easy-</e><t>排序</t><t>离散化</t></tc></p>
+<p>有 \(n\) 个人和 \(m\) 场电影，一个人只会一种语言，一场电影会有原声语言和字幕语言。选择一场电影，在最大化能理解原声的人数的情况下最大化能理解字幕的人数。</p>
+<p>其中语言用 \(1\) 到 \(10^9\) 的数来表示。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>首先离散化语言，并统计每种语言的人数。</p>
+<p>把电影按照第一关键字（理解其原声的人数）和第二关键字（理解其字母的人数）排序。当然直接 \(O(n)\) 做也是可以的。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, m;
+std::vector&lt;int&gt; lang;
+int a[200001];
+int d0[200001], d1[200001], d2[200001];
+int buc[600001];
+
+bool comp(int lhs, int rhs) {
+    if (buc[d1[lhs]] == buc[d1[rhs]])
+        return buc[d2[lhs]] &gt; buc[d2[rhs]];
+    return buc[d1[lhs]] &gt; buc[d1[rhs]];
+}
+
+int main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i)
+        a[i] = read(), lang.push_back(a[i]);
+    m = read();
+    for (int i = 1; i &lt;= m; ++i)
+        d1[i] = read(), lang.push_back(d1[i]);
+    for (int i = 1; i &lt;= m; ++i)    
+        d2[i] = read(), lang.push_back(d2[i]);
+    std::sort(lang.begin(), lang.end());
+    auto p = std::unique(lang.begin(), lang.end());
+    for (int i = 1; i &lt;= n; ++i)
+        ++buc[std::lower_bound(lang.begin(), p, a[i]) - lang.begin()];
+    for (int i = 1; i &lt;= m; ++i)
+        d0[i] = i,
+        d1[i] = std::lower_bound(lang.begin(), p, d1[i]) - lang.begin(),
+        d2[i] = std::lower_bound(lang.begin(), p, d2[i]) - lang.begin();
+    std::sort(d0 + 1, d0 + m + 1, comp);
+    printf(&quot;%d\n&quot;, d0[1]);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x052 中位数]]></title>
+    <link href="oi.afobject.ml/16429095044252.html"/>
+    <updated>2022-01-23T11:45:04+08:00</updated>
+    <id>oi.afobject.ml/16429095044252.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E8%B4%A7%E4%BB%93%E9%80%89%E5%9D%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>货仓选址</h2>
+<p><tc><c>0x0502</c><e>Easy-</e><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>先排序，然后开始「换根」。</p>
+<p>假如从建在 \(i\) 处转移到建在 \(i + 1\) 处，则 \(i\) 左边的商店很倒霉，右边的商店获益。反之同理。</p>
+<p>最好使得左右商店均衡。</p>
+<p>因此如果是奇数就建在中位数处，否则哪怕左右移动 1 毫米就会有超过一半的商店开始叫了。</p>
+<p>如果是偶数，同理，建在中间的两个商店的区间内就行了。</p>
+<p>答案是排序后的</p>
+\[\sum_{i=1}^n \lvert a_i-a_{\lfloor \frac n 2 \rfloor} \rvert
+\]
+<hr />
+<h2><a id="%E4%B8%83%E5%A4%95%E7%A5%AD" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>七夕祭</h2>
+<p><tc><c>0x0503</c><m>Medium+</m><t>前缀和</t><t>数学</t></tc></p>
+<p>\(n \times m\) 的方格中，有 \(t\) 个点为「目标点」。通过一定次数的<strong>相邻</strong>上下、左右格内的交换，使得<strong>每行、每列内的目标点数相同</strong>。但这里比较特殊，一行或一列可以看成一个<strong>环</strong>，首行和末行在同一列上的格子可以交换，首列和末列在同一行上的格子可以交换。</p>
+<p>求最少的交换次数。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>拆分问题：</p>
+<ul>
+<li>通过最少次数的左右交换使每列目标点数相同。</li>
+<li>通过最少次数的上下交换使每行目标点数相同。</li>
+</ul>
+<p>这两个互不干涉。</p>
+<blockquote>
+<h4><a id="%E7%AE%80%E5%8C%96%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>简化问题</h4>
+<p>一条长度为 \(n\) 的数组 \(a\)，要求最终每个数都相等。一次操作可以将相邻两个数一个 \(+1\) 一个 \(-1\)，求最小的操作次数。</p>
+<hr />
+<ul>
+<li>首先要求 \(n \mid \sum a_i\)，否则显然无解。</li>
+<li>否则，从第一个数开始考虑：
+<ul>
+<li>如果多了，给 2；</li>
+<li>少了，2 给。</li>
+</ul>
+</li>
+<li>同理继续。如果出现负数也无所谓，反正操作顺序可以任意调换。</li>
+</ul>
+<p>计算答案：</p>
+<ul>
+<li>由第一个数发起的操作次数为 \(\lvert a_1 - d \rvert\)，其中 \(d = \dfrac{\sum a_i}{n}\)；</li>
+<li>由第二个数发起的操作次数为 \(\lvert a_1 + a_2 - 2 \cdot d \rvert\)；</li>
+</ul>
+<p><strong>总操作次数为 \(\sum\limits_{i=1}^n \lvert \operatorname{pre_a}(i)-i \cdot d \rvert\)。</strong></p>
+<p>如果一开始每个人就减去 \(d\)（设减去后的数组为 \(b\)），则<strong>总操作次数就是 \(\sum_\limits{i=1}^n\lvert \operatorname{pre_b}(i)_ \rvert\)。</strong></p>
+</blockquote>
+<p>与本题的任意一个子问题的区别就在于本题可以成环。很容易想到经典的破环成链，下面来验证正确性。</p>
+<p>我们观察到在简化问题中，<strong>即使允许首项和末项之间的操作，也不会对最优结果产生任何影响</strong>。一个数比 \(d\) 多的部分就雷打不动要移走，移走的时候直接顺着 \(1,2,3, \ldots ,n\) 的顺序就行了，没必要非得直接跳到 \(n\)。所以<strong>破环成链</strong>是正确的。</p>
+<p>当破环破在第 \(k\) 个数之后时，则长成这样：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center">转化后的 \(b\) 数组</th>
+<th>\(b_{k+1}\)</th>
+<th>\(b_{k+2}\)</th>
+<th style="text-align: left">\(b_n\)</th>
+<th style="text-align: left">\(b_1\)</th>
+<th style="text-align: left">\(b_k\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center">前缀和 \(p\) 数组</td>
+<td>\(p_{k+1}-p_k\)</td>
+<td>\(p_{k+2}-p_k\)</td>
+<td style="text-align: left">\(p_n-p_k\)</td>
+<td style="text-align: left">\(p_1+p_n-p_k\)</td>
+<td style="text-align: left">\(p_n\)</td>
+</tr>
+</tbody>
+</table>
+<p>很容易发现，总操作次数是 \(\sum\limits_{i=1}^n \lvert p_i-p_k \rvert\)。</p>
+<p>震惊，就是上一题的货仓选址！将 \(p\) 排序后，\(k\) 应取中位数。</p>
+<p>神 仙 题！</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>大数据题都开 <code>long long</code>。</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+
+int n, m, t;
+int r[100001], c[100001];
+
+int p[100001];
+int solve(int n, int a[]) {
+    int sum = 0;
+    for (int i = 1; i &lt;= n; ++i)
+        sum += a[i];
+    if (sum % n)
+        return -1;
+    const int d = sum / n;
+    for (int i = 1; i &lt;= n; ++i)
+        p[i] = p[i - 1] + a[i] - d;
+    std::sort(p + 1, p + n + 1);
+    int ans = 0;
+    for (int i = 1; i &lt;= n; ++i)
+        ans += abs(p[i] - p[(n + 1) / 2]);
+    return ans;
+}
+
+signed main() {
+    n = read(), m = read(), t = read();
+    while (t--)
+        ++r[read()], ++c[read()];
+    int x = solve(n, r), y = solve(m, c);
+    if (x == -1 &amp;&amp; y == -1) puts(&quot;impossible&quot;);
+    else if (x == -1) printf(&quot;column %lld\n&quot;, y);
+    else if (y == -1) printf(&quot;row %lld\n&quot;, x);
+    else printf(&quot;both %lld\n&quot;, x + y);
+    return 0;
+}
 </code></pre>
 
 ]]></content>

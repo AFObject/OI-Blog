@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    差分 - OI Blog
+    0x051 离散化 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg" type="image/png" />
@@ -73,135 +73,133 @@
             </nav>
       </div>
 
- 
- <div class="hero-body ct-body">
-    <div class="container">
-          <h1 class="title-only">
-                <span>#差分</span>
-          </h1>
-    </div>
-  </div>
-</section>
-<section class="ct-body">
+ <div class="hero-body ct-body"></div>
+      
+    </section>
+    <section class="ct-body">
       <div class="container">
-          <div class="columns is-variable bd-klmn-columns is-4">
-              <div class="column is-two-thirds">
-               <div class="post-body">
-                  <div class="card archives">
+          <div class="columns is-variable bd-klmn-columns is-4 is-centered">
+              <div class="column is-four-fifths">
+                  <div class="post-body single-content">
                     
+                    <h1 class="title">
+                            0x051 离散化   
+                      </h1>
+                     
                     
-                        
-                       <div class="card-content">
-                         <div class="content">
-                          <a href="16425501421616.html">
-                            <h2 class="title">0x032 差分</h2>
-                          </a>
-                             <p class="des">
-                             <span class="date">2022/01/19</span>
-                              <span class="tran-posted-in">posted in</span>&nbsp; 
-                              
-                                  <span class="posted-in"><a href='0x03.html'>0x03 前缀和与差分</a></span>
-                                     
-                             
-                              &nbsp;
-                                  
-                              <span class="tran-tags">Tags:</span>&nbsp;
-                              
-                                <c><a href='tag_%E5%B7%AE%E5%88%86.html'>#差分</a></c>
+                      <div class="media">
+                            
+                            <figure class="media-left">
+                              <p class="image is-48x48">
                                 
-                           </p>
-                          </div>
-                       </div>
-                     
-          </div><!-- end card -->
-        </div><!-- end post body -->
+                                  <img class="is-rounded" src="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg">
+                                
+                              </p>
+                            </figure>
+                            
+                            <div class="media-content">
+                              <div class="content">
+                                <p>
+                                 <span class="date">2022/01/23</span>
+                                  <span class="tran-posted-in">posted in</span>&nbsp; 
+                                  
+                                      <span class="posted-in"><a href='0x05.html'>0x05 排序</a></span>
+                                         
+                                  
 
-              </div><!-- end column -->
-              <div class="column">
-                    <div class="card">
-                      <header class="card-header">
-                        <p class="card-header-title">
-                           <span class="tran-site-categories">Categories</span> 
-                        </p>
-                     
-                      </header>
-                      <div class="card-content site-categories">
-                        <div class="content"> 
-                          <ul>
-                          
-                                <li><a href="0x00.html">0x00 基本算法</a>
-                                   <ul> 
+                                   
+                                      
+                                  <br />
+                                  <span class="tran-tags">Tags:</span>&nbsp;
                                   
-                                        <li><a href="0x01.html">0x01 位运算</a></li>
+                                    <c><a href='tag_%E6%8E%92%E5%BA%8F.html'>#排序</a></c>
                                   
-                                        <li><a href="0x02.html">0x02 递推与递归</a></li>
-                                  
-                                        <li><a href="0x03.html">0x03 前缀和与差分</a></li>
-                                  
-                                        <li><a href="0x04.html">0x04 二分</a></li>
-                                  
-                                        <li><a href="0x05.html">0x05 排序</a></li>
-                                  
-                                   </ul> 
-                                </li> 
-                          
-                          </ul>
-                        </div>
-                      </div>
-                     
+                                    <c><a href='tag_%E7%A6%BB%E6%95%A3%E5%8C%96.html'>#离散化</a></c>
+                                     
+
+                                </p>
+                              </div>
+                            </div>
+                         
                     </div>
+                </div>
+                  <article class="markdown-body single-content">
+                    <p>即把一堆值域巨大的数映射到更小的有限集合中。</p>
+<p>一般有以下几个步骤：</p>
+<ul>
+<li>排序；</li>
+<li>去重；</li>
+<li>得到原数在去重数组中的排名（第几小）。</li>
+</ul>
+<pre class="line-numbers"><code class="language-cpp">for (int i = 1; i &lt;= n; ++i)
+    b[i] = a[i];
+std::sort(b + 1, b + n + 1);
+const int c = std::unique(b + 1, b + n + 1) - b;
+for (int i = 1; i &lt;= n; ++i)
+    printf(&quot;%d &quot;, (int)(std::lower_bound(b + 1, b + c + 1, a[i]) - b));
+</code></pre>
+<hr />
+<h2><a id="cinema" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cinema</h2>
+<p><tc><c>0x0501</c><c>CF670C</c><e>Easy-</e><t>排序</t><t>离散化</t></tc></p>
+<p>有 \(n\) 个人和 \(m\) 场电影，一个人只会一种语言，一场电影会有原声语言和字幕语言。选择一场电影，在最大化能理解原声的人数的情况下最大化能理解字幕的人数。</p>
+<p>其中语言用 \(1\) 到 \(10^9\) 的数来表示。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>首先离散化语言，并统计每种语言的人数。</p>
+<p>把电影按照第一关键字（理解其原声的人数）和第二关键字（理解其字母的人数）排序。当然直接 \(O(n)\) 做也是可以的。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, m;
+std::vector&lt;int&gt; lang;
+int a[200001];
+int d0[200001], d1[200001], d2[200001];
+int buc[600001];
 
-                    <div class="card">
-                        <header class="card-header">
-                          <p class="card-header-title">
-                              <span class="tran-site-tags">Tags</span> 
-                          </p>
-                       
-                        </header>
-                        <div class="card-content site-tags">
-                          <div class="content">
-                           <div class="tags">
-                            
-                              <a class="tag is-link is-light" href="tag_DP.html">#DP</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E4%B8%89%E5%88%86.html">#三分</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E4%BA%8C%E5%88%86.html">#二分</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html">#位运算</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E5%88%86%E6%B2%BB.html">#分治</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E5%89%8D%E7%BC%80%E5%92%8C.html">#前缀和</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E5%B7%AE%E5%88%86.html">#差分</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E6%8E%92%E5%BA%8F.html">#排序</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E6%90%9C%E7%B4%A2.html">#搜索</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E6%95%B0%E5%AD%A6.html">#数学</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E6%A8%A1%E6%8B%9F.html">#模拟</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E7%A6%BB%E6%95%A3%E5%8C%96.html">#离散化</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E8%B4%AA%E5%BF%83.html">#贪心</a> 
-                            
-                              <a class="tag is-link is-light" href="tag_%E9%80%92%E5%BD%92.html">#递归</a> 
-                            
-                           </div>
-                             
-                          </div>
-                        </div>
-                       
-                      </div>
+bool comp(int lhs, int rhs) {
+    if (buc[d1[lhs]] == buc[d1[rhs]])
+        return buc[d2[lhs]] &gt; buc[d2[rhs]];
+    return buc[d1[lhs]] &gt; buc[d1[rhs]];
+}
+
+int main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i)
+        a[i] = read(), lang.push_back(a[i]);
+    m = read();
+    for (int i = 1; i &lt;= m; ++i)
+        d1[i] = read(), lang.push_back(d1[i]);
+    for (int i = 1; i &lt;= m; ++i)    
+        d2[i] = read(), lang.push_back(d2[i]);
+    std::sort(lang.begin(), lang.end());
+    auto p = std::unique(lang.begin(), lang.end());
+    for (int i = 1; i &lt;= n; ++i)
+        ++buc[std::lower_bound(lang.begin(), p, a[i]) - lang.begin()];
+    for (int i = 1; i &lt;= m; ++i)
+        d0[i] = i,
+        d1[i] = std::lower_bound(lang.begin(), p, d1[i]) - lang.begin(),
+        d2[i] = std::lower_bound(lang.begin(), p, d2[i]) - lang.begin();
+    std::sort(d0 + 1, d0 + m + 1, comp);
+    printf(&quot;%d\n&quot;, d0[1]);
+    return 0;
+}
+</code></pre>
+
+                  </article>
+                  <div class="comments-wrap">
+                    <div class="share-comments">
+                      
+
+                      
+
+                      
+                    </div>
+                  </div><!-- end comments wrap -->
               </div>
-            </div>
+            </div><!-- end columns -->
+      </div><!-- end container -->
+    </section>
 
-          
-      </div>
-    </section>    <footer class="footer">
+
+
+    <footer class="footer">
         <div class="content has-text-centered">
           <p>
               Copyright &copy; 2019
@@ -212,6 +210,9 @@
       </footer>
 
 
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
 
   
 
@@ -226,6 +227,8 @@
 
 
 
+
+<script src="asset/prism.js"></script>
 
 
 
