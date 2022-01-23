@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-01-23T19:42:27+08:00</updated>
+  <updated>2022-01-23T19:53:32+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -13,13 +13,24 @@
   <generator uri="http://www.mweb.im/">MWeb</generator>
   
   <entry>
-    <title type="html"><![CDATA[0x00 基本算法]]></title>
-    <link href="oi.afobject.ml/0x00.html"/>
-    <updated>2022-01-07T23:05:09+08:00</updated>
-    <id>oi.afobject.ml/0x00.html</id>
+    <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
+    <link href="oi.afobject.ml/overview.html"/>
+    <updated>2022-01-07T23:06:53+08:00</updated>
+    <id>oi.afobject.ml/overview.html</id>
     <content type="html"><![CDATA[
+<hr />
 <ul>
-<li>0x01 位运算</li>
+<li><c>0x0101</c> 表示题目编号。根据书后索引编号。如果有明确来源则会标注，如果是 CCF 系列比赛则标注赛事和年份，除此之外的题目如果在洛谷上有题号会标注洛谷题号（因为洛谷评测比较方便）。</li>
+<li><e>Easy</e> 我能很快做出来的题目。<br />
+大约对应红 ～ 黄，典型题目：NOIP 2021 A。</li>
+<li><m>Medium</m> 我需要充足的思考才能做出来或者能轻易理解思路的题目。<br />
+大约对应思维黄 ～ 下位蓝，典型题目：CSP-S 2021 A。</li>
+<li><h>Hard</h> 我看题解都蚌埠住的那种。<br />
+大约对应上位蓝到黑。</li>
+</ul>
+<hr />
+<ul>
+<li>0x00 基本算法</li>
 </ul>
 
 ]]></content>
@@ -198,30 +209,6 @@ int main() {
 	return 0;
 }
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
-    <link href="oi.afobject.ml/overview.html"/>
-    <updated>2022-01-07T23:06:53+08:00</updated>
-    <id>oi.afobject.ml/overview.html</id>
-    <content type="html"><![CDATA[
-<hr />
-<ul>
-<li><c>0x0101</c> 表示题目编号。根据书后索引编号。如果有明确来源则会标注，如果是 CCF 系列比赛则标注赛事和年份，除此之外的题目如果在洛谷上有题号会标注洛谷题号（因为洛谷评测比较方便）。</li>
-<li><e>Easy</e> 我能很快做出来的题目。<br />
-大约对应红 ～ 黄，典型题目：NOIP 2021 A。</li>
-<li><m>Medium</m> 我需要充足的思考才能做出来或者能轻易理解思路的题目。<br />
-大约对应思维黄 ～ 下位蓝，典型题目：CSP-S 2021 A。</li>
-<li><h>Hard</h> 我看题解都蚌埠住的那种。<br />
-大约对应上位蓝到黑。</li>
-</ul>
-<hr />
-<ul>
-<li>0x00 基本算法</li>
-</ul>
 
 ]]></content>
   </entry>
