@@ -4,37 +4,13 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-02-16T23:58:21+08:00</updated>
+  <updated>2022-02-16T23:58:23+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
-  
-  <entry>
-    <title type="html"><![CDATA[LG PMOI R2 Div.2]]></title>
-    <link href="oi.afobject.ml/lg-pmoi-r2.html"/>
-    <updated>2022-02-15T23:27:04+08:00</updated>
-    <id>oi.afobject.ml/lg-pmoi-r2.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="b" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>B</h2>
-<h2><a id="c" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>C</h2>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ABC236]]></title>
-    <link href="oi.afobject.ml/abc236.html"/>
-    <updated>2022-01-23T20:24:58+08:00</updated>
-    <id>oi.afobject.ml/abc236.html</id>
-    <content type="html"><![CDATA[
-<p>Rated, 4/8, 776 \(\to\) 977</p>
-<h2><a id="e" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E</h2>
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
@@ -1191,6 +1167,30 @@ int main() {
     return 0;
 }
 </code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ABC236]]></title>
+    <link href="oi.afobject.ml/abc236.html"/>
+    <updated>2022-01-23T20:24:58+08:00</updated>
+    <id>oi.afobject.ml/abc236.html</id>
+    <content type="html"><![CDATA[
+<p>Rated, 4/8, 776 \(\to\) 977</p>
+<h2><a id="e" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E</h2>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[LG PMOI R2 Div.2]]></title>
+    <link href="oi.afobject.ml/lg-pmoi-r2.html"/>
+    <updated>2022-02-15T23:27:04+08:00</updated>
+    <id>oi.afobject.ml/lg-pmoi-r2.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="b" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>B</h2>
+<h2><a id="c" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>C</h2>
 
 ]]></content>
   </entry>
