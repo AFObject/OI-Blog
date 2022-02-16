@@ -4,13 +4,36 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-01-23T19:53:32+08:00</updated>
+  <updated>2022-02-16T23:54:49+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[LG PMOI R2 Div.2]]></title>
+    <link href="oi.afobject.ml/16449388247978.html"/>
+    <updated>2022-02-15T23:27:04+08:00</updated>
+    <id>oi.afobject.ml/16449388247978.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="b" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>B</h2>
+<h2><a id="c" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>C</h2>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ABC236 Rated, 776 $\to$ 977]]></title>
+    <link href="oi.afobject.ml/16429406986435.html"/>
+    <updated>2022-01-23T20:24:58+08:00</updated>
+    <id>oi.afobject.ml/16429406986435.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="e" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E</h2>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
@@ -215,9 +238,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[0x02 递推与递归]]></title>
-    <link href="oi.afobject.ml/16422139834989.html"/>
+    <link href="oi.afobject.ml/0x02.html"/>
     <updated>2022-01-15T10:33:03+08:00</updated>
-    <id>oi.afobject.ml/16422139834989.html</id>
+    <id>oi.afobject.ml/0x02.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E5%AE%8F%E8%A7%82%E6%8F%8F%E8%BF%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>宏观描述</h2>
 <h3><a id="%E9%80%92%E5%BD%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归</h3>
@@ -236,9 +259,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[0x021 递推与递归的简单应用]]></title>
-    <link href="oi.afobject.ml/16422141961714.html"/>
+    <link href="oi.afobject.ml/0x021.html"/>
     <updated>2022-01-15T10:36:36+08:00</updated>
-    <id>oi.afobject.ml/16422141961714.html</id>
+    <id>oi.afobject.ml/0x021.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%8C%87%E6%95%B0%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现指数型枚举</h2>
 <p><tc><c>0x0201</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
@@ -397,9 +420,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[0x022 分治]]></title>
-    <link href="oi.afobject.ml/16422572946324.html"/>
+    <link href="oi.afobject.ml/0x022.html"/>
     <updated>2022-01-15T22:34:54+08:00</updated>
-    <id>oi.afobject.ml/16422572946324.html</id>
+    <id>oi.afobject.ml/0x022.html</id>
     <content type="html"><![CDATA[
 <h2><a id="sumdiv" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sumdiv</h2>
 <p><tc><c>0x0206</c><c>LG1593</c><m>Medium</m><t>数论</t><t>分治</t><t>快速幂</t></tc></p>
@@ -483,9 +506,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[0x023 分形]]></title>
-    <link href="oi.afobject.ml/16424644153749.html"/>
+    <link href="oi.afobject.ml/0x023.html"/>
     <updated>2022-01-18T08:06:55+08:00</updated>
-    <id>oi.afobject.ml/16424644153749.html</id>
+    <id>oi.afobject.ml/0x023.html</id>
     <content type="html"><![CDATA[
 <h2><a id="fractal-streets" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal Streets</h2>
 <p><tc><c>0x0207</c><e>Easy+</e><t>递归</t><t>模拟</t><t>数学</t></tc></p>
@@ -573,9 +596,9 @@ signed main() {
   
   <entry>
     <title type="html"><![CDATA[0x031 前缀和]]></title>
-    <link href="oi.afobject.ml/16424780591373.html"/>
+    <link href="oi.afobject.ml/0x031.html"/>
     <updated>2022-01-18T11:54:19+08:00</updated>
-    <id>oi.afobject.ml/16424780591373.html</id>
+    <id>oi.afobject.ml/0x031.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E6%BF%80%E5%85%89%E7%82%B8%E5%BC%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>激光炸弹</h2>
 <p><tc><c>0x0301</c><c>HNOI 2003</c><e>Easy</e><t>前缀和</t></tc></p>
@@ -642,9 +665,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[0x032 差分]]></title>
-    <link href="oi.afobject.ml/16425501421616.html"/>
+    <link href="oi.afobject.ml/0x032.html"/>
     <updated>2022-01-19T07:55:42+08:00</updated>
-    <id>oi.afobject.ml/16425501421616.html</id>
+    <id>oi.afobject.ml/0x032.html</id>
     <content type="html"><![CDATA[
 <h2><a id="incdec-sequence" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>IncDec Sequence</h2>
 <p><tc><c>0x0302</c><e>Easy</e><t>差分</t></tc></p>
@@ -746,9 +769,9 @@ signed main() {
   
   <entry>
     <title type="html"><![CDATA[0x04 二分]]></title>
-    <link href="oi.afobject.ml/16425842989644.html"/>
+    <link href="oi.afobject.ml/0x04.html"/>
     <updated>2022-01-19T17:24:58+08:00</updated>
-    <id>oi.afobject.ml/16425842989644.html</id>
+    <id>oi.afobject.ml/0x04.html</id>
     <content type="html"><![CDATA[
 <p><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gymucbb50ej30wc0dkabf.jpg" alt="" /></p>
 <h2><a id="%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88%E4%B8%8A%E7%9A%84%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>整数集合上的二分</h2>
@@ -880,9 +903,9 @@ public:
   
   <entry>
     <title type="html"><![CDATA[0x051 离散化]]></title>
-    <link href="oi.afobject.ml/16429063772357.html"/>
+    <link href="oi.afobject.ml/0x051.html"/>
     <updated>2022-01-23T10:52:57+08:00</updated>
-    <id>oi.afobject.ml/16429063772357.html</id>
+    <id>oi.afobject.ml/0x051.html</id>
     <content type="html"><![CDATA[
 <p>即把一堆值域巨大的数映射到更小的有限集合中。</p>
 <p>一般有以下几个步骤：</p>
@@ -947,9 +970,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[0x052 中位数]]></title>
-    <link href="oi.afobject.ml/16429095044252.html"/>
+    <link href="oi.afobject.ml/0x052.html"/>
     <updated>2022-01-23T11:45:04+08:00</updated>
-    <id>oi.afobject.ml/16429095044252.html</id>
+    <id>oi.afobject.ml/0x052.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E8%B4%A7%E4%BB%93%E9%80%89%E5%9D%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>货仓选址</h2>
 <p><tc><c>0x0502</c><e>Easy-</e><t>数学</t></tc></p>
@@ -960,7 +983,7 @@ int main() {
 <p>因此如果是奇数就建在中位数处，否则哪怕左右移动 1 毫米就会有超过一半的商店开始叫了。</p>
 <p>如果是偶数，同理，建在中间的两个商店的区间内就行了。</p>
 <p>答案是排序后的</p>
-\[\sum_{i=1}^n \lvert a_i-a_{\lfloor \frac n 2 \rfloor} \rvert
+\[\sum_{i=1}^n \lvert a_i-a_{\lceil \frac n 2 \rceil} \rvert
 \]
 <hr />
 <h2><a id="%E4%B8%83%E5%A4%95%E7%A5%AD" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>七夕祭</h2>
@@ -1059,6 +1082,111 @@ signed main() {
     else if (x == -1) printf(&quot;column %lld\n&quot;, y);
     else if (y == -1) printf(&quot;row %lld\n&quot;, x);
     else printf(&quot;both %lld\n&quot;, x + y);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="running-median" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Median</h2>
+<p><tc><c>0x0503</c><e>Easy</e><t>对顶堆</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>维护两个堆（<code>std::priority_queue</code>），第一个大根堆维护 \(1 \sim \lfloor \dfrac n 2 \rfloor\)，第二个小根堆维护  \(\lfloor \dfrac n 2 \rfloor + 1 \sim n\)。第二个堆的首项为中位数。</p>
+<p>当任意一个堆的个数超了的时候，移到另外一个去。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">void solve() {
+    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::less&lt;int&gt;&gt; q1;
+    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::greater&lt;int&gt;&gt; q2;
+    int x = read();
+    q2.push(x), printf(&quot;%d &quot;, x);
+    for (int i = 2; i &lt;= n; ++i) {
+        int x = read();
+        if (x &lt; q2.top()) q1.push(x);
+        else q2.push(x);
+        if (q1.size() &gt; (i &gt;&gt; 1))
+            q2.push(q1.top()), q1.pop();
+        if (q2.size() &gt; (i + 1) &gt;&gt; 1)
+            q1.push(q2.top()), q2.pop();
+        if (i &amp; 1)
+            printf(&quot;%d &quot;, q2.top());
+    }
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x053 快速排序与 kth-element]]></title>
+    <link href="oi.afobject.ml/16430257370414.html"/>
+    <updated>2022-01-24T20:02:17+08:00</updated>
+    <id>oi.afobject.ml/16430257370414.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>快速排序</h2>
+<p><tc><c>LG1177</c></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>在区间内 rand 一个数，比它小的放左边，大的放右边。</p>
+<p>可以使用三路快速排序的优化：分为 <strong>小于基准｜等于基准｜大于基准</strong> 三类。</p>
+<h3><a id="%E4%B8%89%E8%B7%AF%E4%BC%98%E5%8C%96%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>三路优化实现</h3>
+<pre class="line-numbers"><code class="language-cpp">void qSort(int l, int r) {
+    if (l &gt;= r) return;
+
+    int s = a[(l + r) / 2];
+    int x = l, y = l, z = r;
+    // y：左侧指针  z：右侧指针
+    // x：存数指针
+    while (y &lt; z + 1) {
+        if (a[y] &lt; s) std::swap(a[x++], a[y++]); // 左侧指针数合法，入库
+        else if (a[y] &gt; s) std::swap(a[z--], a[y]); // 左侧指针数不合法，右边调一个过来，咕着下一轮循环再检查
+        else ++y; // 左侧指针数卡线，放过
+    }
+    // 循环结束：
+    // 所有小于 s 的数都被压在了 [l, x);
+    // 所有大于 s 的数都被压在了 (z, r]。
+    
+    qSort(l, x - 1);
+    qSort(z + 1, r);
+}
+</code></pre>
+<hr />
+<h2><a id="kth-element" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>kth-element</h2>
+<p><tc><c>LG1923</c></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>快排排一半。</p>
+<h3><a id="%E4%B8%89%E8%B7%AF%E4%BC%98%E5%8C%96%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>三路优化实现</h3>
+<p>注意一些细节。</p>
+<pre class="line-numbers"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+
+int n, k, a[5000001];
+
+int read() {
+    int ans = 0, neg = 1; char ch = getchar();
+    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
+    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
+    return ans * neg;
+}
+
+int kthElement(int l, int r, int k) {
+    if (l &gt;= r) return a[l];
+
+    int s = a[(l + r) / 2];
+    int x = l, y = l, z = r;
+
+    while (y &lt; z + 1) {
+        if (a[y] &lt; s) std::swap(a[x++], a[y++]);
+        else if (a[y] &gt; s) std::swap(a[z--], a[y]);
+        else ++y;
+    }
+    
+    if (l + k - 1 &lt; x) return kthElement(l, x - 1, k);
+    else if (l + k - 1 &gt; z) return kthElement(z + 1, r, l + k - 1 - z);
+    else return s;
+}
+
+int main() {
+    n = read(), k = read() + 1;
+    for (int i = 1; i &lt;= n; ++i)
+        a[i] = read();
+    printf(&quot;%d\n&quot;, kthElement(1, n, k));
     return 0;
 }
 </code></pre>
