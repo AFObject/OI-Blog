@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-02-16T23:54:49+08:00</updated>
+  <updated>2022-02-16T23:54:55+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,9 +14,9 @@
   
   <entry>
     <title type="html"><![CDATA[LG PMOI R2 Div.2]]></title>
-    <link href="oi.afobject.ml/16449388247978.html"/>
+    <link href="oi.afobject.ml/lg-pmoi-r2.html"/>
     <updated>2022-02-15T23:27:04+08:00</updated>
-    <id>oi.afobject.ml/16449388247978.html</id>
+    <id>oi.afobject.ml/lg-pmoi-r2.html</id>
     <content type="html"><![CDATA[
 <h2><a id="b" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>B</h2>
 <h2><a id="c" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>C</h2>
@@ -25,11 +25,12 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[ABC236 Rated, 776 $\to$ 977]]></title>
-    <link href="oi.afobject.ml/16429406986435.html"/>
+    <title type="html"><![CDATA[ABC236]]></title>
+    <link href="oi.afobject.ml/abc236.html"/>
     <updated>2022-01-23T20:24:58+08:00</updated>
-    <id>oi.afobject.ml/16429406986435.html</id>
+    <id>oi.afobject.ml/abc236.html</id>
     <content type="html"><![CDATA[
+<p>Rated, 4/8, 776 \(\to\) 977</p>
 <h2><a id="e" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E</h2>
 
 ]]></content>
@@ -1116,9 +1117,9 @@ signed main() {
   
   <entry>
     <title type="html"><![CDATA[0x053 快速排序与 kth-element]]></title>
-    <link href="oi.afobject.ml/16430257370414.html"/>
+    <link href="oi.afobject.ml/0x053.html"/>
     <updated>2022-01-24T20:02:17+08:00</updated>
-    <id>oi.afobject.ml/16430257370414.html</id>
+    <id>oi.afobject.ml/0x053.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>快速排序</h2>
 <p><tc><c>LG1177</c></tc></p>
