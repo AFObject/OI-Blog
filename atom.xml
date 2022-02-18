@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-02-16T23:58:23+08:00</updated>
+  <updated>2022-02-18T22:46:37+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -1164,6 +1164,70 @@ int main() {
     for (int i = 1; i &lt;= n; ++i)
         a[i] = read();
     printf(&quot;%d\n&quot;, kthElement(1, n, k));
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x054 逆序对]]></title>
+    <link href="oi.afobject.ml/0x054.html"/>
+    <updated>2022-02-17T22:48:13+08:00</updated>
+    <id>oi.afobject.ml/0x054.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E6%B1%82%E9%80%86%E5%BA%8F%E5%AF%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>归并排序求逆序对</h2>
+<p><tc><c>LG1908</c></tc></p>
+<pre class="line-numbers"><code class="language-cpp">int ans = 0;
+void mergeSort(int l, int r) {
+    if (l &gt;= r) return;
+    const int mid = (l + r) &gt;&gt; 1;
+    mergeSort(l, mid);
+    mergeSort(mid + 1, r);
+
+    int p = l, pl = l, pr = mid + 1;
+    while (pl &lt;= mid &amp;&amp; pr &lt;= r)
+        if (a[pl] &lt;= a[pr]) t[p++] = a[pl++];
+        else t[p++] = a[pr++], ans += mid - pl + 1;
+    while (pl &lt;= mid) t[p++] = a[pl++];
+    while (pr &lt;= r) t[p++] = a[pr++];
+    for (int i = l; i &lt;= r; ++i) a[i] = t[i];
+}
+</code></pre>
+<hr />
+<h2><a id="ultra-quicksort" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ultra-QuickSort</h2>
+<p><tc><c>0x0505</c><e>Easy-</e><t>逆序对</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>大眼观察答案就是逆序对。</p>
+<p>一次交换少一个逆序对，啊对对对，显然有构成逆序对的相邻的两个。</p>
+<hr />
+<h2><a id="%E5%A5%87%E6%95%B0%E7%A0%81%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>奇数码问题</h2>
+<p><tc><c>0x0506</c><m>Medium</m><t>逆序对</t></tc></p>
+<p>给两个 \(n \times n\) 的数字华容道，问一个能否变成另外一个。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>先忽略 0 把这俩写成一串数（8 个）；</p>
+<ul>
+<li>若左右移动 0 的位置，则这串数不变；</li>
+<li>若上下移动 0 的位置，则相当于将一个数后移 \(n-1\) 个位置。</li>
+</ul>
+<p>上下移动的操作中逆序对的个数的奇偶性不会改变（这个数与 \(n-1\) 个数发生了相对位置改变，每处相对位置改变会增加或减少一个逆序对，而 \(n-1\) 是偶数）。</p>
+<p>因此这两串数逆序对个数的奇偶性相同是<strong>必要</strong>的。充分性猜一下大概是可以找出一种移动 0 的方案的。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">signed main() {
+    while (std::cin &gt;&gt; n) {
+        for (int i = 1, j = 1; i &lt;= n * n; ++i) {
+            std::cin &gt;&gt; a[j];
+            if (a[j]) ++j;
+        }
+        int ans1 = mergeSort(1, n * n - 1);
+        for (int i = 1, j = 1; i &lt;= n * n; ++i) {
+            std::cin &gt;&gt; a[j];
+            if (a[j]) ++j;
+        }
+        int ans2 = mergeSort(1, n * n - 1);
+        puts(((ans1 - ans2) % 2) ? &quot;NIE&quot; : &quot;TAK&quot;);
+    }
     return 0;
 }
 </code></pre>
