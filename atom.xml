@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-02-22T20:36:03+08:00</updated>
+  <updated>2022-02-22T20:36:07+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -746,9 +746,9 @@ signed main() {
   
   <entry>
     <title type="html"><![CDATA[0x04 二分]]></title>
-    <link href="oi.afobject.ml/0x04.html"/>
+    <link href="oi.afobject.ml/0x04-.html"/>
     <updated>2022-01-19T17:24:58+08:00</updated>
-    <id>oi.afobject.ml/0x04.html</id>
+    <id>oi.afobject.ml/0x04-.html</id>
     <content type="html"><![CDATA[
 <p><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gymucbb50ej30wc0dkabf.jpg" alt="" /></p>
 <h2><a id="%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88%E4%B8%8A%E7%9A%84%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>整数集合上的二分</h2>
@@ -1261,9 +1261,9 @@ void mergeSort(int l, int r) {
   
   <entry>
     <title type="html"><![CDATA[0x06 倍增]]></title>
-    <link href="oi.afobject.ml/0x06.html"/>
+    <link href="oi.afobject.ml/0x06-.html"/>
     <updated>2022-02-19T13:19:02+08:00</updated>
-    <id>oi.afobject.ml/0x06.html</id>
+    <id>oi.afobject.ml/0x06-.html</id>
     <content type="html"><![CDATA[
 <p>倍增：将状态空间划分成若干个 2 的次幂的大小。</p>
 <h2><a id="%E9%93%BA%E5%9E%AB" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>铺垫</h2>
@@ -1294,7 +1294,7 @@ void mergeSort(int l, int r) {
 <p>所以要求 \(a,b\) 均不降。</p>
 <hr />
 <ol start="2">
-<li>在（1）的条件下，当 \(a,b\) 中的一个倒序时，证明：此时 \(\sum a_ib_i\) 最大。</li>
+<li>在（1）的条件下，当 \(a,b\) 中的一个倒序时，证明：此时 \(\sum a_ib_i\) 最小。</li>
 </ol>
 <p>简略证明：</p>
 <ul>
@@ -1396,14 +1396,14 @@ signed main() {
 <h2><a id="st%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>ST 表</h2>
 <p><tc><c>LG3865</c></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>\(f(l,k)\) 为 \([l, l + 2^k)\) 的和。</p>
+<p>\(f(l,k)\) 为 \([l, l + 2^k)\) 的 \(\max\)。</p>
 <ul>
 <li>\(\forall i, f(i,0) = a_i\)。</li>
-<li>\(f(l,k) = f(l,k-1)+f(l+2^{k-1},k-1)\)</li>
+<li>\(f(l,k) = \max\{f(l,k-1),f(l+2^{k-1},k-1)\}\)</li>
 </ul>
 <p>求和：令 \(k=\log_2(r-l+1)\)。</p>
-<p>\(f(l,r) = f(l,k)+f(r-2^k+1,k)\)（这两个区间能覆盖 \([l, r]\)）。</p>
-<p>静态最大值 / 最小值同理。</p>
+<p>\(f(l,r) = \max\{f(l,k),f(r-2^k+1,k)\}\)（这两个区间能覆盖 \([l, r]\)）。</p>
+<p>最小值同理。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%9C%80%E5%A4%A7%E5%80%BC%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现（最大值）</h3>
 <pre class="line-numbers"><code class="language-cpp">int n, q;
 int f[5000001][31];

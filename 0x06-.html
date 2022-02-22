@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+    0x06 倍增 - OI Blog
+    
+    </title>
+    <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg" type="image/png" />
+
+    
+    
+    <link href="atom.xml" rel="alternate" title="OI Blog" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/style.min.css">
+    <link rel="stylesheet" href="asset/css/doc.css">
+    <script src="asset/app.js"></script>
+</head>
+  <body>
+    <section class="hero">
+      <div class="hero-head">
+          <nav class="navbar" role="navigation" aria-label="main navigation">
+              <div class="container">
+              <div class="navbar-brand">
+                
+                <a target="self" class="navbar-item " href="index.html">Home</a>
+                
+                <a target="_self" class="navbar-item " href="archives.html">Archives</a>
+                
+
+                <a role="button" id="navbarSNSRssSwitchBtn" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarSNSRssButtons">
+                  <span aria-hidden="true"></span>
+                  <span aria-hidden="true"></span>
+                  <span aria-hidden="true"></span>
+                </a>
+              </div>
+            
+              <div id="navbarSNSRssButtons" class="navbar-menu">
+                <div class="navbar-start">
+                  
+                </div>
+            
+                <div class="navbar-end">
+                  <div class="navbar-item">
+                    <!--buttons start-->
+                    <div class="buttons">
+                      
+                        
+                        
+                        
+                        <a href="https://github.com/AFObject" target="_blank" title="github">
+                            <span class="icon is-large has-text-grey-darker">
+                               <svg class="svg-inline--fa fa-github fa-w-16 fa-lg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" data-fa-i2svg=""><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg><!-- <i class="fab fa-github fa-lg"></i> -->
+                            </span>
+                          </a>
+                        
+                        
+                      
+                      <a href="atom.xml" target="_blank" title="RSS">
+                          <span class="icon is-large has-text-black-bis">
+                              <svg class="svg-inline--fa fa-rss fa-w-14 fa-lg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="rss" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M128.081 415.959c0 35.369-28.672 64.041-64.041 64.041S0 451.328 0 415.959s28.672-64.041 64.041-64.041 64.04 28.673 64.04 64.041zm175.66 47.25c-8.354-154.6-132.185-278.587-286.95-286.95C7.656 175.765 0 183.105 0 192.253v48.069c0 8.415 6.49 15.472 14.887 16.018 111.832 7.284 201.473 96.702 208.772 208.772.547 8.397 7.604 14.887 16.018 14.887h48.069c9.149.001 16.489-7.655 15.995-16.79zm144.249.288C439.596 229.677 251.465 40.445 16.503 32.01 7.473 31.686 0 38.981 0 48.016v48.068c0 8.625 6.835 15.645 15.453 15.999 191.179 7.839 344.627 161.316 352.465 352.465.353 8.618 7.373 15.453 15.999 15.453h48.068c9.034-.001 16.329-7.474 16.005-16.504z"></path></svg><!-- <i class="fas fa-rss fa-lg"></i> -->
+                          </span>
+                      </a>
+                    </div>
+                    <!--buttons end-->
+
+                  </div>
+                </div>
+                </div>
+              </div>
+            </nav>
+      </div>
+
+ <div class="hero-body ct-body"></div>
+      
+    </section>
+    <section class="ct-body">
+      <div class="container">
+          <div class="columns is-variable bd-klmn-columns is-4 is-centered">
+              <div class="column is-four-fifths">
+                  <div class="post-body single-content">
+                    
+                    <h1 class="title">
+                            0x06 倍增   
+                      </h1>
+                     
+                    
+                      <div class="media">
+                            
+                            <figure class="media-left">
+                              <p class="image is-48x48">
+                                
+                                  <img class="is-rounded" src="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg">
+                                
+                              </p>
+                            </figure>
+                            
+                            <div class="media-content">
+                              <div class="content">
+                                <p>
+                                 <span class="date">2022/02/19</span>
+                                  <span class="tran-posted-in">posted in</span>&nbsp; 
+                                  
+                                      <span class="posted-in"><a href='0x06.html'>0x06 倍增</a></span>
+                                         
+                                  
+
+                                   
+                                      
+                                  <br />
+                                  <span class="tran-tags">Tags:</span>&nbsp;
+                                  
+                                    <c><a href='tag_%E6%8E%92%E5%BA%8F.html'>#排序</a></c>
+                                  
+                                    <c><a href='tag_%E5%80%8D%E5%A2%9E.html'>#倍增</a></c>
+                                  
+                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
+                                  
+                                    <c><a href='tag_ST.html'>#ST</a></c>
+                                     
+
+                                </p>
+                              </div>
+                            </div>
+                         
+                    </div>
+                </div>
+                  <article class="markdown-body single-content">
+                    <p>倍增：将状态空间划分成若干个 2 的次幂的大小。</p>
+<h2><a id="%E9%93%BA%E5%9E%AB" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>铺垫</h2>
+<p>给定一个数列 \(A\) 和若干次询问，每次给出一个 \(T\)，求 \(k_{\max}\ s.t.\ \sum_{i=1}^k \le T\)。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<h4><a id="%E6%96%B9%E6%A1%881%EF%BC%9A%E5%9C%A8%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%AD-naive%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 1：在前缀和中 naive 二分</h4>
+<p>复杂度恒定是 <strong>\(\log n\)</strong> 把大概。</p>
+<h4><a id="%E6%96%B9%E6%A1%882%EF%BC%9A%E5%80%8D%E5%A2%9E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 2：倍增</h4>
+<p>这个 \(k\) 是要找的这个前缀的长度，<strong>每次尝试往 \(k\) 里面加 \(2\) 的次幂（\(2^p\)）</strong> 就行了。如果加了以后符合要求那么 \(k \gets k + 2^p\)，\(p \gets p+1\)，否则不加且 \(p \gets p - 1\)。\(p &lt; 0\) 的时候结束。</p>
+<p>区别就是复杂度是 <strong>\(\log \text{答案}\)</strong> 差不多。这玩意相对于 \(\log\) 感觉有一定常数（差不多 3）。我也不清楚为什么要这么做。就是这样。</p>
+<p>感觉有一种平凡优化这里不写了。</p>
+<hr />
+<h2><a id="genius-acm" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Genius ACM</h2>
+<p><tc><c>0x0601</c><h>Hard</h><t>数学</t><t>排序</t><t>倍增</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>首先 \(\sum\limits_{i=1}^{m}(a_i - b_i)^2 = \sum\limits_{i=1}^{m} a_i^2 + \sum\limits_{i=1}^{m} b_i^2 -\sum\limits_{i=1}^{m} a_i b_i\)，所以要使两两的乘积最小。</p>
+<blockquote>
+<h4><a id="%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>排序不等式</h4>
+<ol>
+<li>给定 \(a,b\) 两个数列，证明：当 \(a_i,b_i\) 均不降时，\(\sum a_ib_i\) 最大。</li>
+</ol>
+<p>简略证明：</p>
+<ul>
+<li>假设 \(x_1\le x_2,x_3 \le x_4\)，由于 \((x_1-x_2)(x_3-x_4) \ge 0\)，则 \(x_1x_4+x_2x_3 \ge x_1x_3+x_2x_4\)（1）。</li>
+<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不降），设存在 \(b_i, b_j\) 乱序，且它们分别对应 \(a_i, a_j\)（\(b_i&gt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i&gt;b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不降，结果最优。</li>
+<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不降），同理。</li>
+</ul>
+<p>所以要求 \(a,b\) 均不降。</p>
+<hr />
+<ol start="2">
+<li>在（1）的条件下，当 \(a,b\) 中的一个倒序时，证明：此时 \(\sum a_ib_i\) 最小。</li>
+</ol>
+<p>简略证明：</p>
+<ul>
+<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不升），设存在 \(b_i, b_j\) 非逆序，且它们分别对应 \(a_i, a_j\)（\(b_i&lt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i &lt; b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不升，结果最优。</li>
+<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不升），同理。</li>
+<li>得证。</li>
+</ul>
+</blockquote>
+<p>由<strong>排序不等式</strong>，知应当最大对最大，第二大对第二大……最小对最小，此时的 \(\sum (a_i-b_i)^2\) 就是「校验值」。</p>
+<p>但这并不是重点。</p>
+<p>问题转化为固定一个 \(L\)，求最小的 \(R &gt; L\) 使得 \(f([L, R]) \le T\)。要求「校验值」，必须排序，至少用时 \(O(n \log n)\)。然后 \(n \le 5 \times 10^5\)，好好好，如果每段都很少那么二分屁用没有（\(n\) 级别段，每一段找 \(R\) 二分 \(\log n\) 次总排序 \(n \log n\) 级，感觉得卡成 \(n^2 \log n\)，寄了）。</p>
+<p>😅 倍增，固定一个左端点往右扩展，复杂度 \(\sum len \log len\)（块数次倍增，每次倍增对一段排序，排序的总时间 \(n \log n\)，归并以及计算「校验值」的总时间差不多 \(O(n)\) 带点常数）左右吧，总复杂度大约 \(n \log n\) 可以接受（吧），自带巨大常数但是时限 10s。</p>
+<blockquote>
+<p>776 告诉我 \(\sum len \log len \le n \log n\)。</p>
+</blockquote>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<ol>
+<li>固定一个 \(l\)</li>
+<li>倍增求 \(r\)
+<ol>
+<li>对未排序的部分进行归并排序</li>
+<li>求出「校验值」</li>
+<li>根据「校验值」大小判断当前的 \(r\) 是否满足条件</li>
+<li>回到 1，直到倍增结束（\(p=0\)）</li>
+</ol>
+</li>
+<li>回到 1，直到得到结果（\(r=n\)）</li>
+</ol>
+<p>谢邀，人在太平间，写吐了</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int T, n, m, k;
+// a 原数组不动
+// t 是排好序的
+// q 是辅助
+// copy 是缓存
+int a[5000001], t[5000001], q[5000001], copy[5000001];
+
+void mergeSort(int l0, int l, int r) {
+    r = std::min(r, n);
+    for (int i = l; i &lt;= r; ++i)
+        t[i] = a[i];
+    
+    std::sort(t + l, t + r + 1);
+
+    int lp = l0, tp = l0, rp = l;
+    while (lp &lt; l &amp;&amp; rp &lt;= r)
+        if (t[lp] &lt; t[rp]) q[tp++] = t[lp++];
+        else q[tp++] = t[rp++];
+    while (lp &lt; l) q[tp++] = t[lp++];
+    while (rp &lt;= r) q[tp++] = t[rp++];
+
+    for (int i = l0; i &lt;= r; ++i)
+        t[i] = q[i];
+}
+
+int captcha(int l, int r) {
+    r = std::min(r, n);
+    int ans = 0;
+    for (int i = 0; i &lt; m &amp;&amp; l &lt; r; ++i, --r, ++l)
+        ans += (t[r] - t[l]) * (t[r] - t[l]);
+    return ans;
+}
+
+signed main() {
+    T = read();
+    while (T--) {
+        n = read(), m = read(), k = read();
+        for (int i = 1; i &lt;= n; ++i)
+            a[i] = read();
+        int l0 = 1, ans = 0; // 1
+        while (l0 &lt;= n) {
+            int l = l0, p = 1; bool r = false;
+            while (p) {
+                for (int i = l0; i &lt; l + p; ++i)
+                    copy[i] = t[i]; // 保存当前的快照，以在 c &gt; k 时得以返回上一状态
+                mergeSort(l0, l, l + p - 1); // 2.1
+                const int c = captcha(l0, l + p - 1); // 2.2
+                if (c &lt;= k) { // 2.3
+                    l += p;
+                    if (l &gt; n) break; // 2.4
+                    if (!r)
+                        p &lt;&lt;= 1;
+                } else {
+                    p &gt;&gt;= 1;
+                    r = true;
+                    for (int i = l0; i &lt; l + p; ++i)
+                        t[i] = copy[i];
+                }
+            }
+            ++ans;
+            l0 = l;
+        }
+        printf(&quot;%lld\n&quot;, ans); // 3
+    }
+}
+</code></pre>
+<hr />
+<h2><a id="st%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>ST 表</h2>
+<p><tc><c>LG3865</c></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>\(f(l,k)\) 为 \([l, l + 2^k)\) 的 \(\max\)。</p>
+<ul>
+<li>\(\forall i, f(i,0) = a_i\)。</li>
+<li>\(f(l,k) = \max\{f(l,k-1),f(l+2^{k-1},k-1)\}\)</li>
+</ul>
+<p>求和：令 \(k=\log_2(r-l+1)\)。</p>
+<p>\(f(l,r) = \max\{f(l,k),f(r-2^k+1,k)\}\)（这两个区间能覆盖 \([l, r]\)）。</p>
+<p>最小值同理。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%9C%80%E5%A4%A7%E5%80%BC%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现（最大值）</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, q;
+int f[5000001][31];
+
+int query(int l, int r) {
+    const int k = log2(r - l + 1);
+    return std::max(f[l][k], f[r - (1 &lt;&lt; k) + 1][k]);
+}
+
+void cal() {
+    for (int i = 1; i &lt;= n; ++i)
+        f[i][0] = read();
+    for (int k = 1; k &lt;= 30; ++k)
+        for (int i = 1; i + (1 &lt;&lt; (k - 1)) &lt;= n; ++i)
+            f[i][k] = std::max(f[i][k - 1], f[i + (1 &lt;&lt; (k - 1))][k - 1]);
+}
+</code></pre>
+
+                  </article>
+                  <div class="comments-wrap">
+                    <div class="share-comments">
+                      
+
+                      
+
+                      
+                    </div>
+                  </div><!-- end comments wrap -->
+              </div>
+            </div><!-- end columns -->
+      </div><!-- end container -->
+    </section>
+
+
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+              Copyright &copy; 2019
+              Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+              Theme used <a target="_blank" href="https://bulma.io/">Bulma CSS</a>.
+          </p>
+        </div>
+      </footer>
+
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+
+  
+    
+
+
+
+
+  </body>
+</html>
