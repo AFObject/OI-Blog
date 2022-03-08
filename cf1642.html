@@ -132,7 +132,7 @@
                   <article class="markdown-body single-content">
                     <p>Rated, 3/6, 1353 \(\to\) 1448</p>
 <h2><a id="cf1641b-1642d-repetitions-decoding" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>CF1641B (1642D) Repetitions Decoding</h2>
-<p><tc><m>Medium</m><t>构造</t></tc></p>
+<p><tc><m>Medium *2000</m><t>构造</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>场上思路：找到第一个 \(i\) 使得 \(a_i=a_1\)（例如 <code>ABCDADBC</code>）。在 \(i\) 后面插入 <code>ABCDDCBA</code> 这种形式的一串（<code>ABCDABCDDCBDBC</code>），然后发现前面可以消，只剩 <code>DCBDBC</code>。这个序列相较于原序列长度少 \(2\)，完全可行，操作次数也肉眼可见地不会太多。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
@@ -205,7 +205,7 @@ int main() {
 </code></pre>
 <hr />
 <h2><a id="cf1641c-1642e-anonymity-is-important" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>CF1641C (1642E) Anonymity Is Important</h2>
-<p><tc><m>Medium+</m><t>DS</t><t>线段树</t><t>STL</t></tc></p>
+<p><tc><m>Medium+ *2200</m><t>DS</t><t>线段树</t><t>STL</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>「1」型区间为至少包含一个病人的区间，「0」型区间为不包含病人的区间。</p>
 <ul>
