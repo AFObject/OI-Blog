@@ -73,204 +73,185 @@
             </nav>
       </div>
 
- <div class="hero-body ct-body"></div>
-      
-    </section>
-    <section class="ct-body">
-      <div class="container">
-          <div class="columns is-variable bd-klmn-columns is-4 is-centered">
-              <div class="column is-four-fifths">
-                  <div class="post-body single-content">
-                    
-                    <h1 class="title">
-                            0x07 贪心   
-                      </h1>
-                     
-                    
-                      <div class="media">
+ 
+<div class="hero-body ct-body">
+        <div class="container">
+              <div class="columns is-centered">
+                  <div class="column  is-four-fifths">
+                      <div class="columns is-mobile">
+                          <div class="column">
+                              <h1 class="title">
+                                OI Blog
+                              </h1>
+                              <h2 class="subtitle">
+                                 
+                              </h2>
+                          </div>
+                          <div class="column is-narrow"><figure class="image is-128x128">
                             
-                            <figure class="media-left">
-                              <p class="image is-48x48">
-                                
-                                  <img class="is-rounded" src="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg">
-                                
-                              </p>
-                            </figure>
+                              <img class="is-rounded" src="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg">
                             
-                            <div class="media-content">
-                              <div class="content">
-                                <p>
-                                 <span class="date">2022/03/18</span>
-                                  <span class="tran-posted-in">posted in</span>&nbsp; 
-                                  
-                                      <span class="posted-in"><a href='0x07%20%E8%B4%AA%E5%BF%83.html'>0x07 贪心</a></span>
-                                         
-                                  
-
-                                   
-                                      
-                                  <br />
-                                  <span class="tran-tags">Tags:</span>&nbsp;
-                                  
-                                    <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
-                                     
-
-                                </p>
-                              </div>
-                            </div>
-                         
-                    </div>
+                            </figure></div>
+                      </div>
+                        
+                      
+                  </div>
+                  
                 </div>
-                  <article class="markdown-body single-content">
-                    <h2><a id="sunscreen" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sunscreen</h2>
-<p><tc><c>0x0701</c><c>USACO</c><e>Easy+</e><t>贪心</t><t>排序</t></tc></p>
-<p>有 \(n\) 头牛，每头牛能忍受一个区间范围的阳光，然后有 \(m\) 瓶防晒霜，每瓶防晒霜能让一头牛身上的阳光变成一个定值，现在最大化能忍受阳光的奶牛数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>我们的贪心策略一定是对于每一头牛：</p>
-<ul>
-<li>尽量能匹配到它的防晒霜</li>
-<li>在有多个匹配时选择最不影响其他牛的匹配</li>
-<li>如果非得因为这头牛然后让其他牛寄，也没问题，因为每头牛的权值都是 1。</li>
-</ul>
-<p>对于第二条，考虑给高高在上的牛上牛就匹配值高的防晒霜，把值小的防晒霜留给下面的牛用（没被上面的牛用的一定能满足下面的牛的最小值，如果超过了它的最大值只能怪它自己，我已经把尽量小的留给你了）。</p>
-<p>这种策略事正确的。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>将牛按区间起始值排序，防晒霜按值排序，均从大到小。每一头你从防晒霜中找第一个能被它用的，然后下一个。</p>
-<pre class="line-numbers"><code class="language-cpp">int n, m;
-std::pair&lt;int, int&gt; cow[100001], sun[100001];
-
-int main() {
-    n = read(), m = read();
-    for (int i = 1; i &lt;= n; ++i)
-        cow[i].first = read(), cow[i].second = read();
-    for (int i = 1; i &lt;= m; ++i)
-        sun[i].first = read(), sun[i].second = read();
-    std::sort(cow + 1, cow + n + 1, std::greater&lt;std::pair&lt;int, int&gt;&gt;());
-    std::sort(sun + 1, sun + m + 1, std::greater&lt;std::pair&lt;int, int&gt;&gt;());
-    int ans = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        for (int j = 1; j &lt;= m; ++j)
-            if (sun[j].second &amp;&amp; cow[i].first &lt;= sun[j].first &amp;&amp; sun[j].first &lt;= cow[i].second) {
-                ++ans;
-                --sun[j].second;
-                break;
-            }
-    printf(&quot;%d\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="stall-reservations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stall Reservations</h2>
-<p><tc><c>0x0702</c><c>USACO</c><e>Easy</e><t>贪心</t><t>排序</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>萌萌题黄够了吧，和 廊桥分配 一个套路。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>区间有重复用 <code>std::multiset</code>。</p>
-<pre class="line-numbers"><code class="language-cpp">int n;
-struct Cow {
-    int id, start, end;
-    bool operator &lt; (const Cow &amp;rhs) const {
-        if (start == rhs.start) {
-            if (end == rhs.end)
-                return id &lt; rhs.id;
-            return end &lt; rhs.end;
-        }
-        return start &lt; rhs.start;
-    }
-};
-std::multiset&lt;Cow&gt; s;
-int ans[500001];
-
-int main() {
-    n = read();
-    for (int i = 1; i &lt;= n; ++i) {
-        int a = read(), b = read();
-        s.insert({i, a, b});
-    }
-    int idx = 0;
-    while (s.size()) {
-        auto f = *s.begin();
-        s.erase(s.begin());
-        ans[f.id] = ++idx;
-        int end = f.end;
-        auto it = s.lower_bound({0, end + 1, 0});
-        while (it != s.end()) {
-            ans[it-&gt;id] = idx;
-            end = it-&gt;end;
-            s.erase(it);
-            it = s.lower_bound({0, end + 1, 0});
-        }
-    }
-    printf(&quot;%d\n&quot;, idx);
-    for (int i = 1; i &lt;= n; ++i)
-        printf(&quot;%d\n&quot;, ans[i]);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="radar-installation" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Radar Installation</h2>
-<p><tc><c>0x0703</c><m>Medium-</m><t>贪心</t><t>计算几何</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>从左到右考虑每一个点。对于每一个点，找到一个最右侧的能包含它圆。如果下一个点在先前所列的某个圆的范围内，包含进去。否则，/remake。</p>
-<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h0fmiygnkxj218p0r5goc.jpg" alt="" /><br />
-但这种方案还要再细化。如上图，「包含」关系时，就应该更新圆心往里缩一点，「继承」关系维持不变即可，「脱离」关系自然答案就应该加一。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-#define AVA 100000
-
-int n, d;
-
-struct Pos {
-    int x, y, l, r;
-    bool operator &lt; (const Pos &amp;rhs) const {
-        if (l == rhs.l)
-            return r &lt; rhs.r;
-        return l &lt; rhs.l;
-    }
-} p[100001];
-
-int dist(Pos a, Pos b) {
-    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
-}
-
-signed main() {
-    n = read(), d = read() * AVA;
-    for (int i = 1; i &lt;= n; ++i) {
-        p[i].x = read() * AVA, p[i].y = read() * AVA;
-        const int k = (int)sqrt(d * d - p[i].y * p[i].y);
-        p[i].l = p[i].x - k, p[i].r = p[i].x + k;
-    }
-    std::sort(p + 1, p + n + 1);
-    int ans = 0, pos = -100000000000;
-    for (int i = 1; i &lt;= n; ++i) {
-        if (p[i].y &gt; d) {
-            puts(&quot;-1&quot;);
-            return 0;
-        }
-        if (p[i].l &gt; pos) ++ans, pos = p[i].r;
-        else pos = std::min(pos, p[i].r);
-    }
-    printf(&quot;%lld\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-
-                  </article>
-                  <div class="comments-wrap">
-                    <div class="share-comments">
-                      
-
-                      
-
-                      
+            
+              
+        
+        </div>
+      </div>
+</section>
+<section class="ct-body">
+      <div class="container">
+          <div class="columns is-variable bd-klmn-columns is-4">
+              <div class="column is-two-thirds">
+                
+                  <div class="card">
+                    
+                      <div class="card-content">
+                        <div class="content">
+                          <a href="0x07-.html"> 
+                            <h2 class="title">0x07 贪心</h2>
+                          </a>        
+                                                    
+                          <p> 
+                            <a href="0x07-.html"><span class="tran-readmore">Read more...</span></a>&nbsp;&nbsp; 
+                            <span class="date">2022/03/18</span>
+                            <span class="tran-posted-in">posted in</span>&nbsp; 
+                            
+                                <span class="posted-in"><a href='0x07.html'>0x07 贪心</a></span>
+                                                      
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div><!-- end comments wrap -->
+                  
+
+                  <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                    <a class="pagination-previous"  disabled="disabled" ><span class="tran-prev-page">&laquo; Prev Page</span></a>  
+                    <a class="pagination-next"  disabled="disabled" ><span class="tran-next-page">Next Page &raquo;</span></a>                   
+                  </nav>
+
+              </div><!-- end column -->
+              <div class="column">
+                  <div class="card">
+                      <header class="card-header">
+                        <p class="card-header-title">
+                           <span class="tran-site-categories">Categories</span> 
+                        </p>
+                     
+                      </header>
+                      <div class="card-content site-categories">
+                        <div class="content"> 
+                          <ul>
+                          
+                                <li><a href="0x00.html">0x00 基本算法</a>
+                                   <ul> 
+                                  
+                                        <li><a href="0x01.html">0x01 位运算</a></li>
+                                  
+                                        <li><a href="0x02.html">0x02 递推与递归</a></li>
+                                  
+                                        <li><a href="0x03.html">0x03 前缀和与差分</a></li>
+                                  
+                                        <li><a href="0x04.html">0x04 二分</a></li>
+                                  
+                                        <li><a href="0x05.html">0x05 排序</a></li>
+                                  
+                                        <li><a href="0x06.html">0x06 倍增</a></li>
+                                  
+                                        <li><a href="0x07.html">0x07 贪心</a></li>
+                                  
+                                   </ul> 
+                                </li> 
+                          
+                                <li><a href="contests.html">比赛记录</a>
+                                  
+                                  
+                                  
+                                </li> 
+                          
+                          </ul>
+                        </div>
+                      </div>
+                     
+                    </div>
+
+                    <div class="card">
+                        <header class="card-header">
+                          <p class="card-header-title">
+                              <span class="tran-site-tags">Tags</span> 
+                          </p>
+                       
+                        </header>
+                        <div class="card-content site-tags">
+                          <div class="content">
+                           <div class="tags">
+                            
+                              <a class="tag is-link is-light" href="tag_AtCoder.html">#AtCoder</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_CF.html">#CF</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_DP.html">#DP</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_DS.html">#DS</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_ST.html">#ST</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_STL.html">#STL</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E4%B8%89%E5%88%86.html">#三分</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E4%BA%8C%E5%88%86.html">#二分</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html">#位运算</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E5%80%8D%E5%A2%9E.html">#倍增</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E5%88%86%E6%B2%BB.html">#分治</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E5%89%8D%E7%BC%80%E5%92%8C.html">#前缀和</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E5%A0%86.html">#堆</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E5%B7%AE%E5%88%86.html">#差分</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E6%8E%92%E5%BA%8F.html">#排序</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E6%90%9C%E7%B4%A2.html">#搜索</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E6%95%B0%E5%AD%A6.html">#数学</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E6%9E%84%E9%80%A0.html">#构造</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E6%A8%A1%E6%8B%9F.html">#模拟</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E7%A6%BB%E6%95%A3%E5%8C%96.html">#离散化</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E7%BA%BF%E6%AE%B5%E6%A0%91.html">#线段树</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E8%B4%AA%E5%BF%83.html">#贪心</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E9%80%86%E5%BA%8F%E5%AF%B9.html">#逆序对</a> 
+                            
+                              <a class="tag is-link is-light" href="tag_%E9%80%92%E5%BD%92.html">#递归</a> 
+                            
+                           </div>
+                             
+                          </div>
+                        </div>
+                       
+                      </div>
+
               </div>
-            </div><!-- end columns -->
-      </div><!-- end container -->
+            </div>
+
+          
+      </div>
     </section>
-
-
 
     <footer class="footer">
         <div class="content has-text-centered">
@@ -283,9 +264,6 @@ signed main() {
       </footer>
 
 
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
 
   
 
@@ -300,8 +278,6 @@ signed main() {
 
 
 
-
-<script src="asset/prism.js"></script>
 
 
 

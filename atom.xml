@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-03-20T00:02:08+08:00</updated>
+  <updated>2022-03-20T00:02:11+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,9 +14,9 @@
   
   <entry>
     <title type="html"><![CDATA[0x07 贪心]]></title>
-    <link href="oi.afobject.ml/0x07.html"/>
+    <link href="oi.afobject.ml/0x07-.html"/>
     <updated>2022-03-18T15:15:46+08:00</updated>
-    <id>oi.afobject.ml/0x07.html</id>
+    <id>oi.afobject.ml/0x07-.html</id>
     <content type="html"><![CDATA[
 <h2><a id="sunscreen" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sunscreen</h2>
 <p><tc><c>0x0701</c><c>USACO</c><e>Easy+</e><t>贪心</t><t>排序</t></tc></p>
