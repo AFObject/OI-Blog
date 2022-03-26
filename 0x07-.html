@@ -113,6 +113,12 @@
                                   <span class="tran-tags">Tags:</span>&nbsp;
                                   
                                     <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
+                                  
+                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
+                                  
+                                    <c><a href='tag_%E6%A0%91.html'>#树</a></c>
+                                  
+                                    <c><a href='tag_%E6%8E%92%E5%BA%8F.html'>#排序</a></c>
                                      
 
                                 </p>
@@ -254,6 +260,58 @@ signed main() {
     return 0;
 }
 </code></pre>
+<hr />
+<h2><a id="%E5%9B%BD%E7%8E%8B%E6%B8%B8%E6%88%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>国王游戏</h2>
+<p><tc><c>0x0704</c><c>NOIP 2012</c><m>Medium+</m><t>贪心</t><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑猜个结论，左右手两数乘积大的排后面。现在试图证明。</p>
+<p>对于相邻的两个大臣，获得的奖励就是 \(c_1=\lfloor \dfrac{\prod_{i=0}^{x-1} a_i}{b_x} \rfloor\) 和 \(c_2=\lfloor \dfrac{\prod_{i=0}^{x} a_i}{b_{x+1}} \rfloor\)。</p>
+<p>假如对于 \(x\) 与 \(x+1\) 位进行一个交换，获得的奖励就是 \(d_1=\lfloor \dfrac{(\prod_{i=0}^{x-1} a_i) \times a_{x+1}}{b_x} \rfloor\) 和 \(d_2=\lfloor \dfrac{\prod_{i=0}^{x-1} a_i}{b_{x+1}} \rfloor\)。</p>
+<p>（先忽略向下取整）现在我们要比较 \(\max\{c_1, c_2\}\) 和 \(\max\{d_1, d_2\}\) 的大小关系。</p>
+<p>提取公因式 \(\prod_{i=0}^{x-1}a_i\)，我们要比较的就是 \(\max\left\{\dfrac{1}{b_x}, \dfrac{a_x}{b_{x+1}}\right\}\) 和 \(\max\left\{\dfrac{a_{x+1}}{b_x}, \dfrac{1}{b_{x+1}}\right\}\) 的关系。</p>
+<p>统乘以 \(b_x \cdot b_{x+1}\)，比较 \(\max\{b_{x+1}, a_x \cdot b_x\}\) 与 \(\max\{b_x, a_{x+1} \cdot b_{x+1}\}\) 的大小关系。</p>
+<p>显然 \(a_x \cdot b_x  \ge b_x\)，\(a_{x+1} \cdot b_{x+1} \ge b_{x+1}\)，所以就是比较 \(a_x \cdot b_x\) 与 \(a_{x+1} \cdot b_{x+1}\)，\(a_x \cdot b_x\) 大则交换前大，反之交换后大。得证。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>贺题解。</p>
+<pre class="line-numbers"><code class="language-py">n = int(input())
+a, b = map(int, input().split())
+w = []
+for i in range(n):
+    c, d = map(int, input().split())
+    w.append([c, d])
+w.sort(key=lambda x: (x[0] * x[1]))
+ans = 0
+for i in range(n):
+    ans = max(ans, a // w[i][1])
+    a *= w[i][0]
+print(ans)
+</code></pre>
+<hr />
+<h2><a id="color-a-tree" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Color a Tree</h2>
+<p><tc><c>0x0703</c><m>Medium+</m><t>贪心</t><t>树</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>注意到对于树中权值最大的点，它一定是在它父亲被染色之后立即被染色的。于是就可以把它和它父亲连成一个点。</p>
+<p>连了以后权值变为它们的平均数，非常神奇。</p>
+<p>举例，三个点 \(x,y,z\)，其中 \(x,y\) 同时染色。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>先 \(z\) 再 \(x,y\)</td>
+<td>\(a=z+2x+3y\)</td>
+</tr>
+<tr>
+<td>先 \(x,y\) 再 \(z\)</td>
+<td>\(b=x+2y+3z\)</td>
+</tr>
+</tbody>
+</table>
+<p>我们的目的是比较 \(a,b\) 的大小。作差，得 \(x+y-2z\)。因此，当 \(z \le \dfrac{x+y}2\) 的时候，先染 \(z\) 更优。所以 \(x,y\) 两个点其实等价于它们的平均值。</p>
 
                   </article>
                   <div class="comments-wrap">
