@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-03-26T23:44:05+08:00</updated>
+  <updated>2022-03-28T00:12:20+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,13 +14,13 @@
   
   <entry>
     <title type="html"><![CDATA[NOI Online 2022 Junior]]></title>
-    <link href="oi.afobject.ml/16483688890647.html"/>
+    <link href="oi.afobject.ml/noiol-junior-2022.html"/>
     <updated>2022-03-27T16:14:49+08:00</updated>
-    <id>oi.afobject.ml/16483688890647.html</id>
+    <id>oi.afobject.ml/noiol-junior-2022.html</id>
     <content type="html"><![CDATA[
 <p>场外，不会做 T2。</p>
 <h2><a id="%E6%95%B0%E5%AD%A6%E6%B8%B8%E6%88%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>数学游戏</h2>
-<p><tc><m>Medium+</m><t>数学</t></tc></p>
+<p><tc><m>Medium+</m><t>数学</t><t>GCD</t></tc></p>
 <p>对于每一组 \((x,z)\)，求最小的 \(y\)，使得 \(x \times y \times \gcd(x,y) = z\)。</p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>设 \(x = \gcd(x,y) \cdot a\)，\(y = \gcd(x,y)\cdot b\)。</p>
