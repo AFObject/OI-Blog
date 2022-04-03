@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-04-03T23:47:05+08:00</updated>
+  <updated>2022-04-04T00:31:30+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -267,9 +267,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[0x02 递推与递归]]></title>
-    <link href="oi.afobject.ml/0x02.html"/>
+    <link href="oi.afobject.ml/0x02-.html"/>
     <updated>2022-01-15T10:33:03+08:00</updated>
-    <id>oi.afobject.ml/0x02.html</id>
+    <id>oi.afobject.ml/0x02-.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E5%AE%8F%E8%A7%82%E6%8F%8F%E8%BF%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>宏观描述</h2>
 <h3><a id="%E9%80%92%E5%BD%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归</h3>
