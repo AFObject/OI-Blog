@@ -288,7 +288,7 @@ print(ans)
 </code></pre>
 <hr />
 <h2><a id="color-a-tree" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Color a Tree</h2>
-<p><tc><c>0x0703</c><m>Medium+</m><t>贪心</t><t>树</t></tc></p>
+<p><tc><c>0x0703</c><h>Hard</h><t>贪心</t><t>树</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>注意到对于树中权值最大的点，它一定是在它父亲被染色之后立即被染色的。于是就可以把它和它父亲连成一个点。</p>
 <p>连了以后权值变为它们的平均数，非常神奇。</p>
@@ -312,6 +312,49 @@ print(ans)
 </tbody>
 </table>
 <p>我们的目的是比较 \(a,b\) 的大小。作差，得 \(x+y-2z\)。因此，当 \(z \le \dfrac{x+y}2\) 的时候，先染 \(z\) 更优。所以 \(x,y\) 两个点其实等价于它们的平均值。</p>
+<p>可以推广，\(n\) 个点构成的共同体的权值等价于它们的平均值。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>写不来 \(n \log n\) 就写 \(n^2\)。</p>
+<p><code>fa</code> 数组人工维护一个简化版并查集状物；<code>next</code> 数组维护一个保存染色顺序的单向链表。</p>
+<p><code>sum</code> 和 <code>num</code> 分别表示每个块的权值和以及节点个数；<code>last</code> 表示某个块当前最后一个被染色的节点（用于把后面的链表挂在它上面）；<code>used</code> 代表该点是否已被合并。</p>
+<pre class="line-numbers"><code class="language-cpp">int n, r;
+int fa[100001], c[100001], next[100001];
+int sum[100001], num[100001], last[100001];
+bool used[100001];
+
+int main() {
+    while (true) {
+        n = read(), r = read();
+        if (!n) return 0;
+        for (int i = 1; i &lt;= n; ++i)
+            c[i] = sum[i] = read(), num[i] = 1, last[i] = i, next[i] = i, used[i] = false;
+        for (int i = 1; i &lt; n; ++i) {
+            int x = read(), y = read();
+            fa[y] = x;
+        }
+        for (int i = 1; i &lt; n; ++i) {
+            int x = -1; double max = -1;
+            for (int j = 1; j &lt;= n; ++j)
+                if (j != r &amp;&amp; !used[j] &amp;&amp; (double)sum[j] / num[j] &gt; max)
+                    x = j, max = (double)sum[j] / num[j];
+            int f = fa[x];
+            while (used[f]) f = fa[x] = fa[f];
+            used[x] = true;
+            next[last[f]] = x;
+            last[f] = last[x];
+            sum[f] += sum[x];
+            num[f] += num[x];
+        }
+        int ans = 0;
+        for (int i = 1; i &lt;= n; ++i) {
+            ans += i * c[r];
+            r = next[r];
+        }
+        printf(&quot;%d\n&quot;, ans);
+    }
+    return 0;
+}
+</code></pre>
 
                   </article>
                   <div class="comments-wrap">

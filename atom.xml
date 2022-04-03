@@ -4,55 +4,13 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-03-28T00:12:20+08:00</updated>
+  <updated>2022-04-03T23:47:02+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
-  
-  <entry>
-    <title type="html"><![CDATA[NOI Online 2022 Junior]]></title>
-    <link href="oi.afobject.ml/noiol-junior-2022.html"/>
-    <updated>2022-03-27T16:14:49+08:00</updated>
-    <id>oi.afobject.ml/noiol-junior-2022.html</id>
-    <content type="html"><![CDATA[
-<p>场外，不会做 T2。</p>
-<h2><a id="%E6%95%B0%E5%AD%A6%E6%B8%B8%E6%88%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>数学游戏</h2>
-<p><tc><m>Medium+</m><t>数学</t><t>GCD</t></tc></p>
-<p>对于每一组 \((x,z)\)，求最小的 \(y\)，使得 \(x \times y \times \gcd(x,y) = z\)。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>设 \(x = \gcd(x,y) \cdot a\)，\(y = \gcd(x,y)\cdot b\)。</p>
-<p>则 \(\dfrac zx = \gcd(x,y) \cdot y = \gcd(x,y)^2 \cdot b\)。注意到 \(x^2=\gcd(x,y)^2 \cdot a^2\)，考虑消去没用的 \(a\)。</p>
-<p>因为 \(a \perp b\)，所以 \(\gcd\left(\dfrac zx, x^2\right)=\gcd(x,y)^2\)。所以 \(\gcd(x,y) = \sqrt{\gcd\left(\dfrac zx, x^2\right)}\)。</p>
-<p>所以 \(y = \dfrac z {x \cdot \sqrt{\gcd\left(\dfrac zx, x^2\right)}}\)。</p>
-<p>没法用以上方法复原 \(y\) 的，均为无解。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int t, x, z;
-
-int gcd(int a, int b) {
-    return b ? gcd(b, a % b) : a;
-}
-
-signed main() {
-    t = read();
-    while (t--) {
-        x = read(), z = read();
-        if (z % x) { puts(&quot;-1&quot;); continue; }
-        const int k = z / x;
-        const int g = gcd(x * x, k);
-        const int rt = sqrt(g);
-        if (rt * rt != g) { puts(&quot;-1&quot;); continue; }
-        printf(&quot;%lld\n&quot;, z / (x * rt));
-    }
-}
-</code></pre>
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
@@ -1608,7 +1566,7 @@ print(ans)
 </code></pre>
 <hr />
 <h2><a id="color-a-tree" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Color a Tree</h2>
-<p><tc><c>0x0703</c><m>Medium+</m><t>贪心</t><t>树</t></tc></p>
+<p><tc><c>0x0703</c><h>Hard</h><t>贪心</t><t>树</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>注意到对于树中权值最大的点，它一定是在它父亲被染色之后立即被染色的。于是就可以把它和它父亲连成一个点。</p>
 <p>连了以后权值变为它们的平均数，非常神奇。</p>
@@ -1632,6 +1590,49 @@ print(ans)
 </tbody>
 </table>
 <p>我们的目的是比较 \(a,b\) 的大小。作差，得 \(x+y-2z\)。因此，当 \(z \le \dfrac{x+y}2\) 的时候，先染 \(z\) 更优。所以 \(x,y\) 两个点其实等价于它们的平均值。</p>
+<p>可以推广，\(n\) 个点构成的共同体的权值等价于它们的平均值。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>写不来 \(n \log n\) 就写 \(n^2\)。</p>
+<p><code>fa</code> 数组人工维护一个简化版并查集状物；<code>next</code> 数组维护一个保存染色顺序的单向链表。</p>
+<p><code>sum</code> 和 <code>num</code> 分别表示每个块的权值和以及节点个数；<code>last</code> 表示某个块当前最后一个被染色的节点（用于把后面的链表挂在它上面）；<code>used</code> 代表该点是否已被合并。</p>
+<pre class="line-numbers"><code class="language-cpp">int n, r;
+int fa[100001], c[100001], next[100001];
+int sum[100001], num[100001], last[100001];
+bool used[100001];
+
+int main() {
+    while (true) {
+        n = read(), r = read();
+        if (!n) return 0;
+        for (int i = 1; i &lt;= n; ++i)
+            c[i] = sum[i] = read(), num[i] = 1, last[i] = i, next[i] = i, used[i] = false;
+        for (int i = 1; i &lt; n; ++i) {
+            int x = read(), y = read();
+            fa[y] = x;
+        }
+        for (int i = 1; i &lt; n; ++i) {
+            int x = -1; double max = -1;
+            for (int j = 1; j &lt;= n; ++j)
+                if (j != r &amp;&amp; !used[j] &amp;&amp; (double)sum[j] / num[j] &gt; max)
+                    x = j, max = (double)sum[j] / num[j];
+            int f = fa[x];
+            while (used[f]) f = fa[x] = fa[f];
+            used[x] = true;
+            next[last[f]] = x;
+            last[f] = last[x];
+            sum[f] += sum[x];
+            num[f] += num[x];
+        }
+        int ans = 0;
+        for (int i = 1; i &lt;= n; ++i) {
+            ans += i * c[r];
+            r = next[r];
+        }
+        printf(&quot;%d\n&quot;, ans);
+    }
+    return 0;
+}
+</code></pre>
 
 ]]></content>
   </entry>
@@ -1894,6 +1895,89 @@ int main() {
         }
     }
     return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ABC242]]></title>
+    <link href="oi.afobject.ml/abc242.html"/>
+    <updated>2022-03-08T22:51:04+08:00</updated>
+    <id>oi.afobject.ml/abc242.html</id>
+    <content type="html"><![CDATA[
+<p>VP</p>
+<h2><a id="d-abc-transform" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D ABC Transform</h2>
+<p><tc><m>Medium *1286</m><t>递归</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h02vhvw87kj20vl0u0q4f.jpg" alt="" /></p>
+<p>可以发现原树由 \(n\) 棵完全二叉树组成，然后发现可以暴力。具体地：</p>
+<ul>
+<li>对于节点 \((t,k)\)（第 \(t\) 层第 \(k\) 个） 它父亲一定是 \((t-1,\lfloor \dfrac k 2 \rfloor)\)，继续递归。回溯的时候，若 \(k \equiv 1 \pmod 2\)，则是左子节点，返回相应字母（原字母进一）；反之返回右子节点的字母（原字母进二 / 退一）。</li>
+<li>对于节点 \((0,k)\)，返回第 \(k\) 个源字母。</li>
+</ul>
+<p>然后发现暴力似乎太慢，但又发现 \(k \le 10^{18}\) 这样一个怪异的条件。假如能做到 \(\log k\) 也是能过的。</p>
+<p>考虑对于 \(k\) 已除到 \(0\) 的情况，即返回某一指定层的第一个字母。很容易发现第一个字母是循环的如 <code>ABCABC......</code> 所以结束了。复杂度 \(O(Q \log k)\)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>注意负数取模仍是负数。</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+char a[1000001];
+int q, t, k;
+
+char solve(int t, int k) {
+	if (t == 0)
+		return a[k];
+    if (k == 1)
+        return (a[1] - 'A' + t) % 3 + 'A';
+
+    char c = solve(t - 1, (k + 1) &gt;&gt; 1);
+    return (c - 'A' - (k &amp; 1) + 2) % 3 + 'A';
+}
+
+signed main() {
+	scanf(&quot;%s&quot;, a + 1);
+	q = read();
+	while (q--) {
+		t = read(), k = read();
+		printf(&quot;%c\n&quot;, solve(t, k));
+	}
+}
+</code></pre>
+<hr />
+<h2><a id="e%E2%88%80-x%E2%88%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E (∀x∀)</h2>
+<p><tc><m>Medium- *1365</m><t>递归</t></tc></p>
+<h3><a id="%E5%88%86%E6%9E%90" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>分析</h3>
+<p>毛估估是 \(\le\) 取一半构成的那个回文串的回文串的个数，如果取一半构成的那个回文串不符合那么答案就减一。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+#define MOD 998244353
+#define m(x) (((x) + MOD) % MOD)
+
+int T, n;
+int pow26[2500001];
+char s[2500001];
+
+signed main() {
+    pow26[0] = 1;
+    for (int i = 1; i &lt;= 2500000; ++i)
+        pow26[i] = m(26 * pow26[i - 1]);
+    scanf(&quot;%lld&quot;, &amp;T);
+    while (T--) {
+        scanf(&quot;%lld%s&quot;, &amp;n, s);
+        int ans = 1;
+        const int q = (n - 1) &gt;&gt; 1;
+        for (int i = q; i &gt;= 0; --i) 
+            ans = m(ans + m((s[i] - 'A') * pow26[q - i]));
+        bool valid = true;
+        for (int i = q; i &gt;= 0; --i)
+            if (s[n - i - 1] != s[i]) {
+                valid = s[n - i - 1] &gt; s[i];
+                break;
+            }
+        printf(&quot;%lld\n&quot;, m(ans - !valid));
+    }
 }
 </code></pre>
 
