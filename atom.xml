@@ -4,13 +4,66 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-04-03T23:47:02+08:00</updated>
+  <updated>2022-04-03T23:47:05+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x0801 ~ 0x0804]]></title>
+    <link href="oi.afobject.ml/0x08-1.html"/>
+    <updated>2022-04-03T23:51:45+08:00</updated>
+    <id>oi.afobject.ml/0x08-1.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="the-pilots-brothers-refrigerator" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Pilots Brothers' Refrigerator</h2>
+<p><tc><c>0x0801</c><e>Easy</e><t>状压</t><t>枚举</t><t>模拟</t></tc></p>
+<p>给定一个 \(4\times4\) 的 0-1 矩阵，每次选择一个 \((i,j)\)，使得第 \(i\) 行、第 \(j\) 列上所有的数反转。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>枚举每一个位置是否反转，并模拟。时间复杂度 O(能过)。</p>
+<p>侮辱智商。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">bool m[5][5], c[5][5];
+
+int main() {
+    for (int i = 1; i &lt;= 4; ++i)
+        for (int j = 1; j &lt;= 4; ++j) {
+            char q; std::cin &gt;&gt; q;
+            m[i][j] = (q == '-');
+        }
+    int min = 17, minS = 0;
+    for (int s = 0; s &lt; 1 &lt;&lt; 16; ++s) {
+        memcpy(c, m, sizeof c);
+        int cnt = 0;
+        for (int i = 0; i &lt; 16; ++i)
+            if (s &amp; (1 &lt;&lt; i)) {
+                ++cnt;
+                const int row = i / 4 + 1, col = i % 4 + 1;
+                for (int j = 1; j &lt;= 4; ++j)
+                    c[row][j] ^= 1;
+                for (int j = 1; j &lt;= 4; ++j)
+                    c[j][col] ^= 1;
+                c[row][col] ^= 1;
+            }
+        bool sum = 1;
+        for (int i = 1; i &lt;= 4; ++i)
+            for (int j = 1; j &lt;= 4; ++j)
+                sum &amp;= c[i][j];
+        if (sum &amp;&amp; cnt &lt; min)
+            min = cnt, minS = s;
+    }
+    printf(&quot;%d\n&quot;, min);
+    for (int i = 0; i &lt; 16; ++i)
+        if (minS &amp; (1 &lt;&lt; i))
+            printf(&quot;%d %d\n&quot;, i / 4 + 1, i % 4 + 1);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
@@ -1895,89 +1948,6 @@ int main() {
         }
     }
     return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ABC242]]></title>
-    <link href="oi.afobject.ml/abc242.html"/>
-    <updated>2022-03-08T22:51:04+08:00</updated>
-    <id>oi.afobject.ml/abc242.html</id>
-    <content type="html"><![CDATA[
-<p>VP</p>
-<h2><a id="d-abc-transform" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D ABC Transform</h2>
-<p><tc><m>Medium *1286</m><t>递归</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h02vhvw87kj20vl0u0q4f.jpg" alt="" /></p>
-<p>可以发现原树由 \(n\) 棵完全二叉树组成，然后发现可以暴力。具体地：</p>
-<ul>
-<li>对于节点 \((t,k)\)（第 \(t\) 层第 \(k\) 个） 它父亲一定是 \((t-1,\lfloor \dfrac k 2 \rfloor)\)，继续递归。回溯的时候，若 \(k \equiv 1 \pmod 2\)，则是左子节点，返回相应字母（原字母进一）；反之返回右子节点的字母（原字母进二 / 退一）。</li>
-<li>对于节点 \((0,k)\)，返回第 \(k\) 个源字母。</li>
-</ul>
-<p>然后发现暴力似乎太慢，但又发现 \(k \le 10^{18}\) 这样一个怪异的条件。假如能做到 \(\log k\) 也是能过的。</p>
-<p>考虑对于 \(k\) 已除到 \(0\) 的情况，即返回某一指定层的第一个字母。很容易发现第一个字母是循环的如 <code>ABCABC......</code> 所以结束了。复杂度 \(O(Q \log k)\)。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>注意负数取模仍是负数。</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-char a[1000001];
-int q, t, k;
-
-char solve(int t, int k) {
-	if (t == 0)
-		return a[k];
-    if (k == 1)
-        return (a[1] - 'A' + t) % 3 + 'A';
-
-    char c = solve(t - 1, (k + 1) &gt;&gt; 1);
-    return (c - 'A' - (k &amp; 1) + 2) % 3 + 'A';
-}
-
-signed main() {
-	scanf(&quot;%s&quot;, a + 1);
-	q = read();
-	while (q--) {
-		t = read(), k = read();
-		printf(&quot;%c\n&quot;, solve(t, k));
-	}
-}
-</code></pre>
-<hr />
-<h2><a id="e%E2%88%80-x%E2%88%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E (∀x∀)</h2>
-<p><tc><m>Medium- *1365</m><t>递归</t></tc></p>
-<h3><a id="%E5%88%86%E6%9E%90" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>分析</h3>
-<p>毛估估是 \(\le\) 取一半构成的那个回文串的回文串的个数，如果取一半构成的那个回文串不符合那么答案就减一。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-#define MOD 998244353
-#define m(x) (((x) + MOD) % MOD)
-
-int T, n;
-int pow26[2500001];
-char s[2500001];
-
-signed main() {
-    pow26[0] = 1;
-    for (int i = 1; i &lt;= 2500000; ++i)
-        pow26[i] = m(26 * pow26[i - 1]);
-    scanf(&quot;%lld&quot;, &amp;T);
-    while (T--) {
-        scanf(&quot;%lld%s&quot;, &amp;n, s);
-        int ans = 1;
-        const int q = (n - 1) &gt;&gt; 1;
-        for (int i = q; i &gt;= 0; --i) 
-            ans = m(ans + m((s[i] - 'A') * pow26[q - i]));
-        bool valid = true;
-        for (int i = q; i &gt;= 0; --i)
-            if (s[n - i - 1] != s[i]) {
-                valid = s[n - i - 1] &gt; s[i];
-                break;
-            }
-        printf(&quot;%lld\n&quot;, m(ans - !valid));
-    }
 }
 </code></pre>
 
