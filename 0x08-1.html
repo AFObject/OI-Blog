@@ -111,6 +111,8 @@
                                       
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
+                                  
+                                    <c><a href='tag_%E6%A8%A1%E6%8B%9F.html'>#模拟</a></c>
                                      
 
                                 </p>
@@ -125,7 +127,6 @@
 <p>给定一个 \(4\times4\) 的 0-1 矩阵，每次选择一个 \((i,j)\)，使得第 \(i\) 行、第 \(j\) 列上所有的数反转。</p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>枚举每一个位置是否反转，并模拟。时间复杂度 O(能过)。</p>
-<p>侮辱智商。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
 <pre class="line-numbers"><code class="language-cpp">bool m[5][5], c[5][5];
 
@@ -163,6 +164,112 @@ int main() {
     return 0;
 }
 </code></pre>
+<hr />
+<h2><a id="%E5%8D%A0%E5%8D%9Cdiy" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>占卜 DIY</h2>
+<p><tc><c>0x0802</c><e>Easy</e><t>模拟</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>？？？？？？？</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">struct Node {
+    int num;
+    bool state;
+};
+std::deque&lt;Node&gt; q[14];
+
+int trans(char c) {
+    if (c &gt;= '2' &amp;&amp; c &lt;= '9')
+        return c - '0';
+    switch (c) {
+        case '0': return 10;
+        case 'J': return 11;
+        case 'Q': return 12;
+        case 'K': return 13;
+        case 'A': return 1;
+    }
+    return 0;
+}
+
+int buc[14];
+
+int main() {
+    for (int i = 1; i &lt;= 13; ++i) {
+        char c;
+        for (int j = 1; j &lt;= 4; ++j) {
+            std::cin &gt;&gt; c;
+            // front 上，back 下。
+            q[i].push_back({trans(c), false});
+        }
+    }
+    while (q[13].size()) {
+        auto current = q[13].front();
+        q[13].pop_front();
+        while (true) {
+            const int t = current.num;
+            if (t == 13)
+                break;
+            q[t].push_front({t, true});
+            current = q[t].back();
+            q[t].pop_back();
+        }
+    }
+    for (int i = 1; i &lt;= 13; ++i)
+        while (q[i].size())
+            buc[q[i].front().num] += q[i].front().state,
+            q[i].pop_front();
+    int ans = 0;
+    for (int i = 1; i &lt; 13; ++i)
+        if (buc[i] == 4)
+            ++ans;
+    std::cout &lt;&lt; ans &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="fractal" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal</h2>
+<p><tc><c>0x0803</c><e>Easy</e><t>模拟</t><t>分形</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>？？？？？？？</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n;
+int pow3[1001];
+char res[1001][1001];
+
+void fractal(int x, int y, int level) {
+    if (level == 1) {
+        res[x][y] = 'X';
+        return;
+    }
+    const int t = pow3[level - 2];
+    fractal(x, y, level - 1);
+    fractal(x + (t &lt;&lt; 1), y, level - 1);
+    fractal(x, y + (t &lt;&lt; 1), level - 1);
+    fractal(x + (t &lt;&lt; 1), y + (t &lt;&lt; 1), level - 1);
+    fractal(x + t, y + t, level - 1);
+}
+
+int main() {
+    pow3[0] = 1;
+    for (int i = 1; i &lt;= 7; ++i)
+        pow3[i] = pow3[i - 1] * 3;
+    while (scanf(&quot;%d&quot;, &amp;n)) {
+        if (n == -1)
+            break;
+        memset(res, ' ', sizeof res);
+        fractal(1, 1, n);
+        for (int i = 1; i &lt;= pow3[n - 1]; ++i) {
+            for (int j = 1; j &lt;= pow3[n - 1]; ++j)
+                printf(&quot;%c&quot;, res[i][j]);
+            putchar('\n');
+        }
+        puts(&quot;-&quot;);
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="raid" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raid</h2>
+<p><tc><c>0x0804</c></tc></p>
+<p>疑似只能用玄学算法卡过，最坏情况 \(n^2\)。。。先跳过了。</p>
 
                   </article>
                   <div class="comments-wrap">
