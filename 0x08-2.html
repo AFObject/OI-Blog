@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x052 中位数 - OI Blog
+    0x0805 ~ 0x0808 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg" type="image/png" />
@@ -83,7 +83,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x052 中位数   
+                            0x0805 ~ 0x0808   
                       </h1>
                      
                     
@@ -100,10 +100,10 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/01/23</span>
+                                 <span class="date">2022/04/04</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
-                                      <span class="posted-in"><a href='0x05.html'>0x05 排序</a></span>
+                                      <span class="posted-in"><a href='0x08.html'>0x08 总结与练习</a></span>
                                          
                                   
 
@@ -112,13 +112,13 @@
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
                                   
-                                    <c><a href='tag_%E6%8E%92%E5%BA%8F.html'>#排序</a></c>
-                                  
-                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
+                                    <c><a href='tag_%E4%BA%8C%E5%88%86.html'>#二分</a></c>
                                   
                                     <c><a href='tag_%E5%89%8D%E7%BC%80%E5%92%8C.html'>#前缀和</a></c>
                                   
-                                    <c><a href='tag_%E5%A0%86.html'>#堆</a></c>
+                                    <c><a href='tag_%E7%A6%BB%E6%95%A3%E5%8C%96.html'>#离散化</a></c>
+                                  
+                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
                                   
                                     <c><a href='tag_%E7%8E%AF%E4%B8%8A%E9%97%AE%E9%A2%98.html'>#环上问题</a></c>
                                      
@@ -130,140 +130,163 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <h2><a id="%E8%B4%A7%E4%BB%93%E9%80%89%E5%9D%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>货仓选址</h2>
-<p><tc><c>0x0502</c><e>Easy-</e><t>数学</t></tc></p>
+                    <h2><a id="%E9%98%B2%E7%BA%BF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>防线</h2>
+<p><tc><c>0x0805</c><e>Easy</e><t>二分</t><t>前缀和</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>先排序，然后开始「换根」。</p>
-<p>假如从建在 \(i\) 处转移到建在 \(i + 1\) 处，则 \(i\) 左边的商店很倒霉，右边的商店获益。反之同理。</p>
-<p>最好使得左右商店均衡。</p>
-<p>因此如果是奇数就建在中位数处，否则哪怕左右移动 1 毫米就会有超过一半的商店开始叫了。</p>
-<p>如果是偶数，同理，建在中间的两个商店的区间内就行了。</p>
-<p>答案是排序后的</p>
-\[\sum_{i=1}^n \lvert a_i-a_{\lceil \frac n 2 \rceil} \rvert
-\]
-<hr />
-<h2><a id="%E4%B8%83%E5%A4%95%E7%A5%AD" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>七夕祭</h2>
-<p><tc><c>0x0503</c><m>Medium+</m><t>前缀和</t><t>数学</t><t>环上问题</t></tc></p>
-<p>\(n \times m\) 的方格中，有 \(t\) 个点为「目标点」。通过一定次数的<strong>相邻</strong>上下、左右格内的交换，使得<strong>每行、每列内的目标点数相同</strong>。但这里比较特殊，一行或一列可以看成一个<strong>环</strong>，首行和末行在同一列上的格子可以交换，首列和末列在同一行上的格子可以交换。</p>
-<p>求最少的交换次数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>拆分问题：</p>
-<ul>
-<li>通过最少次数的左右交换使每列目标点数相同。</li>
-<li>通过最少次数的上下交换使每行目标点数相同。</li>
-</ul>
-<p>这两个互不干涉。</p>
-<blockquote>
-<h4><a id="%E7%AE%80%E5%8C%96%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>简化问题</h4>
-<p>一条长度为 \(n\) 的数组 \(a\)，要求最终每个数都相等。一次操作可以将相邻两个数一个 \(+1\) 一个 \(-1\)，求最小的操作次数。</p>
-<hr />
-<ul>
-<li>首先要求 \(n \mid \sum a_i\)，否则显然无解。</li>
-<li>否则，从第一个数开始考虑：
-<ul>
-<li>如果多了，给 2；</li>
-<li>少了，2 给。</li>
-</ul>
-</li>
-<li>同理继续。如果出现负数也无所谓，反正操作顺序可以任意调换。</li>
-</ul>
-<p>计算答案：</p>
-<ul>
-<li>由第一个数发起的操作次数为 \(\lvert a_1 - d \rvert\)，其中 \(d = \dfrac{\sum a_i}{n}\)；</li>
-<li>由第二个数发起的操作次数为 \(\lvert a_1 + a_2 - 2 \cdot d \rvert\)；</li>
-</ul>
-<p><strong>总操作次数为 \(\sum\limits_{i=1}^n \lvert \operatorname{pre_a}(i)-i \cdot d \rvert\)。</strong></p>
-<p>如果一开始每个人就减去 \(d\)（设减去后的数组为 \(b\)），则<strong>总操作次数就是 \(\sum_\limits{i=1}^n\lvert \operatorname{pre_b}(i)_ \rvert\)。</strong></p>
-</blockquote>
-<p>与本题的任意一个子问题的区别就在于本题可以成环。很容易想到经典的破环成链，下面来验证正确性。</p>
-<p>我们观察到在简化问题中，<strong>即使允许首项和末项之间的操作，也不会对最优结果产生任何影响</strong>。一个数比 \(d\) 多的部分就雷打不动要移走，移走的时候直接顺着 \(1,2,3, \ldots ,n\) 的顺序就行了，没必要非得直接跳到 \(n\)。所以<strong>破环成链</strong>是正确的。</p>
-<p>当破环破在第 \(k\) 个数之后时，则长成这样：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: center">转化后的 \(b\) 数组</th>
-<th>\(b_{k+1}\)</th>
-<th>\(b_{k+2}\)</th>
-<th style="text-align: left">\(b_n\)</th>
-<th style="text-align: left">\(b_1\)</th>
-<th style="text-align: left">\(b_k\)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center">前缀和 \(p\) 数组</td>
-<td>\(p_{k+1}-p_k\)</td>
-<td>\(p_{k+2}-p_k\)</td>
-<td style="text-align: left">\(p_n-p_k\)</td>
-<td style="text-align: left">\(p_1+p_n-p_k\)</td>
-<td style="text-align: left">\(p_n\)</td>
-</tr>
-</tbody>
-</table>
-<p>很容易发现，总操作次数是 \(\sum\limits_{i=1}^n \lvert p_i-p_k \rvert\)。</p>
-<p>震惊，就是上一题的货仓选址！将 \(p\) 排序后，\(k\) 应取中位数。</p>
-<p>神 仙 题！</p>
+<p>《人工 h1》<strong>最多只有一个事奇数的位置！</strong>《/人工 h1》</p>
+<p>所以直接二分出第一个出现前缀和为奇数的位置就好了。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>大数据题都开 <code>long long</code>。</p>
+<p>样例搞偷袭不讲武德！!1</p>
 <pre class="line-numbers"><code class="language-cpp">#define int long long
 
-#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+int T, n;
+int s[200001], e[200001], d[200001];
 
-int n, m, t;
-int r[100001], c[100001];
+int upper(int x, int y) {
+    if (x % y) return x / y + 1;
+    else return x / y;
+}
 
-int p[100001];
-int solve(int n, int a[]) {
-    int sum = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        sum += a[i];
-    if (sum % n)
-        return -1;
-    const int d = sum / n;
-    for (int i = 1; i &lt;= n; ++i)
-        p[i] = p[i - 1] + a[i] - d;
-    std::sort(p + 1, p + n + 1);
+int sum(int x) {
+    if (x &lt; 0) return 0;
     int ans = 0;
     for (int i = 1; i &lt;= n; ++i)
-        ans += abs(p[i] - p[(n + 1) / 2]);
+        if (s[i] &lt;= x)
+            ans += upper(std::min(e[i], x) - s[i] + 1, d[i]);
     return ans;
 }
 
 signed main() {
-    n = read(), m = read(), t = read();
-    while (t--)
-        ++r[read()], ++c[read()];
-    int x = solve(n, r), y = solve(m, c);
-    if (x == -1 &amp;&amp; y == -1) puts(&quot;impossible&quot;);
-    else if (x == -1) printf(&quot;column %lld\n&quot;, y);
-    else if (y == -1) printf(&quot;row %lld\n&quot;, x);
-    else printf(&quot;both %lld\n&quot;, x + y);
+    T = read();
+    while (T--) {
+        n = read();
+        for (int i = 1; i &lt;= n; ++i)
+            s[i] = read(), e[i] = read(), d[i] = read();
+        int l = 0, r = 1ll &lt;&lt; 31;
+        while (l &lt; r) {
+            const int mid = (l + r) &gt;&gt; 1;
+            if (sum(mid) &amp; 1) r = mid;
+            else l = mid + 1;
+        }
+        if (l == 1ll &lt;&lt; 31) puts(&quot;There's no weakness.&quot;);
+        else printf(&quot;%lld %lld\n&quot;, l, sum(l) - sum(l - 1));
+    }
     return 0;
 }
 </code></pre>
 <hr />
-<h2><a id="running-median" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Median</h2>
-<p><tc><c>0x0503</c><e>Easy</e><t>对顶堆</t></tc></p>
+<h2><a id="corral-the-cows" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Corral the Cows</h2>
+<p><tc><c>0x0806</c><c>USACO</c><e>Easy+</e><t>二分</t><t>前缀和</t><t>离散化</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>维护两个堆（<code>std::priority_queue</code>），第一个大根堆维护 \(1 \sim \lfloor \dfrac n 2 \rfloor\)，第二个小根堆维护  \(\lfloor \dfrac n 2 \rfloor + 1 \sim n\)。第二个堆的首项为中位数。</p>
-<p>当任意一个堆的个数超了的时候，移到另外一个去。</p>
+<p>由于 \(n\) 极小，考虑离散化。</p>
+<p>离散化完了以后照样二分就完了。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">void solve() {
-    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::less&lt;int&gt;&gt; q1;
-    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::greater&lt;int&gt;&gt; q2;
-    int x = read();
-    q2.push(x), printf(&quot;%d &quot;, x);
-    for (int i = 2; i &lt;= n; ++i) {
-        int x = read();
-        if (x &lt; q2.top()) q1.push(x);
-        else q2.push(x);
-        if (q1.size() &gt; (i &gt;&gt; 1))
-            q2.push(q1.top()), q1.pop();
-        if (q2.size() &gt; (i + 1) &gt;&gt; 1)
-            q1.push(q2.top()), q2.pop();
-        if (i &amp; 1)
-            printf(&quot;%d &quot;, q2.top());
+<p>注意：</p>
+<ol>
+<li>处理重合的点；</li>
+<li>边界情况。</li>
+</ol>
+<pre class="line-numbers"><code class="language-cpp">int n, c;
+int x[501], y[501];
+int a[501], b[501];
+int sizeA, sizeB;
+int x1[501], y1[501];
+int g[501][501];
+
+int xid(int x) {
+    return std::lower_bound(a + 1, a + sizeA, x) - a;
+}
+int yid(int y) {
+    return std::lower_bound(b + 1, b + sizeB, y) - b;
+}
+
+bool check(int d) {
+    for (int a2 = 1; a2 &lt; sizeA; ++a2)
+        for (int b2 = 1; b2 &lt; sizeB; ++b2) {
+            const int a1 = xid(x1[a2] - d + 1),
+                      b1 = yid(y1[b2] - d + 1);
+            const int sum = g[a2][b2] - g[a1 - 1][b2] - g[a2][b1 - 1] + g[a1 - 1][b1 - 1];
+            if (sum &gt;= c)
+                return true;
+        }
+    return false;
+}
+
+int main() {
+    c = read(), n = read();
+    for (int i = 1; i &lt;= n; ++i) {
+        x[i] = a[i] = read();
+        y[i] = b[i] = read();
     }
+
+    std::sort(a + 1, a + n + 1);
+    std::sort(b + 1, b + n + 1);
+    sizeA = std::unique(a + 1, a + n + 1) - a;
+    sizeB = std::unique(b + 1, b + n + 1) - b;
+    for (int i = 1; i &lt;= n; ++i) {
+        const int p = xid(x[i]), q = yid(y[i]);
+        x1[p] = x[i], y1[q] = y[i];
+        ++g[p][q];
+    }
+    for (int i = 1; i &lt;= n; ++i)
+        for (int j = 1; j &lt;= n; ++j)
+            g[i][j] += g[i - 1][j] + g[i][j - 1] - g[i - 1][j - 1];
+
+    int l = 1, r = 1e5;
+    while (l &lt; r) {
+        const int mid = (l + r) &gt;&gt; 1;
+        if (check(mid)) r = mid;
+        else l = mid + 1;
+    }
+    printf(&quot;%d\n&quot;, l);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E7%B3%96%E6%9E%9C%E4%BC%A0%E9%80%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>糖果传递</h2>
+<p><tc><c>0x0807</c><c>HAOI 2008</c><e>Easy+</e><t>前缀和</t><t>数学</t><t>环上问题</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>0x0503 简化版，这里重新推导一遍，思路可能不同。</p>
+<p>先破环成链。假如在 \(a_1\) 与 \(a_n\) 之间断开。</p>
+<p>要让 \(a_1\) 达到 \(\overline{a}\)，则需要 \(a_2\) 提供它 \(\overline{a}-a_1\)（不管正负），贡献增加 \(\mid\overline{a}-a_1\mid\)。</p>
+<p>此时 \(a_2 \gets a_1 + a_2 - \overline{a}\)。想让 \(a_2\) 达到 \(\overline{a}\)，那么就要 \(a_3\) 给它 \(\overline{a}-(a_1+a_2-\overline{a})=2\cdot\overline{a}-(a_1+a_2)\)，贡献增加 \(\mid2\cdot\overline{a}-(a_1+a_2)\mid\)。</p>
+<p>可以发现，总答案为</p>
+\[\sum_{i=1}^n\left|i \cdot \overline{a}-\sum_{j=1}^ia_j\right|
+\]
+<p>假如双倍一下，进一步推广，破环破在 \(a_{k+1}\) 与 \(a_k\) 之间的，总答案为</p>
+\[\sum_{i=1}^{n}\left|i \cdot \overline{a}-\sum_{j=k+1}^{i+k}a_j\right|
+\]
+<p>设前缀和数组为 \(s\)，即 \(s_i = \sum\limits_{j=1}^ia_j\)。</p>
+<p>答案变形为</p>
+\[\sum_{i=1}^{n}\left|i \cdot \overline{a}-s_{i+k}+s_{k}\right|
+\]
+<p>前面那个东西实在是不顺眼，所以我们让 \(a_i \gets a_i-\overline{a}\) 再计算前缀和 \(s\)，答案变形为：</p>
+\[\sum_{i=1}^{n}\left|s_{k}-s_{i+k}\right|
+\]
+<p>\(s_k\) 定，考虑到 \(s_n=0\)，而因为珈贝了，我们这里的前缀和 \(s\) 的值域是 \(2n\)，\(s_{n+j}=s_{j}\)，所以式子里的 \(s_{i+k}\) 可以取到 \(s_1 \sim s_n\) 的任何值，所以答案也就是</p>
+\[\sum_{i=1}^{n}\left|s_{k}-s_i\right|
+\]
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+
+int n;
+int a[1000001], s[1000001];
+
+signed main() {
+    n = read();
+    int sum = 0;
+    for (int i = 1; i &lt;= n; ++i)
+        a[i] = read(), sum += a[i];
+    const int aver = sum / n;
+    for (int i = 1; i &lt;= n; ++i)
+        s[i] = s[i - 1] + a[i] - aver;
+    std::sort(s + 1, s + n + 1);
+    int ans = 0;
+    for (int i = 1; i &lt;= n; ++i)
+        ans += abs(s[(n + 1) &gt;&gt; 1] - s[i]);
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
 }
 </code></pre>
 
