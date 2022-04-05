@@ -289,6 +289,58 @@ signed main() {
     return 0;
 }
 </code></pre>
+<hr />
+<h2><a id="soldiers" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Soldiers</h2>
+<p><tc><c>0x0808</c><m>Medium-</m><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>纵坐标移到中位数容易证明，接下来考虑横坐标。</p>
+<p>首先证明一个事：按 \(x\) 坐标排序后，每个点的顺序与最终结果相同。</p>
+<blockquote>
+<h4><a id="%E8%AF%81%E6%98%8E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>证明</h4>
+<p>若交换一组 \((i,j)\)（\(x_i&gt;x_j\) 且 \(a_i&gt;a_j\)）那么答案将减少 \(\Delta=\mid x_i - a_i \mid + \mid  x_j - a_j \mid - \mid x_i - a_j \mid - \mid x_j - a_i \mid\)</p>
+<ul>
+<li>
+<p>若 \(x_j &gt; a_i\) 或 \(x_i &lt; a_j\)：\(\Delta=0\)</p>
+</li>
+<li>
+<p>若 \(a_j&lt;x_j&lt;a_i&lt;x_i\)：\(\Delta=x_i-a_i+x_j-a_j-x_i+a_j+x_j-a_i=2\cdot x_j-2\cdot a_i&lt;0\)</p>
+</li>
+<li>
+<p>若 \(a_j&lt;x_j&lt;x_i&lt;a_i\)：\(\Delta=a_i-x_i+x_j-a_j-x_i+a_j+x_j-a_i=2\cdot x_j-2\cdot x_i&lt;0\)</p>
+</li>
+<li>
+<p>若 \(x_j&lt;a_j&lt;x_i&lt;a_i\)：\(\Delta=a_i-x_i+a_j-x_j-x_i+a_j+x_j-a_i=2\cdot a_j-2\cdot x_i&lt;0\)</p>
+</li>
+<li>
+<p>若 \(x_j&lt;a_j&lt;a_i&lt;x_i\)：\(\Delta=x_i-a_i+a_j-x_j-x_i+a_j+x_j-a_i=2\cdot a_j-2\cdot a_i&lt;0\)</p>
+</li>
+</ul>
+<p>所以是正确的。</p>
+</blockquote>
+<p>然后就容易了，因为本来 \(x\) 坐标很小或者很大的，到时候相对于其他点就一定可以少移动一点。所以先把这个东西消掉，因此这个时候就处理好，向最右边的看齐，从右到左第 \(i\) 个点的横坐标加上 \(i\)（也可以当成，向最左边的对齐，从左到右第 \(i\) 个点的横坐标减去 \(i\)）。</p>
+<p>更理性一点，设最终移到 \( a+1, a+2, \ldots, a+n\)。那么第 \(i\) 个点的贡献是 \(\mid x_i-(a+i) \mid=\mid (x_i-i)-a \mid\)。所以 \(x_i \gets x_i-i\) 即可。</p>
+<p>这个时候，就可以照常取中位数然后算答案了。管他上一步是加还是减，相对坐标差不变，答案不变就完了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+
+int n, x[10001], y[10001];
+
+int main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i)
+        x[i] = read(), y[i] = read();
+    std::sort(x + 1, x + n + 1);
+    for (int i = 1; i &lt;= n; ++i)
+        x[i] -= i;
+    std::sort(y + 1, y + n + 1);
+    std::sort(x + 1, x + n + 1);
+    int ans = 0, x0 = x[(n + 1) &gt;&gt; 1], y0 = y[(n + 1) &gt;&gt; 1];
+    for (int i = 1; i &lt;= n; ++i)
+        ans += abs(x[i] - x0) + abs(y[i] - y0);
+    printf(&quot;%d\n&quot;, ans);
+    return 0;
+}
+</code></pre>
 
                   </article>
                   <div class="comments-wrap">
