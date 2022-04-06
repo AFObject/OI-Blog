@@ -115,6 +115,10 @@
                                     <c><a href='tag_%E9%AB%98%E7%B2%BE.html'>#高精</a></c>
                                   
                                     <c><a href='tag_%E6%A8%A1%E6%8B%9F.html'>#模拟</a></c>
+                                  
+                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
+                                  
+                                    <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
                                      
 
                                 </p>
@@ -183,6 +187,47 @@ int main() {
             printf(&quot;%c&quot;, ans[i]);
         printf(&quot;\n\n&quot;);
     }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="cow-acrobats" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cow Acrobats</h2>
+<p><tc><c>0x0810</c><m>Medium-</m><t>贪心</t><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>0x0704 改编版。</p>
+<p>第 \(x\) 头奶牛的风险值为 \(a=\sum\limits_{i=1}^{x-1} w_i - s_x\)。第 \(x+1\) 头牛风险值为 \(b=\sum\limits_{i=1}^{x} w_i - s_{x+1}\)。</p>
+<p>最后奶牛一定是按照某个顺序排列的，一旦打破这个顺序（交换），答案一定会增加。假设第 \(x\) 头牛与第 \(x+1\) 头牛交换。</p>
+<p>此时，第 \(x\) 头牛的风险值为 \(c=\sum\limits_{i=1}^{x-1} w_i+w_{x+1}-s_x\)，第 \(x+1\) 头牛的风险值为 \(d=\sum\limits_{i=1}^{x-1} w_i-s_{x+1}\)。</p>
+<p>前者一定减少，后者要比原来的大，才符合要求。</p>
+\[\begin{aligned}
+\Delta=&amp;\max\{c,d\}-\max\{a,b\}\\
+=&amp;\max\{w_{x+1}-s_x, -s_{x+1}\}-\max\{-s_x, w_x - s_{x+1}\}\text{   (统加 }\sum_{i=1}^{x-1}w_i\text{ )}\\
+=&amp;\max\{w_{x+1}+s_{x+1}, s_x\}-\max\{s_{x+1}, w_x + s_x\}\text{   (统加 }s_x+s_{x+1}\text{ )}
+\end{aligned}
+\]
+<p>好好好，当 \(w_x+s_x&gt;w_{x+1}+s_{x+1}\) 时，左边 \(s+x\) 再大也铁定大不了 \(w_x+s_x\)，\(\Delta&lt;0\)，不交换更优。</p>
+<p>当 \(w_x+s_x &lt; w_{x+1}+s_{x+1}\) 时，同理，\(\Delta&gt;0\)，交换更优。</p>
+<p>因此，按 \(w_i+s_i\) 从小到大排序最优。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n;
+struct Cow {
+    int w, s;
+    bool operator &lt; (const Cow &amp;rhs) const {
+        return w + s &lt; rhs.w + rhs.s;
+    }
+} c[1000001];
+
+int main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i)
+        c[i].w = read(), c[i].s = read();
+    std::sort(c + 1, c + n + 1);
+    int ans = -1e9, p = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        ans = std::max(ans, p - c[i].s);
+        p += c[i].w;
+    }
+    printf(&quot;%d\n&quot;, ans);
     return 0;
 }
 </code></pre>
