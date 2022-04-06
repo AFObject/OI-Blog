@@ -4,13 +4,85 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-04-05T19:19:00+08:00</updated>
+  <updated>2022-04-06T09:02:06+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x0809 ~ 0x0812]]></title>
+    <link href="oi.afobject.ml/0x08-3.html"/>
+    <updated>2022-04-06T07:39:26+08:00</updated>
+    <id>oi.afobject.ml/0x08-3.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="number-base-conversion" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Number Base Conversion</h2>
+<p><tc><c>0x0809</c><e>Easy+</e><t>高精</t><t>模拟</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>什么模拟题乱入，，，</p>
+<p>考虑随便找个数模拟一下，\(964\) 转化 7 进制：</p>
+\[\begin{aligned}
+964 \div 7 &amp;= 137 &amp;\ldots 5 \\
+137 \div 7 &amp;= 19 &amp;\ldots 4 \\
+19 \div 7 &amp;= 2 &amp;\ldots 5 \\
+2 \div 7 &amp;= 2 &amp;\ldots2 \\
+(964)_{10}&amp;=(2545)_7
+\end{aligned}
+\]
+<p>其实就是高精除低精，高精取模低精。</p>
+<p>后面那个很容易，再看一下前者是怎么做的。</p>
+\[\begin{aligned}
+\underline 9 \div 7 &amp;= 1 &amp;\ldots 2 \\
+\underline{26} \div 7 &amp;= 3 &amp;\ldots5 \\
+\underline{54} \div 7&amp;=7 &amp;\ldots5
+\end{aligned}
+\]
+<p>可以发现过程中有一个很重要的中间变量 \(k\)，也就是下划线的部分。它是计算过程中原数前若干位的十进制表示形式，只不过都及时按位模了 \(7\)。</p>
+<p>……还说啥呢，可以开始写了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int T, a, b;
+char s[1000001], ans[1000001];
+
+int to10(char x) {
+    if (x &gt;= '0' &amp;&amp; x &lt;= '9') return x - '0';
+    if (x &gt;= 'A' &amp;&amp; x &lt;= 'Z') return x - 'A' + 10;
+    return x - 'a' + 36;
+}
+char from10(int x) {
+    if (x &lt;= 9) return x + '0';
+    if (x &lt;= 35) return x - 10 + 'A';
+    return x - 36 + 'a';
+}
+
+int main() {
+    scanf(&quot;%d&quot;, &amp;T);
+    while (T--) {
+        scanf(&quot;%d%d&quot;, &amp;a, &amp;b);
+        scanf(&quot;%s&quot;, s);
+        printf(&quot;%d %s\n%d &quot;, a, s, b);
+        int len = strlen(s), t = 0, ansSize = 0;
+        while (t &lt; len) {
+            int k = 0;
+            for (int i = t; i &lt; len; ++i) {
+                k = k * a + to10(s[i]);
+                s[i] = from10(k / b);
+                k %= b;
+            }
+            ans[++ansSize] = from10(k);
+            while (t &lt; len &amp;&amp; s[t] == '0') ++t;
+        }
+        for (int i = ansSize; i; --i)
+            printf(&quot;%c&quot;, ans[i]);
+        printf(&quot;\n\n&quot;);
+    }
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
@@ -2009,74 +2081,6 @@ int main() {
     for (int i = 1; i &lt;= n; ++i)
         ans += abs(x[i] - x0) + abs(y[i] - y0);
     printf(&quot;%d\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ABC236]]></title>
-    <link href="oi.afobject.ml/abc236.html"/>
-    <updated>2022-01-23T20:24:58+08:00</updated>
-    <id>oi.afobject.ml/abc236.html</id>
-    <content type="html"><![CDATA[
-<p>Rated, 4/8, 776 \(\to\) 977</p>
-<h2><a id="e-average-and-median" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E Average and Median</h2>
-<p><tc><m>Medium *1893</m><t>DP</t><t>二分</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>显然二分。</p>
-<p>判断是否存在平均数 \(k\)：每个数减去 \(k\)，判总和是否大于 0。</p>
-<p>判断是否存在中位数 \(k\)：一个数如果 \(\ge k\) 则是 \(1\)，否则 \(-1\)，判总和大于 0。</p>
-<p>由于有这个相邻二选一的该死限制所以只能进行 DP。</p>
-<p>考虑设 \(f(i)\) 为前 \([1,i]\) 中选择 \(i\) 时的最大的和。</p>
-\[\begin{aligned}
-f(0)&amp;=0\\
-f(i)&amp;=\max\{f(i-2), f(i-1)\} + a_i
-\end{aligned}
-\]
-<p>时间复杂度 \(O(n \log n)\)。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>爆 ll 警告。</p>
-<pre class="line-numbers"><code class="language-cpp">#define AVA 10000
-#define int __int128
-
-int n;
-int a[100001], f[100001];
-
-bool judgeMedian(int x) {
-    f[1] = (a[1] &gt;= x) ? 1 : -1;
-    for (int i = 2; i &lt;= n; ++i)
-        f[i] = std::max(f[i - 2], f[i - 1]) + ((a[i] &gt;= x) ? 1 : -1);
-    return std::max(f[n], f[n - 1]) &gt; 0;
-}
-
-bool judgeAverage(int x) {
-    f[1] = a[1] - x;
-    for (int i = 2; i &lt;= n; ++i)
-        f[i] = std::max(f[i - 2], f[i - 1]) + a[i] - x;
-    return std::max(f[n], f[n - 1]) &gt;= 0;
-}
-
-signed main() {
-    n = read();
-    for (int i = 1; i &lt;= n; ++i)
-        a[i] = read() * AVA;
-    int l = 1, r = 1e15;
-    while (l &lt; r) {
-        const int mid = (l + r + 1) &gt;&gt; 1;
-        if (judgeAverage(mid)) l = mid;
-        else r = mid - 1;
-    }
-    printf(&quot;%.4lf\n&quot;, (double)l / AVA);
-    l = 1, r = 1e15;
-    while (l &lt; r) {
-        const int mid = (l + r + 1) &gt;&gt; 1;
-        if (judgeMedian(mid)) l = mid;
-        else r = mid - 1;
-    }
-    printf(&quot;%lld\n&quot;, (long long)(l / AVA));
     return 0;
 }
 </code></pre>
