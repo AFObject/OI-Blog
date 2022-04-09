@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x02 递推与递归 - OI Blog
+    0x01 位运算 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg" type="image/png" />
@@ -83,7 +83,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x02 递推与递归   
+                            0x01 位运算   
                       </h1>
                      
                     
@@ -100,10 +100,10 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/01/15</span>
+                                 <span class="date">2022/01/08</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
-                                      <span class="posted-in"><a href='0x02.html'>0x02 递推与递归</a></span>
+                                      <span class="posted-in"><a href='0x01.html'>0x01 位运算</a></span>
                                          
                                   
 
@@ -112,7 +112,7 @@
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
                                   
-                                    <c><a href='tag_%E9%80%92%E5%BD%92.html'>#递归</a></c>
+                                    <c><a href='tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html'>#位运算</a></c>
                                      
 
                                 </p>
@@ -122,17 +122,21 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <h2><a id="%E5%AE%8F%E8%A7%82%E6%8F%8F%E8%BF%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>宏观描述</h2>
-<h3><a id="%E9%80%92%E5%BD%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归</h3>
-<p>从原大问题出发到小问题，然后将小问题推广到大问题。</p>
-<p>缩小、求解、扩展。</p>
-<p>Key Points：</p>
+                    <h2><a id="%E8%A1%A5%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>补码</h2>
 <ul>
-<li>自身调用自身</li>
-<li>回溯时还原现场。</li>
+<li>对于 <code>unsigned int</code>：补码等于原码。</li>
+<li>对于 <code>signed int</code>：正数部分补码等于原码，负数部分 \([-2^{31}, -1]\) 相当于 <code>unsigned int</code> \([2^{31}+1, 2^{32}]\)。即原来的<strong>负数的绝对值减去 1 后取反</strong>。<br />
+\(-45 \to -(00101101)_2 \to \operatorname{rev}(00101101-1)_2 \to (11010011)_2\)。</li>
 </ul>
-<h3><a id="%E9%80%92%E6%8E%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递推</h3>
-<p>正向，由小问题直接推到大问题。</p>
+<hr />
+<h2><a id="%E6%88%90%E5%AF%B9%E5%8F%98%E6%8D%A2" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>成对变换</h2>
+<p>\((0,1), (2,3), (4,5)\) 这些二元组中的一个数可以通过 <code>xor</code> 运算得到另一个数。应用：双向边邻接表。</p>
+<hr />
+<h2><a id="lowbit%E8%BF%90%E7%AE%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>lowbit 运算</h2>
+<p>lowbit 是<strong>二进制下最低位的 1 及其右边的所有 0 构成的数值</strong>。</p>
+\[\operatorname{lowbit}(n)=n\ \&amp;\ (-n)
+\]
+<p>应用：哈希、树状数组等。</p>
 
                   </article>
                   <div class="comments-wrap">
@@ -163,6 +167,9 @@
 
 
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
   
 
 
@@ -176,6 +183,8 @@
 
 
 
+
+<script src="asset/prism.js"></script>
 
 
 
