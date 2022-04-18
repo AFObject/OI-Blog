@@ -115,6 +115,10 @@
                                     <c><a href='tag_STL.html'>#STL</a></c>
                                   
                                     <c><a href='tag_AtCoder.html'>#AtCoder</a></c>
+                                  
+                                    <c><a href='tag_DP.html'>#DP</a></c>
+                                  
+                                    <c><a href='tag_%E5%9B%BE%E8%AE%BA.html'>#图论</a></c>
                                      
 
                                 </p>
@@ -166,6 +170,54 @@ signed main() {
     for (auto i = m.begin(); i != m.end(); i = m.upper_bound(*i))
         ans += (t[m.count(*i)] &gt;= k);
     printf(&quot;%lld\n&quot;, (int)ans);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="f-keep-connect" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Keep Connect</h2>
+<p><tc><m>Medium+ *1828</m><t>DP</t><t>图论</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p><strong>考虑一个子图 \(G_k\)</strong>，它包含点 \((1,1),(1,2)\) 至 \((k,1),(k,2)\)。在 DP 进行过程中，它的 \((k-1,1) \to (k,1)\)，\((k,1) \to (k,2)\) 和 \((k-1,2) \to (k,2)\) 这三条边（分别叫做 \(a,b,c\) 边）未确定是否存在。</p>
+<p><strong>考虑它在什么情况下才能让最终的图连通。</strong> 第一种是它本身连通；第二种是它有两个连通块，分别包含 \((k,1)\) 和 \((k,2)\)（注意一个点也算一个连通块！）。</p>
+<p>接下来设计状态。\(f(k,j,s)\) 为 DP 进行到 \(G_k\) 时，已删了 \(j\) 条边，且连通状态为 \(s\)（\(s \in \{1,2\}\)）时的答案。</p>
+<p>接下来考虑转移：</p>
+<ol>
+<li>从 1 转移到 1。这个时候可能的状态有：\((a,b),(b,c),(a,c),(a,b,c)\)，共 4 种。</li>
+<li>从 2 转移到 2。可选择的只有 \((a,c)\)。</li>
+<li>从 1 转移到 2。可以选择 \(a,c\)，2 种。</li>
+<li>从 2 转移到 1。只能选择 \((a,b,c)\)。</li>
+</ol>
+<p>因此有：</p>
+\[\begin{aligned}
+f(k,j,1) &amp;= 3 \cdot f(k-1,j-1,1)+f(k-1,j,1)+f(k-1,j,2) \\
+f(k,j,2) &amp;= f(k-1,j-1,2)+2 \cdot f(k-1,j-2,1)
+\end{aligned}
+\]
+<p>最后考虑初始值。\(f(1,0,1)=f(1,1,2)=1\)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n, p;
+int f[3001][3001][3];
+
+void add(int &amp;x, int d) {
+    x = (x + d) % p;
+}
+
+signed main() {
+    n = read(), p = read();
+    f[1][0][1] = f[1][1][2] = 1;
+    for (int i = 2; i &lt;= n; ++i) {
+        for (int j = 0; j &lt; n; ++j) {
+            if (j &gt;= 1) add(f[i][j][1], 3 * f[i - 1][j - 1][1]);
+            add(f[i][j][1], f[i - 1][j][1] + f[i - 1][j][2]);
+            if (j &gt;= 1) add(f[i][j][2], f[i - 1][j - 1][2]);
+            if (j &gt;= 2) add(f[i][j][2], 2 * f[i - 1][j - 2][1]);
+        }
+    }
+    for (int i = 1; i &lt; n; ++i)
+        printf(&quot;%lld &quot;, f[n][i][1]);
+    putchar('\n');
     return 0;
 }
 </code></pre>
