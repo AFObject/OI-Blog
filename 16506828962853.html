@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x012 二进制状态压缩 - OI Blog
+    0x00 索引 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg" type="image/png" />
@@ -83,7 +83,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x012 二进制状态压缩   
+                            0x00 索引   
                       </h1>
                      
                     
@@ -100,10 +100,10 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/01/14</span>
+                                 <span class="date">2022/04/23</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
-                                      <span class="posted-in"><a href='0x01.html'>0x01 位运算</a></span>
+                                      <span class="posted-in"><a href='0x00.html'>0x00 基本算法</a></span>
                                          
                                   
 
@@ -111,12 +111,6 @@
                                       
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
-                                  
-                                    <c><a href='tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html'>#位运算</a></c>
-                                  
-                                    <c><a href='tag_DP.html'>#DP</a></c>
-                                  
-                                    <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
                                      
 
                                 </p>
@@ -126,78 +120,37 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <h2><a id="%E6%9C%80%E7%9F%ADhamilton%E8%B7%AF%E5%BE%84" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>最短 Hamilton 路径</h2>
-<p><tc><c>0x0104</c><c>LG1171</c><e>Easy+</e><t>状压</t><t>DP</t></tc></p>
-<p>在一张点数小于等于 \(20\) 的带权无向图中找出一条从 \(0\) 到 \(n-1\) <strong>不重不漏地经过每一个点</strong>且<strong>边权和最短</strong>的路径。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>很容易想到用一个二进制数来表示已路过的点的状态（路径状态）。</p>
-<p>令 \(f(s,i)\) 为路径状态为 \(s\)，当前点在 \(i\) 的最短路。然后转移即可。</p>
-\[f(s,i) = \min_{s' \to s}\{f(s',k) + w(k,i)\}
-\]
-<p>注意细节：\(s'\) 能通向 \(s\) 需要满足 <strong>\(k\) 包含在 \(s'\) 中</strong>，即 \(k\) 包含在 \(s\) 中且 \(k \neq i\)。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n;
-int w[21][21];
-int dis[1 &lt;&lt; 21][21];
-
-int main() {
-    memset(dis, 0x3f, sizeof dis);
-	dis[1][0] = 0;
-	for (int s = 2; s &lt; (1 &lt;&lt; n); ++s) {
-		for (int i = 0; i &lt; n; ++i) {
-			if (!((s &gt;&gt; i) &amp; 1)) continue; // 要求 s 包含 i。
-			for (int k = 0; k &lt; n; ++k) { // 选择上一个点。
-				if ((s &gt;&gt; k) &amp; 1 &amp;&amp; k != i) // 要求 s 包含 k 且 k 不等于 i。
-					dis[s][i] = std::min(dis[s][i], dis[s ^ (1 &lt;&lt; i)][k] + w[k][i]);
-			}
-		}
-	}
-	printf(&quot;%d\n&quot;, dis[(1 &lt;&lt; n) - 1][n - 1]);
-	return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E8%B5%B7%E5%BA%8A%E5%9B%B0%E9%9A%BE%E7%BB%BC%E5%90%88%E7%97%87" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>起床困难综合症</h2>
-<p><tc><c>0x0105</c><c>NOI 2014</c><e>Easy+</e><t>位运算</t><t>贪心</t></tc></p>
-<p>\([0, m]\) 之间选择一个数，使得经过 \(n\) 次位运算后值最大，求最大值。\(m \le 10^9\)，\(n \le 10^5\)。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>很牛的一点：<strong>题目中这些操作在二进制中都不会产生进位。</strong></p>
-<p>所以每一位分讨，结果能是 1 就是 1，原数能是 0 就是 0（因为要满足 \(\le m\) 的条件）。</p>
-<p>即如果只有填 1 结果才能是 1，且当前还 \(\le m\) 的情况下，就填 1。否则一律填 0。</p>
-<p>从高到低分位讨论。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, m, arg[1000001];
-std::string op[1000001];
-
-bool calc(int k, bool val) {
-	for (int i = 1; i &lt;= n; ++i) {
-		if (op[i] == &quot;AND&quot;)
-			val &amp;= (arg[i] &gt;&gt; k) &amp; 1;
-		else if (op[i] == &quot;OR&quot;)
-			val |= (arg[i] &gt;&gt; k) &amp; 1;
-		else
-			val ^= (arg[i] &gt;&gt; k) &amp; 1;
-	}
-	return val;
-}
-
-int main() {
-	std::cin &gt;&gt; n &gt;&gt; m;
-	for (int i = 1; i &lt;= n; ++i)
-		std::cin &gt;&gt; op[i] &gt;&gt; arg[i];
-		
-	int sel = 0, ans = 0;
-	for (int i = 30; i &gt;= 0; --i) {
-		if (sel + (1 &lt;&lt; i) &lt;= m &amp;&amp;
-			calc(i, 0) == 0 &amp;&amp; calc(i, 1) == 1)
-			sel += (1 &lt;&lt; i), ans += (1 &lt;&lt; i);
-		else if (calc(i, 0))
-			ans += (1 &lt;&lt; i);
-	}
-	printf(&quot;%d\n&quot;, ans);
-	return 0;
-}
-</code></pre>
+                    <h2><a id="0x01" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>0x01</h2>
+<table>
+<thead>
+<tr>
+<th>题目</th>
+<th>一句话题解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x0101</td>
+<td>快速幂板子，通过二进制拆分 \(b\) 证明结论。</td>
+</tr>
+<tr>
+<td>0x0102</td>
+<td>模拟。</td>
+</tr>
+<tr>
+<td>0x0103</td>
+<td>快速幂改快速乘。</td>
+</tr>
+<tr>
+<td>0x0104</td>
+<td>状压 DP 板子，设 \(f(i,u)\) 为经过的点集为 \(i\)，且当前点为 \(u\) 时的最短路长度，容易推出转移方程。</td>
+</tr>
+<tr>
+<td>0x0105</td>
+<td>从高到低对于每一位分别讨论，如果该位不确定，则在 \(m\) 的限制条件下尽量让它变成 1。</td>
+</tr>
+</tbody>
+</table>
 
                   </article>
                   <div class="comments-wrap">
@@ -244,8 +197,6 @@ int main() {
 
 
 
-
-<script src="asset/prism.js"></script>
 
 
 
