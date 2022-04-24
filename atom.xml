@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-04-24T09:46:44+08:00</updated>
+  <updated>2022-04-24T09:46:47+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -53,6 +53,7 @@ signed main() {
     return 0;
 }
 </code></pre>
+<hr />
 <h2><a id="f-ignore-operations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Ignore Operations</h2>
 <p><tc><m>Medium *1786</m><t>堆</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
@@ -118,6 +119,60 @@ int main() {
         --k;
     } while (k &gt;= 0 &amp;&amp; rep.size());
 
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="e-rle" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E RLE</h2>
+<p><tc><m>Medium+ *1970</m><t>DP</t><t>前缀和</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>设 \(f(i,j)\) 为原长为 \(i\)，压缩后长为 \(j\) 的个数。</p>
+<p>接下来考虑转移。首先假如连续段长度都只有个位数，则</p>
+\[f(i,j)=\sum_{k=1}^9 f(i-k,j-2)
+\]
+<p>扩展：</p>
+\[\begin{aligned}
+f(i,j)&amp;=\sum_{k=1}^i f(i-k,j-\lfloor\log_{10}(k)\rfloor-1)
+\end{aligned}
+\]
+<p>\(k\) 从 \(1\) 到 \(i\) 的遍历相当于逐个尝试这个字符串最后连续相同字符的个数。</p>
+<p>但上面这个方程不完全对，还要考虑到每个字符都不一样，转移时都要乘上系数 \(25\)。</p>
+<p>但是这样的效率还是不够高，我们考虑对于 \(f\) 的每一行进行一个前缀和，由于 \(i,j\) 显然最多只是四位数，状态转移方程变为：</p>
+\[\begin{aligned}
+f(i,j)&amp;=25 \cdot [ s(i-1,j-2)-s(i-10,j-2)\\
+&amp;+s(i-10,j-3)-s(i-100,j-3)\\
+&amp;+s(i-100,j-4)-s(i-1000,j-4)\\
+&amp;+s(i-1000,j-5)-s(i-10000,j-5) ]
+\end{aligned}
+\]
+<p>计数的时候从小到大对于每个 \(i\) 分别讨论，注意到当原长为 \(i\) 时，\(j\) 至少为 \(\lfloor \log_{10}(i)  \rfloor+1\)，因此初始值 \(f(i,\lfloor \log_{10}(i)\rfloor+1)=26\)，其余的直接 \(0\)，懒得考虑边界问题。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">long long n, p; // npk48
+long long f[3005][3005], s[3005][3005];
+
+int len(int x) {
+    if (x &lt; 10) return 2;
+    if (x &lt; 100) return 3;
+    if (x &lt; 1000) return 4;
+    return 5;
+}
+
+int main() {
+    n = read(), p = read();
+    for (int i = 1; i &lt;= n; ++i) {
+        f[i][len(i)] = 26ll;
+        for (int j = 1; j &lt; n; ++j) {
+            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 1)][T(j - 2)]     - s[T(i - 10)][T(j - 2)]));
+            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 10)][T(j - 3)]    - s[T(i - 100)][T(j - 3)]));
+            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 100)][T(j - 4)]   - s[T(i - 1000)][T(j - 4)]));
+            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 1000)][T(j - 5)]  - s[T(i - 3001)][T(j - 5)]));
+            s[i][j] = M(s[i - 1][j] + f[i][j]);
+        }
+    }
+    long long ans = 0;
+    for (int i = 1; i &lt; n; ++i)
+        ans = M(ans + f[n][i]);
     printf(&quot;%lld\n&quot;, ans);
     return 0;
 }
