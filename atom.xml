@@ -4,13 +4,127 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-04-23T11:50:23+08:00</updated>
+  <updated>2022-04-24T09:46:44+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[ABC249]]></title>
+    <link href="oi.afobject.ml/abc249.html"/>
+    <updated>2022-04-23T20:54:17+08:00</updated>
+    <id>oi.afobject.ml/abc249.html</id>
+    <content type="html"><![CDATA[
+<p>为什么每次打 ABC 都碰上蓝色的 E（恼）</p>
+<p>Rated, 4/8, 977 \(\to\) 987</p>
+<h2><a id="d-index-trio" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D Index Trio</h2>
+<p><tc><m>Medium- *983</m><t>数论</t><t>组合</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%951" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 1</h3>
+<p>从乘积出发。</p>
+<p>考虑对于每一个数，根号复杂度分解质因数。如果分到的恰好都是数列里的数，则答案加上两边出现次数的乘积再乘以二。有一些小细节。</p>
+<h3><a id="%E7%AE%97%E6%B3%952" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 2</h3>
+<p>从乘数出发。</p>
+<p>在记录每个数的出现次数后，对于每对 \((i,j)\)，答案直接加上 \(c_i \cdot c_j \cdot c_{i \times j}\)。时间复杂度能过。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>（算法 1）</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n;
+int b[1000001];
+
+signed main() {
+    n = read();
+    for (int i = 1; i &lt;= n; i++)
+        ++b[read()];
+    int ans = 0;
+    for (int i = 1; i &lt;= 200000; i++) {
+        if (!b[i]) continue;
+        for (int x = 1; x * x &lt;= i; ++x)
+            if (i % x == 0)
+                if (b[x] &amp;&amp; b[i / x]) {
+                    if (x * x == i) ans += b[i] * b[x] * b[x];
+                    else ans += b[i] * b[x] * b[i / x] * 2;
+                }
+    }
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+<h2><a id="f-ignore-operations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Ignore Operations</h2>
+<p><tc><m>Medium *1786</m><t>堆</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑一下如果一定要删一个操作，那么肯定是看一下删哪个对最终的结果最好。如果该操作后面有替换操作，那么屁用没有；否则对最终答案的贡献就是进行到那一步和前一步操作后的结果差。</p>
+<p>那如果一定要删两个呢？</p>
+<p>在替换操作前面删屁用没有。所以要么在这之后选 \(y\) 最小的两个修改操作，要么就干脆直接把这个替换操作删了。所以有三种：</p>
+<ul>
+<li>在最后一个替换操作后面选两个 \(y\) 最小的删；</li>
+<li>删了最后一个替换操作，然后在倒数第二个后面选一个最小的删；</li>
+<li>直接删掉最后两个替换操作。</li>
+</ul>
+<p>扩展到选 \(k\) 个删，且没必要删完：</p>
+<ul>
+<li>在最后一个替换操作后面选至多 \(k\) 个 \(y\) 最小且为负的删；</li>
+<li>删了最后一个替换操作，然后在倒数第二个后面选至多 \(k-1\) 个最小且为负的删；</li>
+<li>……</li>
+<li>把最后 \(k\) 个替换操作全删了（如果有）。</li>
+</ul>
+<p>在以上 \(k+1\) 种答案中选一个最小的即可。到这里时间复杂度为 \(O(n \log n + k^2)\)，不太行。</p>
+<p>接下来考虑怎么更高效地维护信息。可以从后往前，动态维护所有修改操作 \(y\) 的前 \(k\) 小，并维护这个顺序，碰到一个替换操作的时候就可以计算出一种可能的答案了。</p>
+<p>设两个相邻的替换操作在 \(i,j\) 这两个位置，并且我已经在 \((j,n]\) 范围内的修改操作中找到了删去最优的 \(k\) 个的和。我现在要找 \((i,n]\) 范围内最优 \(k-1\) 个的和。这个相对比较容易，首先先踢出去一个，然后优先队列（大根堆）维护就行了（同时另外维护一个总和），在 \((i,j)\) 的修改操作中碰到有比优先队列中相对最不优的那个更优的，把它顶掉就行了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, k;
+std::stack&lt;int&gt; rep;
+std::priority_queue&lt;long long&gt; q;
+long long t[200005], y[200005];
+long long suf[200005];
+
+int main() {
+    n = read(), k = read();
+    rep.push(0);
+    for (int i = 1; i &lt;= n; i++) {
+        t[i] = read(), y[i] = read();
+        if (t[i] == 1)
+            rep.push(i);
+    }
+
+    for (int i = n; i; --i)
+        if (t[i] == 2)
+            suf[i] = suf[i + 1] + y[i];
+        else
+            suf[i] = suf[i + 1];
+
+    int now, last = n;
+    long long sum = 0, ans = -1e18;
+    do {
+        now = rep.top() + 1;
+        rep.pop();
+        for (int i = now; i &lt;= last; ++i)
+            if (t[i] == 2 &amp;&amp; y[i] &lt; 0) {
+                if (q.size() &lt; k) {
+                    sum += y[i];
+                    q.push(y[i]);
+                } else if (k &amp;&amp; q.top() &gt; y[i]) {
+                    sum += y[i] - q.top();
+                    q.pop();
+                    q.push(y[i]);
+                }
+            }
+        ans = std::max(ans, y[now - 1] + suf[now] - sum);
+        last = now - 2;
+        if (k &amp;&amp; q.size() == k) sum -= q.top(), q.pop();
+        --k;
+    } while (k &gt;= 0 &amp;&amp; rep.size());
+
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
@@ -1699,89 +1813,6 @@ int main() {
         }
     }
     return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ABC242]]></title>
-    <link href="oi.afobject.ml/abc242.html"/>
-    <updated>2022-03-08T22:51:04+08:00</updated>
-    <id>oi.afobject.ml/abc242.html</id>
-    <content type="html"><![CDATA[
-<p>VP</p>
-<h2><a id="d-abc-transform" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D ABC Transform</h2>
-<p><tc><m>Medium *1286</m><t>递归</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h02vhvw87kj20vl0u0q4f.jpg" alt="" /></p>
-<p>可以发现原树由 \(n\) 棵完全二叉树组成，然后发现可以暴力。具体地：</p>
-<ul>
-<li>对于节点 \((t,k)\)（第 \(t\) 层第 \(k\) 个） 它父亲一定是 \((t-1,\lfloor \dfrac k 2 \rfloor)\)，继续递归。回溯的时候，若 \(k \equiv 1 \pmod 2\)，则是左子节点，返回相应字母（原字母进一）；反之返回右子节点的字母（原字母进二 / 退一）。</li>
-<li>对于节点 \((0,k)\)，返回第 \(k\) 个源字母。</li>
-</ul>
-<p>然后发现暴力似乎太慢，但又发现 \(k \le 10^{18}\) 这样一个怪异的条件。假如能做到 \(\log k\) 也是能过的。</p>
-<p>考虑对于 \(k\) 已除到 \(0\) 的情况，即返回某一指定层的第一个字母。很容易发现第一个字母是循环的如 <code>ABCABC......</code> 所以结束了。复杂度 \(O(Q \log k)\)。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>注意负数取模仍是负数。</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-char a[1000001];
-int q, t, k;
-
-char solve(int t, int k) {
-	if (t == 0)
-		return a[k];
-    if (k == 1)
-        return (a[1] - 'A' + t) % 3 + 'A';
-
-    char c = solve(t - 1, (k + 1) &gt;&gt; 1);
-    return (c - 'A' - (k &amp; 1) + 2) % 3 + 'A';
-}
-
-signed main() {
-	scanf(&quot;%s&quot;, a + 1);
-	q = read();
-	while (q--) {
-		t = read(), k = read();
-		printf(&quot;%c\n&quot;, solve(t, k));
-	}
-}
-</code></pre>
-<hr />
-<h2><a id="e%E2%88%80-x%E2%88%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E (∀x∀)</h2>
-<p><tc><m>Medium- *1365</m><t>递归</t></tc></p>
-<h3><a id="%E5%88%86%E6%9E%90" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>分析</h3>
-<p>毛估估是 \(\le\) 取一半构成的那个回文串的回文串的个数，如果取一半构成的那个回文串不符合那么答案就减一。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-#define MOD 998244353
-#define m(x) (((x) + MOD) % MOD)
-
-int T, n;
-int pow26[2500001];
-char s[2500001];
-
-signed main() {
-    pow26[0] = 1;
-    for (int i = 1; i &lt;= 2500000; ++i)
-        pow26[i] = m(26 * pow26[i - 1]);
-    scanf(&quot;%lld&quot;, &amp;T);
-    while (T--) {
-        scanf(&quot;%lld%s&quot;, &amp;n, s);
-        int ans = 1;
-        const int q = (n - 1) &gt;&gt; 1;
-        for (int i = q; i &gt;= 0; --i) 
-            ans = m(ans + m((s[i] - 'A') * pow26[q - i]));
-        bool valid = true;
-        for (int i = q; i &gt;= 0; --i)
-            if (s[n - i - 1] != s[i]) {
-                valid = s[n - i - 1] &gt; s[i];
-                break;
-            }
-        printf(&quot;%lld\n&quot;, m(ans - !valid));
-    }
 }
 </code></pre>
 
