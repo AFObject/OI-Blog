@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x021 递推与递归的简单应用 - OI Blog
+    0x11 栈 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="https://tva1.sinaimg.cn/large/008i3skNgy1gymvsc0qbkj30e80e8glz.jpg" type="image/png" />
@@ -83,7 +83,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x021 递推与递归的简单应用   
+                            0x11 栈   
                       </h1>
                      
                     
@@ -100,10 +100,10 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/01/15</span>
+                                 <span class="date">2022/04/25</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
-                                      <span class="posted-in"><a href='0x02.html'>0x02 递推与递归</a></span>
+                                      <span class="posted-in"><a href='0x11%20%E6%A0%88.html'>0x11 栈</a></span>
                                          
                                   
 
@@ -111,10 +111,6 @@
                                       
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
-                                  
-                                    <c><a href='tag_%E9%80%92%E5%BD%92.html'>#递归</a></c>
-                                  
-                                    <c><a href='tag_%E6%90%9C%E7%B4%A2.html'>#搜索</a></c>
                                      
 
                                 </p>
@@ -124,155 +120,87 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%8C%87%E6%95%B0%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现指数型枚举</h2>
-<p><tc><c>0x0201</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
-<pre class="line-numbers"><code class="language-cpp">bool c[21];
-void recursive(int t) {
-	if (t == n + 1) {
-		for (int i = 1; i &lt;= n; ++i)
-			if (c[i])
-				printf(&quot;%d &quot;, i);
-		putchar('\n');
-		return;
-	}
-	c[t] = true;
-	recursive(t + 1);
-	c[t] = false;
-	recursive(t + 1);
-}
-</code></pre>
-<h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E7%BB%84%E5%90%88%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现组合型枚举</h2>
-<p><tc><c>0x0202</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
-<pre class="line-numbers"><code class="language-cpp">bool c[21];
-void recursive(int t, int sel) {
-	if (sel &gt; m || sel + n - t + 1 &lt; m)
-		return;
-	if (t == n + 1) {
-		for (int i = 1; i &lt;= n; ++i)
-			if (c[i])
-				printf(&quot;%d &quot;, i);
-		putchar('\n');
-		return;
-	}
-	c[t] = true;
-	recursive(t + 1, sel + 1);
-	c[t] = false;
-	recursive(t + 1, sel);
-}
-</code></pre>
-<h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%8E%92%E5%88%97%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现排列型枚举</h2>
-<p><tc><c>0x0203</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
-<pre class="line-numbers"><code class="language-cpp">bool c[21];
-int sel[21];
-void recursive(int t) {
-	if (t == n + 1) {
-		for (int i = 1; i &lt;= n; ++i)
-			printf(&quot;%d &quot;, sel[i]);
-		putchar('\n');
-		return;
-	}
-	for (int i = 1; i &lt;= n; ++i) {
-		if (!c[i]) {
-			sel[t] = i;
-			c[i] = true;
-			recursive(t +  1);c[i] = false;
-		}
-	}
-}
-</code></pre>
-<hr />
-<h2><a id="%E8%B4%B9%E8%A7%A3%E7%9A%84%E5%BC%80%E5%85%B3" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>费解的开关</h2>
-<p><tc><c>0x0204</c><m>Medium-</m><t>结论</t><t>贪心</t></tc></p>
-<p>\(5\times 5\) 的 01 矩阵中，点击一个位置，它及它上下左右格内的数都会变化，最少多少次点击变成全 0？</p>
+                    <h2><a id="push-pop-getmin" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Push, Pop, GetMin</h2>
+<p><tc><c>0x1101</c><e>Easy-</e><t>栈</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p><strong>考虑特殊情况：</strong> 假如不能动第一行，则对于第一行的任意一个数，如果它是 1，那么只能点击它下面的那个格子。</p>
-<p>又有：<strong>点击的顺序不影响最终的结果。</strong> 一个格子被翻转的次数等于它四周的格子被点按次数之和。所以可以以任意顺序考虑点击的位置。</p>
-<p>因此只用枚举第一行的 \(2^5\) 种状态即可。后面的方案都是确定的。假如最后不都为 0 那么这种做法就是寄的，继续搜索求解。</p>
+<p>维护两个栈，一个是题目中给出的栈，一个保存每个时刻最小值。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>第一次在 OI 里写异常处理。</p>
-<pre class="line-numbers"><code class="language-cpp">int T;
-int m[7][7];
-int t[7][7];
-
-int cnt = 0;
-void doOper(int x, int y) {
-	t[x][y] ^= 1;
-	t[x - 1][y] ^= 1;
-	t[x + 1][y] ^= 1;
-	t[x][y - 1] ^= 1;
-	t[x][y + 1] ^= 1;
-	++cnt;
-	if (cnt &gt; 6)
-		throw -1;
-}
-
-int main() {
-	scanf(&quot;%d&quot;, &amp;T);
-	while (T--) {
-		for (int i = 1; i &lt;= 5; ++i)
-			for (int j = 1; j &lt;= 5; ++j)
-				scanf(&quot;%1d&quot;, &amp;m[i][j]);
-		int ans = 0x3f3f3f3f;
-		for (int s = 0; s &lt; 32; ++s) {
-			cnt = 0;
-			try {
-				for (int i = 1; i &lt;= 5; ++i)
-					for (int j = 1; j &lt;= 5; ++j)
-						t[i][j] = m[i][j];
-				for (int i = 1, s0 = s; s0; s0 &gt;&gt;= 1, ++i)
-					if (s0 &amp; 1)
-						doOper(1, i);
-				for (int r = 2; r &lt;= 5; ++r) {
-					for (int c = 1; c &lt;= 5; ++c)
-						if (!t[r - 1][c])
-							doOper(r, c);
-				}
-			} catch (int e) {
-				continue;
-			}
-			int sum = 1;
-			for (int i = 1; i &lt;= 5; ++i)
-				sum &amp;= t[5][i];
-			if (sum)
-				ans = std::min(ans, cnt);
-		}
-		printf(&quot;%d\n&quot;, (ans == 0x3f3f3f3f) ? -1 : ans);
-	}
-	return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="strange-towers-of-hanoi" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Strange Towers of Hanoi</h2>
-<p><tc><c>0x0205</c><m>Medium</m><t>递推</t><t>DP</t></tc></p>
-<p>求 \(n\) 盘 4 塔的汉诺塔步数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>考虑 \(n\) 盘 3 塔：</p>
-<ul>
-<li>\(n-1\) 盘：A \(\to\) B</li>
-<li>第 \(n\) 盘：A \(\to\) C</li>
-<li>\(n-1\) 盘：B \(\to\) C</li>
-</ul>
-<p>因此 \(f_3(n)=2 \times f_3(n-1) + 1\)，其中 \(f_3(1)=1\)。可以知道 \(f_3(n)=2^n-1\)。</p>
-<p>再考虑 \(n\) 盘 4 塔：</p>
-\[f_4(n) \le \min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}
-\]
-<p>注意此处使用小于等于号。</p>
-<p>参照具体数学上证明等于的方法：</p>
-<p>我们迟早都必须要移动最下面的那 \(n-i\) 个盘子移动到 D 柱，当我们这么做的时候，上面 \(i\) 个必须已经在某个柱子上。而把下面的这 \(n-i\) 个盘子摆好以后，又要用 \(f_4(i)\) 次移动将上面的盘子放置在它上方（胡言乱语 /tuu）。因此至少需要有 \(\min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}\) 次移动。</p>
-\[\therefore f_4(n) = \min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}
-\]
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define f3(x) ((1 &lt;&lt; (x)) - 1)
-
-int f4[13];
-
-int main() {
-    f4[1] = 1;
-    for (int x = 2; x &lt;= 12; ++x) {
-    	f4[x] = 0x3f3f3f3f;
-    	for (int i = 1; i &lt; x; ++i)
-    		f4[x] = std::min(f4[x], 2 * f4[i] + f3(x - i));
+<pre class="line-numbers"><code class="language-cpp">class MinStack {
+public:
+    std::stack&lt;int&gt; o, m;
+    MinStack() {}
+    void push(int x) {
+        o.push(x);
+        if (m.size())
+            m.push(std::min(m.top(), x));
+        else
+            m.push(x);
     }
+    void pop() {
+        o.pop();
+        m.pop();
+    }
+    int top() {
+        return o.top();
+    }
+    int getMin() {
+        return m.top();
+    }
+};
+</code></pre>
+<hr />
+<h2><a id="editor" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Editor</h2>
+<p><tc><c>0x1102</c><e>Easy</e><t>栈</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑建立对顶栈，这样前四种操作都可以实现。</p>
+<p>对于第五种操作，可以再建立两个栈，一个保存所有时刻的前缀和，另一个用 0x1101 的方式维护最小值，只不过这里要用数组模拟栈（需要直接访问）。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>注意第一个数为负数时的处理。</p>
+<pre class="line-numbers"><code class="language-cpp">int n;
+std::stack&lt;int&gt; a, b;
+int s[1000001], f[1000001], top;
+
+void pushA(int t) {
+    a.push(t);
+    s[top + 1] = s[top] + t;
+    if (top) f[top + 1] = std::max(f[top], s[top + 1]);
+    else f[top + 1] = s[top + 1];
+    ++top;
+}
+
+void popA() {
+    a.pop();
+    --top;
+}
+
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(0);
+
+    std::cin &gt;&gt; n;
+    while (n--) {
+        char c; int t;
+        std::cin &gt;&gt; c;
+        switch (c) {
+            case 'I':
+                std::cin &gt;&gt; t; pushA(t);
+                break;
+            case 'D':
+                if (a.size()) popA();
+                break;
+            case 'L':
+                if (a.size()) b.push(a.top()), popA();
+                break;
+            case 'R':
+                if (b.size()) pushA(b.top()), b.pop();
+                break;
+            case 'Q':
+                std::cin &gt;&gt; t;
+                std::cout &lt;&lt; f[t] &lt;&lt; std::endl;
+                break;
+        }
+    }
+    return 0;
 }
 </code></pre>
 
@@ -304,9 +232,6 @@ int main() {
       </footer>
 
 
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
 
   
 
