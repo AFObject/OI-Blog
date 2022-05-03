@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    Codeforces Round #773 (Div.2) - OI Blog
+    Codeforces Round #786 (Div.3) - OI Blog
     
     </title>
     <link rel="shortcut icon" href="media/16415680135532/diana2.jpg" type="image/png" />
@@ -83,7 +83,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            Codeforces Round #773 (Div.2)   
+                            Codeforces Round #786 (Div.3)   
                       </h1>
                      
                     
@@ -100,7 +100,7 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/02/28</span>
+                                 <span class="date">2022/05/03</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
                                       <span class="posted-in"><a href='contests.html'>比赛记录</a></span>
@@ -114,13 +114,13 @@
                                   
                                     <c><a href='tag_CF.html'>#CF</a></c>
                                   
-                                    <c><a href='tag_%E6%9E%84%E9%80%A0.html'>#构造</a></c>
+                                    <c><a href='tag_%E6%A8%A1%E6%8B%9F.html'>#模拟</a></c>
                                   
-                                    <c><a href='tag_DS.html'>#DS</a></c>
+                                    <c><a href='tag_DP.html'>#DP</a></c>
                                   
-                                    <c><a href='tag_%E7%BA%BF%E6%AE%B5%E6%A0%91.html'>#线段树</a></c>
+                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
                                   
-                                    <c><a href='tag_STL.html'>#STL</a></c>
+                                    <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
                                      
 
                                 </p>
@@ -130,192 +130,121 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <p>Rated, 3/6, 1353 \(\to\) 1448</p>
-<h2><a id="1641b-1642d-repetitions-decoding" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1641B (1642D) Repetitions Decoding</h2>
-<p><tc><m>Medium *2000</m><t>构造</t></tc></p>
+                    <p>Rated, 4/7, 1364 \(\to\) 1435</p>
+<p>E 大家都 fst 也就算了，F 就差造个极端数据拍一拍就过了 /fn</p>
+<h2><a id="cf1674f-desktop-rearrangement" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>CF1674F Desktop Rearrangement</h2>
+<p><tc><e>Easy+</e><t>模拟</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>场上思路：找到第一个 \(i\) 使得 \(a_i=a_1\)（例如 <code>ABCDADBC</code>）。在 \(i\) 后面插入 <code>ABCDDCBA</code> 这种形式的一串（<code>ABCDABCDDCBDBC</code>），然后发现前面可以消，只剩 <code>DCBDBC</code>。这个序列相较于原序列长度少 \(2\)，完全可行，操作次数也肉眼可见地不会太多。</p>
+<p>你 CF 为啥要出这种烂模拟。</p>
+<p>问题相当于询问有几个图标需要移动。首先求出原图状态下有几个需要移的，接下来考虑变化。</p>
+<ul>
+<li>
+<p>如果是从没有变成有的：</p>
+<ul>
+<li>在操作<strong>后</strong>的边界上的那个点（如果存在）不用移了，答案减一（如果操作的就是这个点，<strong>忽略</strong>这一条，对答案没有影响）。</li>
+<li>另外如果改变的这个点超过了操作<strong>后</strong>的边界，那么就需要费力气移它，答案加一。</li>
+</ul>
+</li>
+<li>
+<p>如果是从有变成没有的：</p>
+<ul>
+<li>操作<strong>前</strong>的守门员（如果存在）被踢了，需要移的加一（如果操作的就是这个点，<strong>忽略</strong>这一条，对答案没有影响）。</li>
+<li>如果本来就超出了操作<strong>前</strong>的范围，需要移的减一，否则不变。</li>
+</ul>
+</li>
+</ul>
+<p>由上分类讨论可见，对于 <code>.</code> 变 <code>*</code> 和 <code>*</code> 变 <code>.</code> 对答案的影响是不同的，尤其体现在操作前边界或是操作后边界的区别。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>随便开个 STL 模拟。</p>
-<pre class="line-numbers"><code class="language-cpp">
-#define MP std::make_pair
-
-int T, n;
-std::vector&lt;int&gt; a;
-std::map&lt;int, int&gt; m;
-
-std::vector&lt;std::pair&lt;int, int&gt;&gt; op;
-std::vector&lt;int&gt; v;
-
-void solve(int d) {
-    if (a.size() &lt;= 1)
-        return;
-
-    int pos = 0, len = 0;
-    for (int i = 2; i &lt; a.size(); ++i)
-        if (a[i] == a[1]) {
-            pos = i;
-            len = pos - 1;
-            break;
-        }
-
-    for (int i = pos; i &lt; pos + len - 1; ++i)
-        op.push_back(MP(i + d, a[i - len + 1]));
-    v.push_back(len &lt;&lt; 1);
-
-    a.erase(a.begin() + pos);
-    a.erase(a.begin() + 1);
-    for (int i = 1, j = pos - 2; i &lt;= j; ++i, --j)
-        std::swap(a[i], a[j]);
-
-    solve(d + (len &lt;&lt; 1));
-}
+<p>考虑将矩阵转为序列，在序列上操作方便得多。</p>
+<pre class="line-numbers"><code class="language-cpp">#define trans(i, j) (((j) - 1) * n + (i))
+int n, m, q;
+char map[1000001];
 
 int main() {
-    T = read();
-    while (T--) {
-        n = read();
-        m = std::map&lt;int, int&gt;();
-        a = std::vector&lt;int&gt;();
-        op = std::vector&lt;std::pair&lt;int, int&gt;&gt;();
-        v = std::vector&lt;int&gt;();
-        a.resize(n + 1);
-
-        for (int i = 1; i &lt;= n; ++i)
-            a[i] = read(), ++m[a[i]];
-        bool flag = true;
-        for (auto [x, y] : m)
-            if (y &amp; 1)
-                flag = false;
-        if (!flag) {
-            puts(&quot;-1&quot;);
-            continue;
+    std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
+    int cnt = 0;
+    for (int i = 1, k = 0; i &lt;= n; ++i) {
+        for (int j = 1; j &lt;= m; ++j) {
+            std::cin &gt;&gt; map[trans(i, j)];
+            if (map[trans(i, j)] == '*') ++cnt;
         }
-        solve(0);
-        printf(&quot;%d\n&quot;, (int)op.size());
-        for (auto [x, y] : op)
-            printf(&quot;%d %d\n&quot;, x, y);
-        printf(&quot;%d\n&quot;, (int)v.size());
-        for (int len : v)
-            printf(&quot;%d &quot;, len);
-        putchar('\n');
+    }
+    int ans = cnt;
+    for (int i = 1; i &lt;= cnt; ++i)
+        if (map[i] == '*')
+            --ans;
+
+    while (q--) {
+        int x, y;
+        std::cin &gt;&gt; x &gt;&gt; y;
+        int idx = trans(x, y);
+        if (map[idx] == '.') {
+            ++cnt;
+            if (map[cnt] == '*') --ans;
+            if (idx &gt; cnt) ++ans;
+            map[idx] = '*';
+        } else {
+            map[idx] = '.';
+            if (idx &gt; cnt) --ans;
+            if (map[cnt] == '*') ++ans;
+            --cnt;
+        }
+        std::cout &lt;&lt; ans &lt;&lt; '\n';
     }
     return 0;
 }
 </code></pre>
 <hr />
-<h2><a id="1641c-1642e-anonymity-is-important" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1641C (1642E) Anonymity Is Important</h2>
-<p><tc><m>Medium+ *2200</m><t>DS</t><t>线段树</t><t>STL</t></tc></p>
+<h2><a id="cf1674e-breaking-the-wall" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>CF1674E Breaking the Wall</h2>
+<p><tc><m>Medium-</m><t>数学</t><t>贪心</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>「1」型区间为至少包含一个病人的区间，「0」型区间为不包含病人的区间。</p>
+<p>形象一点，我们的答案的来源只有可能是这几种情况：</p>
 <ul>
-<li>回答 <code>NO</code>：\(x\) 号病人包含在任意一个「0」区间中。</li>
-<li>回答 <code>YES</code>：\(x\) 号病人包含且仅包含在「1」区间中，且<strong>存在一个包含它的「1」区间，使得除了它以外的所有病人都在「0」区间</strong>。</li>
-<li>回答 <code>N/A</code>：不属于以上两种情况。</li>
+<li>火力全开。即对数列中最小的两个每次杀掉 2。适用于数列中最小的两个数分隔较远的情况。</li>
+<li>投机取巧。相隔一个数的两个奇数，先通过杀中间的那个数一次转为偶数，然后转为「火力全开」型。</li>
+<li>互帮互助。杀掉相邻两个数，互相凑一凑，答案就是两个数和除以 3 向上取整。但当一个数 \(a\) 大于另一个数 \(b\) 的两倍时，此方法只能妥协，答案为 \(\lceil \dfrac a 2 \rceil\)。</li>
 </ul>
-<p>接下来我们用 C 表示确定不是病人，U 表示不确定是否是病人的人。</p>
-<p>一开始的数列一定是 <code>UUUU...UUU</code>。当报告一个区间内没有病人时，数列会变成类似这样：<code>UUCC...CCUUUU</code>。</p>
-<p>接下来考虑 <code>YES</code> 情况的维护。通俗一点来讲，显然当一个 U 周围也是 U 的时候，就很难确定它；当一个 U 左右都是 C 时，确定它是否是病人就更容易一些。进一步思考，可以发现：</p>
-<pre class="line-numbers"><code class="language-plain_text">...UUUCCCCCCUCCCCCUUU....
-      o     ^    o
-</code></pre>
-<p>假设被 <code>^</code> 标记的 U 是我们的研究对象。当且仅当在<strong>它以及它左右 C 的连续段（两个 <code>o</code> 标记中间）中</strong>，存在一个包含这个 U 的「1」区间，U 才可以被确定为病人。</p>
-<p>如果将所有的 U 用 <code>std::set</code> 维护，那么这就很简单了，直接就找中间那个 U（设其下标为 \(x\)）的前驱后继（设它们的下标为 \(l,r\)）即可。接下来，需要判定上述的区间是否存在。可以发现区间的左端点一定是在 U 左边那个 C 的连续段，因此<strong>只要存在一个以 \((l,x]\) 为起点的「1」区间，其右端点在 \([x, r)\)，那么 \(x\) 就确定是病人</strong>。</p>
-<p>这部分可以使用一个单点修改、区间查询最小值的线段树 \(t\) 来维护。当输入一个「1」区间时，将 \(t_l\) 单点赋值为 \(\min\{t_l, r\}\) 即可。查询时判断 \(\operatorname{query}(l+1,x)\) 与 \(r\) 的大小关系就行了。</p>
+<p>当被杀的两个数距离大于等于 2 的时候，可以做到各杀各的互不干涉，归于「火力全开」型。</p>
+<p>当被杀的两个数距离等于 1 的时候，适用「火力全开」型或「投机取巧」型。</p>
+<p>当被杀的两个数相邻，那必然属于「互帮互助」型。</p>
+<p>因此，以上三种得到答案的类型覆盖所有的情况，解法是正确的。</p>
+<p>这个题叉麻了，300 多测试点，乐死了。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#include &lt;cstdio&gt;
-#include &lt;algorithm&gt;
-#include &lt;set&gt;
+<pre class="line-numbers"><code class="language-cpp">int n, a[200001];
 
-#define lt(x) ((x) &lt;&lt; 1)
-#define rt(x) (lt(x) + 1)
-
-int n, m;
-
-int read() {
-    int ans = 0, neg = 1; char ch = getchar();
-    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
-    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
-    return ans * neg;
+int upper(int a, int b) {
+    if (a % b) return a / b + 1;
+    else return a / b;
 }
 
-namespace SegTree {
-    int t[1000001];
-
-    void build(int x = 1, int l = 1, int r = n) {
-        t[x] = n + 1;
-        if (l == r)
-            return;
-        const int mid = (l + r) &gt;&gt; 1;
-        build(lt(x), l, mid);
-        build(rt(x), mid + 1, r);
-    }
-
-    void modify(int p, int a, int x = 1, int _l = 1, int _r = n) {
-        if (_l == _r) {
-            t[x] = std::min(t[x], a);
-            return;
-        }
-        const int mid = (_l + _r) &gt;&gt; 1;
-        if (p &lt;= mid)
-            modify(p, a, lt(x), _l, mid);
-        else
-            modify(p, a, rt(x), mid + 1, _r);
-        t[x] = std::min(t[lt(x)], t[rt(x)]);
-    }
-
-    int query(int l, int r, int x = 1, int _l = 1, int _r = n) {
-        if (l &lt;= _l &amp;&amp; _r &lt;= r)
-            return t[x];
-        const int mid = (_l + _r) &gt;&gt; 1;
-        int ans = n + 1;
-        if (l &lt;= mid)
-            ans = std::min(ans, query(l, r, lt(x), _l, mid));
-        if (r &gt; mid)
-            ans = std::min(ans, query(l, r, rt(x), mid + 1, _r));
-        return ans;
-    }
-};
-
-std::set&lt;int&gt; s;
-
 int main() {
-    n = read(), m = read();
-    SegTree::build();
-    for (int i = 0; i &lt;= n + 1; ++i)
-        s.insert(i);
-    while (m--) {
-        int t = read();
-        if (!t) {
-            int l = read(), r = read(), op = read();
-            if (!op) {
-                while (!s.empty()) {
-                    int pos = *s.lower_bound(l);
-                    if (pos &lt;= r)
-                        s.erase(pos);
-                    else
-                        break;
-                }
-            } else {
-                SegTree::modify(l, r);
-            }
-        } else {
-            int x = read();
-            if (!s.count(x))
-                puts(&quot;NO&quot;);
-            else {
-                auto i = s.lower_bound(x), j = s.upper_bound(x);
-                --i;
-                if (SegTree::query((*i) + 1, x) &lt; *j)
-                    puts(&quot;YES&quot;);
-                else
-                    puts(&quot;N/A&quot;);
-            }
-        }
+    n = read();
+    for (int i = 1; i &lt;= n; ++i) {
+        a[i] = read();
     }
+
+    int t3 = 1000000;
+    for (int i = 1; i &lt;= n - 1; ++i) {
+        int res = 0;
+        if (a[i] &gt; a[i + 1] * 2) res = (a[i] + 1) / 2;
+        else if (a[i + 1] &gt; a[i] * 2) res = (a[i + 1] + 1) / 2;
+        else res = upper(a[i] + a[i + 1], 3);
+        t3 = std::min(t3, res);
+    }
+
+    int t2 = 1000000;
+    for (int i = 1; i &lt;= n - 2; ++i)
+        if ((a[i] &amp; 1) &amp;&amp; (a[i + 2] &amp; 1))
+            t2 = std::min(t2, 1 + a[i] / 2 + a[i + 2] / 2);
+
+    std::sort(a + 1, a + n + 1);
+    int t1 = (a[1] + 1) / 2 + (a[2] + 1) / 2;
+
+    printf(&quot;%d\n&quot;, std::min({t1, t2, t3}));
     return 0;
 }
 </code></pre>
+<hr />
 
                   </article>
                   <div class="comments-wrap">
