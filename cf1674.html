@@ -121,6 +121,10 @@
                                     <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
                                   
                                     <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
+                                  
+                                    <c><a href='tag_%E5%9B%BE%E8%AE%BA.html'>#图论</a></c>
+                                  
+                                    <c><a href='tag_%E6%8B%93%E6%89%91.html'>#拓扑</a></c>
                                      
 
                                 </p>
@@ -132,7 +136,7 @@
                   <article class="markdown-body single-content">
                     <p>Rated, 4/7, 1364 \(\to\) 1435</p>
 <p>E 大家都 fst 也就算了，F 就差造个极端数据拍一拍就过了 /fn</p>
-<h2><a id="cf1674f-desktop-rearrangement" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>CF1674F Desktop Rearrangement</h2>
+<h2><a id="1674f-desktop-rearrangement" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1674F Desktop Rearrangement</h2>
 <p><tc><e>Easy+</e><t>模拟</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>你 CF 为啥要出这种烂模拟。</p>
@@ -153,7 +157,8 @@
 </ul>
 </li>
 </ul>
-<p>由上分类讨论可见，对于 <code>.</code> 变 <code>*</code> 和 <code>*</code> 变 <code>.</code> 对答案的影响是不同的，尤其体现在操作前边界或是操作后边界的区别。</p>
+<p>由上分类讨论可见，<code>.</code> 变 <code>*</code> 和 <code>*</code> 变 <code>.</code> 对答案的影响是不同的，尤其体现在操作前边界或是操作后边界的区别。</p>
+<p>更直接的做法是树状数组直接暴力维护范围内有几个（前缀和）。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
 <p>考虑将矩阵转为序列，在序列上操作方便得多。</p>
 <pre class="line-numbers"><code class="language-cpp">#define trans(i, j) (((j) - 1) * n + (i))
@@ -195,7 +200,7 @@ int main() {
 }
 </code></pre>
 <hr />
-<h2><a id="cf1674e-breaking-the-wall" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>CF1674E Breaking the Wall</h2>
+<h2><a id="1674e-breaking-the-wall" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1674E Breaking the Wall</h2>
 <p><tc><m>Medium-</m><t>数学</t><t>贪心</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>形象一点，我们的答案的来源只有可能是这几种情况：</p>
@@ -205,7 +210,7 @@ int main() {
 <li>互帮互助。杀掉相邻两个数，互相凑一凑，答案就是两个数和除以 3 向上取整。但当一个数 \(a\) 大于另一个数 \(b\) 的两倍时，此方法只能妥协，答案为 \(\lceil \dfrac a 2 \rceil\)。</li>
 </ul>
 <p>当被杀的两个数距离大于等于 2 的时候，可以做到各杀各的互不干涉，归于「火力全开」型。</p>
-<p>当被杀的两个数距离等于 1 的时候，适用「火力全开」型或「投机取巧」型。</p>
+<p>当被杀的两个数距离等于 1 的时候，适用「火力全开」型或「投机取巧」型（总结起来就是两个数加起来除以二向上取整）。</p>
 <p>当被杀的两个数相邻，那必然属于「互帮互助」型。</p>
 <p>因此，以上三种得到答案的类型覆盖所有的情况，解法是正确的。</p>
 <p>这个题叉麻了，300 多测试点，乐死了。</p>
@@ -245,6 +250,51 @@ int main() {
 }
 </code></pre>
 <hr />
+<h2><a id="1674g-remove-directed-edges" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1674G Remove Directed Edges</h2>
+<p><tc><m>Medium+</m><t>图论</t><t>拓扑</t><t>DP</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>首先回顾一下「Cute Set」的定义：</p>
+<blockquote>
+<p>一个顶点的集合 \(S\) 被称作可爱的当且仅当任意两个顶点 \(v\) 和 \(u\)（\(v \neq u,v \in S,u \in S\)），可以经过由未删除的边组成的路径由 \(u\) 达到 \(v\)，或是从 \(v\) 达到 \(u\)。</p>
+</blockquote>
+<p>由于原图是一个 DAG，集合中点和未删除的边构成的也是一个 DAG。由 DAG 联想到可以进行拓扑排序。拓扑序中，任何一对相邻的顶点 \((i, i+1)\)，都满足：由 \(i\) 可以通过一条路径到达 \(i+1\)，或是由 \(i+1\) 可以通过条路径到达 \(i\)。若是后者，则 \(i+1\) 在拓扑序中，必位于 \(i\) 之前，矛盾。因此拓扑序中，总可以由靠前的顶点经过一些边到达靠后的顶点。由此推出一个重要的结论：<strong>存在一条经过一个 Cute Set 中所有顶点的路径，一条路径经过的顶点的集合也是一个 Cute Set</strong>。</p>
+<p>问题转化为：在 DAG 中找一条最长路，且经过的边均未删除。</p>
+<p>转化为一个更简单直白问题后，再来看删边的条件。每个顶点要么没有入边，要么被删一条入边，出边同理。下面思考的问题是，在选择路径的时候，哪些顶点可以被加入集合中？路径对于一个顶点而言，就是一条入边和一条出边。在保留这条路径不能删的同时，它还要预留可以删除的入边、出边各一条，以满足题意。因此，第二个重要的结论是：除了路径的起点没有入度要求、路径的终点没有出度要求以外，对于路径上每一个点的要求是至少分别有两条入边和两条出边，即<strong>对于路径上的每一条边 \(u \to v\)，都要满足 \(out_u&gt;1\) 且 \(in_v&gt;1\)</strong>。</p>
+<p>对于 DAG 上最长路问题，直接在拓扑序上 DP 即可，具体方法不再赘述。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, m;
+int ind[200001], oud[200001], del[200001];
+std::vector&lt;int&gt; e[200001];
+std::queue&lt;int&gt; q;
+int f[200001];
+
+int main() {
+    n = read(), m = read();
+    while (m--) {
+        int u = read(), v = read();
+        ++ind[v], ++del[v], ++oud[u];
+        e[u].push_back(v);
+    }
+    for (int i = 1; i &lt;= n; ++i) {
+        f[i] = 1;
+        if (!del[i]) q.push(i);
+    }
+    int ans = 1;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        ans = std::max(ans, f[u]);
+        for (int v : e[u]) {
+            if (ind[v] &gt; 1 &amp;&amp; oud[u] &gt; 1)
+                f[v] = std::max(f[v], f[u] + 1);
+            if (!--del[v])
+                q.push(v);
+        }
+    }
+    printf(&quot;%d\n&quot;, ans);
+    return 0;
+}
+</code></pre>
 
                   </article>
                   <div class="comments-wrap">
