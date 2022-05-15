@@ -25,7 +25,9 @@
               <div class="container">
               <div class="navbar-brand">
                 
-                <a target="self" class="navbar-item " href="index.html">Home</a>
+                <a target="_self" class="navbar-item " href="index.html">Home</a>
+                
+                <a target="_self" class="navbar-item " href="contests.html">Contests</a>
                 
                 <a target="_self" class="navbar-item " href="archives.html">Archives</a>
                 
@@ -57,6 +59,12 @@
                           </a>
                         
                         
+                     <a href="https://twitter.com/ns_zyx"  target="_blank" title="twitter">
+                       <span class="icon is-large has-text-grey-darker">
+                          <svg class="svg-inline--fa fa-twitter fa-w-16 fa-lg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path></svg><!-- <i class="fab fa-twitter fa-lg"></i> -->
+                       </span>
+                     </a>
+                      
                       
                       <a href="atom.xml" target="_blank" title="RSS">
                           <span class="icon is-large has-text-black-bis">
@@ -117,6 +125,8 @@
                                     <c><a href='tag_DP.html'>#DP</a></c>
                                   
                                     <c><a href='tag_CF.html'>#CF</a></c>
+                                  
+                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
                                      
 
                                 </p>
@@ -126,9 +136,9 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <p>Rated, 1/6, \(1448 \to 1364\)，我是天下第一🎤，哈哈哈哈！！！！！！！！！B 都不会！！！</p>
+                    <p>[3/6] Rated, 1/6, \(1448 \to 1364\)，我是天下第一🎤，哈哈哈哈！！！！！！！！！B 都不会！！！</p>
 <h2><a id="1673b-a-perfectly-balanced-string" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1673B A Perfectly Balanced String?</h2>
-<p><tc><m>Medium- *114514</m><t>结论</t></tc></p>
+<p><tc><m>Medium- *1100</m><t>结论</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>五花八门。</p>
 <p>你找一个长度最短且首尾字符相同的，此时首尾字符出现的次数为 \(2\)，那么中间的次数只能是 \(1\) 咯，必须每个都轮一遍。轮不到的寄。</p>
@@ -168,7 +178,7 @@ int main() {
 </code></pre>
 <hr />
 <h2><a id="1673c-palindrome-basis" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1673C Palindrome Basis</h2>
-<p><tc><m>Medium- *114514</m><t>背包</t><t>DP</t></tc></p>
+<p><tc><m>Medium- *1500</m><t>背包</t><t>DP</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>考虑设 \(f(i,j)\) 为在前 \(i\) 个回文数中（第 \(i\) 个为 \(p_i\)），凑出来数 \(n\) 的方案数。则有：</p>
 \[f(i,j)=f(i-1,j)+f(i,j-p_i)
@@ -186,6 +196,62 @@ int main() {
             f[i] = (f[i] + f[i - p[k]]) % MOD;
     while (T--)
         printf(&quot;%lld\n&quot;, f[read()]);
+}
+</code></pre>
+<hr />
+<h2><a id="1673d-lost-arithmetic-progression" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1673D Lost Arithmetic Progression</h2>
+<p><tc><m>Medium+ *1900</m><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>由题意直接得出：由公差为 \(d_0,d_1\) 的两个等差数列合成的新等差数列的公差必定为 \(d'=\operatorname{lcm}(d_0,d_1)\)，也就是说 \(d_0 \mid d'\)，\(d_1 \mid d'\)。设这三个等差数列的数的集合分别为 \(A,B,C\)，则 \(A \in C\)，\(B \in C\)。</p>
+<p>无解的情况很方便判断，即 \(\exists x \in C\) 满足 \(x\notin B\)，即满足以下条件之一：</p>
+<ul>
+<li>\(d_B \not\mid d_C\)</li>
+<li>\(C_1 \notin B\) 或 \(C_n \notin B\)</li>
+</ul>
+<p>接下来看有几个解。乍一看好像都是无数个解，但由于 \(A \cap B\) 中不能有 \(C\) 以外的元素，所以 \(A\) 只能在 \(C\) 限定的范围内蠕动，<strong>不得在 \(C\) 之外与 \(B\) 有交点</strong>。而 \(A\) 与 \(B\) 在 \(C\) 左侧第一个交点显然是 \(C_0\) 即 \(C_1-d_C\)（如果 \(B\) 的左端点大于这个那么 \(A\) 可以向左无限延长，无数个解），中间（从 \(C_0+1\) 到 \(C_1\)）放得下的 \(A\) 的个数显然是 \(\dfrac {d_C} {d_A}\)，\(C\) 右侧同理。因此，对于每一个 \(d_A\) 使得 \(\operatorname{lcm}(d_A,d_B)=d_C\)，答案为 \(\left(\dfrac {d_C} {d_A}\right)^2\)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int __int128
+#define MOD 1000000007
+
+int T;
+struct AP {
+    int s, d, n;
+    int get(int i) { return (i - 1) * d + s; }
+    int last() { return get(n); }
+    bool in(int x) {
+        if (s &lt;= x &amp;&amp; x &lt;= last() &amp;&amp; (x - s) % d == 0) return true;
+        else return false;
+    }
+} b, c;
+
+int gcd(int a, int b) {
+    return a % b ? gcd(b, a % b) : b;
+}
+int lcm(int a, int b) {
+    return a / gcd(a, b) * b;
+}
+
+signed main() {
+    T = read();
+    while (T--) {
+        b.s = read(), b.d = read(), b.n = read();
+        c.s = read(), c.d = read(), c.n = read();
+        if (c.d % b.d || !b.in(c.s) || !b.in(c.last()))
+            puts(&quot;0&quot;);
+        else if (b.s &gt; c.get(0) || b.last() &lt; c.get(c.n + 1))
+            puts(&quot;-1&quot;);
+        else {
+            int ans = 0;
+            for (int x = 1; x * x &lt;= c.d; ++x) {
+                if (lcm(x, b.d) == c.d)
+                    ans = (ans + (c.d / x) * (c.d / x)) % MOD;
+                if (x * x != c.d &amp;&amp; lcm(c.d / x, b.d) == c.d)
+                    ans = (ans + x * x) % MOD;
+            }
+            printf(&quot;%lld\n&quot;, (long long)ans);
+        }
+    }
+    return 0;
 }
 </code></pre>
 

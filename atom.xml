@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-05-05T22:38:01+08:00</updated>
+  <updated>2022-05-15T17:48:30+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -13,24 +13,876 @@
   <generator uri="http://www.mweb.im/">MWeb</generator>
   
   <entry>
-    <title type="html"><![CDATA[0xff 算法竞赛进阶指南]]></title>
-    <link href="oi.afobject.ml/overview.html"/>
-    <updated>2022-01-07T23:06:53+08:00</updated>
-    <id>oi.afobject.ml/overview.html</id>
+    <title type="html"><![CDATA[Educational Codeforces Round #128 (Div.2)]]></title>
+    <link href="oi.afobject.ml/cf1680.html"/>
+    <updated>2022-05-14T22:28:03+08:00</updated>
+    <id>oi.afobject.ml/cf1680.html</id>
     <content type="html"><![CDATA[
+<p>[5/6] Alt (Rated), 3/6, 1071 \(\to\) 1278</p>
+<h2><a id="1680c-binary-string" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680C Binary String</h2>
+<p><tc><m>Medium-</m><t>二分</t><t>前缀和</t></tc></p>
+<p>场切了，想出二分没觉得特难，到时候看看 \(O(n)\) 做法是什么。</p>
 <hr />
+<h2><a id="1680d-dog-walking" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680D Dog Walking</h2>
+<p><tc><m>Medium+</m><t>数学</t><t>贪心</t><t>前缀和</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>题面太长不看。稍微简化一下题面：将数列中的 \(0\) 都替换成 \([-k,k]\) 中的一个数后，令前缀和数组为 \(s\)，最大化 \(\max\{s\}-\min\{s\}\) 且 \(s_n=0\)（很容易判断，当 \(\mid s_n\mid\) 大于 0 的个数乘以 \(k\) 的时候，必然无解）。</p>
+<p>由这个式子不难想到最大子段和的前缀和解法，可以差不多地理解一下，这个 \(\max\{s\}-\min\{s\}\) 代表的是原数列中的<strong>一段区间和（的绝对值）</strong>。然后注意到 \(1 \le n \le 3000\) 的良心范围，考虑直接枚举这个区间的左、右端点。最优化的方案必然是要么 0 全替换为 \(k\)，要么全替换为 \(-k\)。</p>
+<p>但要求 \(s_n=0\)，怎么处理这个条件也是难点之一。关键点在于看被选择的区间内、外的和能否达到平衡，即「归零」：</p>
 <ul>
-<li><c>0x0101</c> 表示题目编号。根据书后索引编号，如果有明确来源则会标注。</li>
-<li><e>Easy</e> 我能很快做出来的题目。<br />
-大约对应 *1500 以内，如 NOIP 2021 A。</li>
-<li><m>Medium</m> 我需要充足的思考才能做出来或者能有个大概方向但细节卡住了的题目。<br />
-大约对应 *2200 以内，如 CSP-S 2021 A。</li>
-<li><h>Hard</h> 蚌。</li>
+<li>当区间内的和为一个正数 \(p\)，区间外的和的最小值为 \(p'_{\min}\)，我们想要使 \(p+p'_{\min}=0\)，因此答案取 \(\min\{p, \mid p'_{\min} \mid\}\)；</li>
+<li>同理，当区间内的和为一个负数 \(-p\)，区间外的和的最大值为 \(p'_{\max}\)，答案取 \(\min\{\mid p \mid, p'_{\max}\}\)。</li>
 </ul>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, k, a[3001];
+int p[3001], d[3001];
+
+signed main() {
+    n = read(), k = read();
+    for (int i = 1; i &lt;= n; i++) {
+        a[i] = read();
+        d[i] = d[i - 1] + (a[i] == 0);
+        p[i] = p[i - 1] + a[i];
+    }
+    if (abs(p[n]) &gt; k * d[n]) return puts(&quot;-1&quot;), 0;
+    int max = -1;
+    for (int l = 1; l &lt;= n; l++) {
+        for (int r = l; r &lt;= n; r++) {
+            int sum = p[r] - p[l - 1], cnt = d[r] - d[l - 1];
+            int lSum = p[n] - sum, lCnt = d[n] - cnt;
+            max = std::max(max, std::min(abs(sum + cnt * k), abs(lSum - lCnt * k)));
+            max = std::max(max, std::min(abs(sum - cnt * k), abs(lSum + lCnt * k)));
+        }
+    }
+    printf(&quot;%lld\n&quot;, max + 1);
+    return 0;
+}
+</code></pre>
 <hr />
+<h2><a id="1680e-moving-chips" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680E Moving Chips</h2>
+<p><tc><m>Medium+</m><t>DP</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>这题里吃的路径其实是可逆的，比如说 A 吃了 B，C 再吃了 B 和 A 吃了 B 然后继续吃了 C 是一样的。所以我们的目标是找出代价最少的一条吃人路径，并且可以钦定任意一个星号作为最终状态。假如设最后留下来的是最右边的某个星号，那就是「从左吃到右」的过程，可以尝试用 DP 来最优化方案。</p>
+<p>设 \(f(i,0/1)\) 为把第 \(1\) 到第 \(i-1\) 列全部吃掉，且星号仅在 \((i,0/1)\) 时的最小步数。在对这一列进行 DP 的过程中，我们要考虑的问题是<strong>怎么把上一列的星号全部转移到这一列的目标位置中去</strong>。假如本列有两个星号，<strong>合并一定更优</strong>（否则同时移两个就是浪费），所以也要考虑合并。</p>
 <ul>
-<li>0x00 基本算法</li>
+<li>若全部转移到 \((i,0)\)：
+<ul>
+<li>从 \((i-1,0)\) 转移：代价为 \(1\)，但如果 \((i,1)\) 有星号，还需要再加一。</li>
+<li>从 \((i-1,1)\) 转移：可以顺便吃了 \((i,1)\)，无论如何代价始终为 \(2\)。</li>
 </ul>
+</li>
+<li>若全部转移到 \((i,1)\)：
+<ul>
+<li>从 \((i-1,1)\) 转移：代价为 \(1\)，但如果 \((i,0)\) 有星号，还需要再加一。</li>
+<li>从 \((i-1,0)\) 转移：代价始终为 \(2\)。</li>
+</ul>
+</li>
+</ul>
+<p>可以轻松写出状态转移方程。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int T, n;
+int g[200001][2], f[200001][2];
+
+int main() {
+    std::cin &gt;&gt; T;
+    while (T--) {
+        std::cin &gt;&gt; n;
+        for (int i = 1; i &lt;= n; ++i)
+            f[i][0] = f[i][1] = 0;
+        for (int i = 0; i &lt; 2; ++i) {
+            for (int j = 1; j &lt;= n; ++j) {
+                char c; std::cin &gt;&gt; c;
+                g[j][i] = (c == '*');
+            }
+        }
+        int l = 1, r = n;
+        while (!g[l][0] &amp;&amp; !g[l][1]) ++l;
+        while (!g[r][0] &amp;&amp; !g[r][1]) --r;
+        for (int i = l; i &lt;= r; ++i) {
+            f[i][0] = std::min(f[i - 1][0] + g[i][1] + 1, f[i - 1][1] + 2);
+            f[i][1] = std::min(f[i - 1][1] + g[i][0] + 1, f[i - 1][0] + 2);
+        }
+        std::cout &lt;&lt; std::min(f[r][0], f[r][1]) - 1 &lt;&lt; std::endl;
+        // 之前没有特地算 f[l][0/1] 的初始值，循环直接从 l 开始，但是 l-1 -&gt; l 算了 1 步，所以这里减去一。
+    }
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Codeforces Round #786 (Div.3)]]></title>
+    <link href="oi.afobject.ml/cf1674.html"/>
+    <updated>2022-05-03T23:02:19+08:00</updated>
+    <id>oi.afobject.ml/cf1674.html</id>
+    <content type="html"><![CDATA[
+<p>[已通关] Rated, 4/7, 1364 \(\to\) 1438</p>
+<p>E 大家都 fst 也就算了，F 就差造个极端数据拍一拍就过了 /fn</p>
+<h2><a id="1674f-desktop-rearrangement" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1674F Desktop Rearrangement</h2>
+<p><tc><e>Easy+ *1800</e><t>模拟</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>你 CF 为啥要出这种烂模拟。</p>
+<p>问题相当于询问有几个图标需要移动。首先求出原图状态下有几个需要移的，接下来考虑变化。</p>
+<ul>
+<li>
+<p>如果是从没有变成有的：</p>
+<ul>
+<li>在操作<strong>后</strong>的边界上的那个点（如果存在）不用移了，答案减一（如果操作的就是这个点，<strong>忽略</strong>这一条，对答案没有影响）。</li>
+<li>另外如果改变的这个点超过了操作<strong>后</strong>的边界，那么就需要费力气移它，答案加一。</li>
+</ul>
+</li>
+<li>
+<p>如果是从有变成没有的：</p>
+<ul>
+<li>操作<strong>前</strong>的守门员（如果存在）被踢了，需要移的加一（如果操作的就是这个点，<strong>忽略</strong>这一条，对答案没有影响）。</li>
+<li>如果本来就超出了操作<strong>前</strong>的范围，需要移的减一，否则不变。</li>
+</ul>
+</li>
+</ul>
+<p>由上分类讨论可见，<code>.</code> 变 <code>*</code> 和 <code>*</code> 变 <code>.</code> 对答案的影响是不同的，尤其体现在操作前边界或是操作后边界的区别。</p>
+<p>更直接的做法是树状数组直接暴力维护范围内有几个（前缀和）。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>考虑将矩阵转为序列，在序列上操作方便得多。</p>
+<pre class="line-numbers"><code class="language-cpp">#define trans(i, j) (((j) - 1) * n + (i))
+int n, m, q;
+char map[1000001];
+
+int main() {
+    std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
+    int cnt = 0;
+    for (int i = 1, k = 0; i &lt;= n; ++i) {
+        for (int j = 1; j &lt;= m; ++j) {
+            std::cin &gt;&gt; map[trans(i, j)];
+            if (map[trans(i, j)] == '*') ++cnt;
+        }
+    }
+    int ans = cnt;
+    for (int i = 1; i &lt;= cnt; ++i)
+        if (map[i] == '*')
+            --ans;
+
+    while (q--) {
+        int x, y;
+        std::cin &gt;&gt; x &gt;&gt; y;
+        int idx = trans(x, y);
+        if (map[idx] == '.') {
+            ++cnt;
+            if (map[cnt] == '*') --ans;
+            if (idx &gt; cnt) ++ans;
+            map[idx] = '*';
+        } else {
+            map[idx] = '.';
+            if (idx &gt; cnt) --ans;
+            if (map[cnt] == '*') ++ans;
+            --cnt;
+        }
+        std::cout &lt;&lt; ans &lt;&lt; '\n';
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="1674e-breaking-the-wall" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1674E Breaking the Wall</h2>
+<p><tc><m>Medium- *2000</m><t>数学</t><t>贪心</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>形象一点，我们的答案的来源只有可能是这几种情况：</p>
+<ul>
+<li>火力全开。即对数列中最小的两个每次杀掉 2。适用于数列中最小的两个数分隔较远的情况。</li>
+<li>投机取巧。相隔一个数的两个奇数，先通过杀中间的那个数一次转为偶数，然后转为「火力全开」型。</li>
+<li>互帮互助。杀掉相邻两个数，互相凑一凑，答案就是两个数和除以 3 向上取整。但当一个数 \(a\) 大于另一个数 \(b\) 的两倍时，此方法只能妥协，答案为 \(\lceil \dfrac a 2 \rceil\)。</li>
+</ul>
+<p>当被杀的两个数距离大于等于 2 的时候，可以做到各杀各的互不干涉，归于「火力全开」型。</p>
+<p>当被杀的两个数距离等于 1 的时候，适用「火力全开」型或「投机取巧」型（总结起来就是两个数加起来除以二向上取整）。</p>
+<p>当被杀的两个数相邻，那必然属于「互帮互助」型。</p>
+<p>因此，以上三种得到答案的类型覆盖所有的情况，解法是正确的。</p>
+<p>这个题叉麻了，300 多测试点，乐死了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, a[200001];
+
+int upper(int a, int b) {
+    if (a % b) return a / b + 1;
+    else return a / b;
+}
+
+int main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i) {
+        a[i] = read();
+    }
+
+    int t3 = 1000000;
+    for (int i = 1; i &lt;= n - 1; ++i) {
+        int res = 0;
+        if (a[i] &gt; a[i + 1] * 2) res = (a[i] + 1) / 2;
+        else if (a[i + 1] &gt; a[i] * 2) res = (a[i + 1] + 1) / 2;
+        else res = upper(a[i] + a[i + 1], 3);
+        t3 = std::min(t3, res);
+    }
+
+    int t2 = 1000000;
+    for (int i = 1; i &lt;= n - 2; ++i)
+        if ((a[i] &amp; 1) &amp;&amp; (a[i + 2] &amp; 1))
+            t2 = std::min(t2, 1 + a[i] / 2 + a[i + 2] / 2);
+
+    std::sort(a + 1, a + n + 1);
+    int t1 = (a[1] + 1) / 2 + (a[2] + 1) / 2;
+
+    printf(&quot;%d\n&quot;, std::min({t1, t2, t3}));
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="1674g-remove-directed-edges" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1674G Remove Directed Edges</h2>
+<p><tc><m>Medium+ *2000</m><t>图论</t><t>拓扑</t><t>DP</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>首先回顾一下「Cute Set」的定义：</p>
+<blockquote>
+<p>一个顶点的集合 \(S\) 被称作可爱的当且仅当任意两个顶点 \(v\) 和 \(u\)（\(v \neq u,v \in S,u \in S\)），可以经过由未删除的边组成的路径由 \(u\) 达到 \(v\)，或是从 \(v\) 达到 \(u\)。</p>
+</blockquote>
+<p>由于原图是一个 DAG，集合中点和未删除的边构成的也是一个 DAG。由 DAG 联想到可以进行拓扑排序。拓扑序中，任何一对相邻的顶点 \((i, i+1)\)，都满足：由 \(i\) 可以通过一条路径到达 \(i+1\)，或是由 \(i+1\) 可以通过条路径到达 \(i\)。若是后者，则 \(i+1\) 在拓扑序中，必位于 \(i\) 之前，矛盾。因此拓扑序中，总可以由靠前的顶点经过一些边到达靠后的顶点。由此推出一个重要的结论：<strong>存在一条经过一个 Cute Set 中所有顶点的路径，一条路径经过的顶点的集合也是一个 Cute Set</strong>。</p>
+<p>问题转化为：在 DAG 中找一条最长路，且经过的边均未删除。</p>
+<p>转化为一个更简单直白问题后，再来看删边的条件。每个顶点要么没有入边，要么被删一条入边，出边同理。下面思考的问题是，在选择路径的时候，哪些顶点可以被加入集合中？路径对于一个顶点而言，就是一条入边和一条出边。在保留这条路径不能删的同时，它还要预留可以删除的入边、出边各一条，以满足题意。因此，第二个重要的结论是：除了路径的起点没有入度要求、路径的终点没有出度要求以外，对于路径上每一个点的要求是至少分别有两条入边和两条出边，即<strong>对于路径上的每一条边 \(u \to v\)，都要满足 \(out_u&gt;1\) 且 \(in_v&gt;1\)</strong>。</p>
+<p>对于 DAG 上最长路问题，直接在拓扑序上 DP 即可，具体方法不再赘述。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, m;
+int ind[200001], oud[200001], del[200001];
+std::vector&lt;int&gt; e[200001];
+std::queue&lt;int&gt; q;
+int f[200001];
+
+int main() {
+    n = read(), m = read();
+    while (m--) {
+        int u = read(), v = read();
+        ++ind[v], ++del[v], ++oud[u];
+        e[u].push_back(v);
+    }
+    for (int i = 1; i &lt;= n; ++i) {
+        f[i] = 1;
+        if (!del[i]) q.push(i);
+    }
+    int ans = 1;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        ans = std::max(ans, f[u]);
+        for (int v : e[u]) {
+            if (ind[v] &gt; 1 &amp;&amp; oud[u] &gt; 1)
+                f[v] = std::max(f[v], f[u] + 1);
+            if (!--del[v])
+                q.push(v);
+        }
+    }
+    printf(&quot;%d\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[LGR108]]></title>
+    <link href="oi.afobject.ml/LGR108.html"/>
+    <updated>2022-05-01T23:13:15+08:00</updated>
+    <id>oi.afobject.ml/LGR108.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="c-sunset-p8320" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>C Sunset - P8320</h2>
+<p><tc><e>Easy</e><t>交互</t><t>二分</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>观察 \(a\) 数列的变化趋势，那必然是先上升后不变，不变的那个点为当前数列的最大值。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int main() {
+    cin &gt;&gt; T;
+    while (T--) {
+        cin &gt;&gt; n;
+        for (int i = n; i; --i) {
+            int last = query(n);
+            int l = 1, r = n;
+            while (l &lt; r) {
+                const int mid = (l + r) / 2;
+                if (query(mid) &lt; last) l = mid + 1;
+                else r = mid;
+            }
+            ans[l] = i;
+            cout &lt;&lt; &quot;? 2 &quot; &lt;&lt; l &lt;&lt; endl;
+        }
+        cout &lt;&lt; &quot;! &quot;;
+        for (int i = 1; i &lt;= n; ++i)
+            cout &lt;&lt; ans[i] &lt;&lt; &quot; &quot;;
+        cout &lt;&lt; endl;
+    }
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Codeforces Round #785 (Div.2)]]></title>
+    <link href="oi.afobject.ml/cf1673.html"/>
+    <updated>2022-05-01T00:58:35+08:00</updated>
+    <id>oi.afobject.ml/cf1673.html</id>
+    <content type="html"><![CDATA[
+<p>[3/6] Rated, 1/6, \(1448 \to 1364\)，我是天下第一🎤，哈哈哈哈！！！！！！！！！B 都不会！！！</p>
+<h2><a id="1673b-a-perfectly-balanced-string" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1673B A Perfectly Balanced String?</h2>
+<p><tc><m>Medium- *1100</m><t>结论</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>五花八门。</p>
+<p>你找一个长度最短且首尾字符相同的，此时首尾字符出现的次数为 \(2\)，那么中间的次数只能是 \(1\) 咯，必须每个都轮一遍。轮不到的寄。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>这个 <code>last</code> 的用法还挺妙的。</p>
+<pre class="line-numbers"><code class="language-cpp">int T;
+char s[200003];
+bool e[27];
+int last[27];
+
+int main() {
+    scanf(&quot;%d&quot;, &amp;T);
+    while (T--) {
+        scanf(&quot;%s&quot;, s);
+        const int len = strlen(s);
+        for (int i = 0; i &lt; 27; i++)
+            e[i] = false;
+        for (int i = 0; i &lt; len; i++)
+            e[s[i] - 'a'] = true;
+        int kind = 0;
+        for (int i = 0; i &lt; 26; i++)
+            kind += e[i], last[i] = -1;
+        for (int i = 0; i &lt; len; i++) {
+            if (last[s[i] - 'a'] != -1) {
+                if (i - last[s[i] - 'a'] != kind) {
+                    puts(&quot;NO&quot;);
+                    goto end;
+                }
+            }
+            last[s[i] - 'a'] = i;
+        }
+        puts(&quot;YES&quot;);
+        end: continue;
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="1673c-palindrome-basis" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1673C Palindrome Basis</h2>
+<p><tc><m>Medium- *1500</m><t>背包</t><t>DP</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑设 \(f(i,j)\) 为在前 \(i\) 个回文数中（第 \(i\) 个为 \(p_i\)），凑出来数 \(n\) 的方案数。则有：</p>
+\[f(i,j)=f(i-1,j)+f(i,j-p_i)
+\]
+<p>考虑省去一维。</p>
+\[f(j)\gets f(j)+f(j-p_i)
+\]
+<p>\(f(0)=1\)。</p>
+<p>关于循环顺序：两维的时候你爱咋地咋地，但一维的时候省去了 \(i\) 这维，所以大前提就是在虚拟遍历 \(i\) 只不过没在转移方程里体现出来，\(i\) 必须放在外层，否则就会对 \(f(j)\) 的值产生影响。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">signed main() {
+    T = read(); f[0] = 1;
+    for (int k = 0; k &lt; P; ++k)
+        for (int i = p[k]; i &lt;= 50000; ++i)
+            f[i] = (f[i] + f[i - p[k]]) % MOD;
+    while (T--)
+        printf(&quot;%lld\n&quot;, f[read()]);
+}
+</code></pre>
+<hr />
+<h2><a id="1673d-lost-arithmetic-progression" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1673D Lost Arithmetic Progression</h2>
+<p><tc><m>Medium+ *1900</m><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>由题意直接得出：由公差为 \(d_0,d_1\) 的两个等差数列合成的新等差数列的公差必定为 \(d'=\operatorname{lcm}(d_0,d_1)\)，也就是说 \(d_0 \mid d'\)，\(d_1 \mid d'\)。设这三个等差数列的数的集合分别为 \(A,B,C\)，则 \(A \in C\)，\(B \in C\)。</p>
+<p>无解的情况很方便判断，即 \(\exists x \in C\) 满足 \(x\notin B\)，即满足以下条件之一：</p>
+<ul>
+<li>\(d_B \not\mid d_C\)</li>
+<li>\(C_1 \notin B\) 或 \(C_n \notin B\)</li>
+</ul>
+<p>接下来看有几个解。乍一看好像都是无数个解，但由于 \(A \cap B\) 中不能有 \(C\) 以外的元素，所以 \(A\) 只能在 \(C\) 限定的范围内蠕动，<strong>不得在 \(C\) 之外与 \(B\) 有交点</strong>。而 \(A\) 与 \(B\) 在 \(C\) 左侧第一个交点显然是 \(C_0\) 即 \(C_1-d_C\)（如果 \(B\) 的左端点大于这个那么 \(A\) 可以向左无限延长，无数个解），中间（从 \(C_0+1\) 到 \(C_1\)）放得下的 \(A\) 的个数显然是 \(\dfrac {d_C} {d_A}\)，\(C\) 右侧同理。因此，对于每一个 \(d_A\) 使得 \(\operatorname{lcm}(d_A,d_B)=d_C\)，答案为 \(\left(\dfrac {d_C} {d_A}\right)^2\)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int __int128
+#define MOD 1000000007
+
+int T;
+struct AP {
+    int s, d, n;
+    int get(int i) { return (i - 1) * d + s; }
+    int last() { return get(n); }
+    bool in(int x) {
+        if (s &lt;= x &amp;&amp; x &lt;= last() &amp;&amp; (x - s) % d == 0) return true;
+        else return false;
+    }
+} b, c;
+
+int gcd(int a, int b) {
+    return a % b ? gcd(b, a % b) : b;
+}
+int lcm(int a, int b) {
+    return a / gcd(a, b) * b;
+}
+
+signed main() {
+    T = read();
+    while (T--) {
+        b.s = read(), b.d = read(), b.n = read();
+        c.s = read(), c.d = read(), c.n = read();
+        if (c.d % b.d || !b.in(c.s) || !b.in(c.last()))
+            puts(&quot;0&quot;);
+        else if (b.s &gt; c.get(0) || b.last() &lt; c.get(c.n + 1))
+            puts(&quot;-1&quot;);
+        else {
+            int ans = 0;
+            for (int x = 1; x * x &lt;= c.d; ++x) {
+                if (lcm(x, b.d) == c.d)
+                    ans = (ans + (c.d / x) * (c.d / x)) % MOD;
+                if (x * x != c.d &amp;&amp; lcm(c.d / x, b.d) == c.d)
+                    ans = (ans + x * x) % MOD;
+            }
+            printf(&quot;%lld\n&quot;, (long long)ans);
+        }
+    }
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x113 单调栈]]></title>
+    <link href="oi.afobject.ml/0x113.html"/>
+    <updated>2022-04-27T21:35:55+08:00</updated>
+    <id>oi.afobject.ml/0x113.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="largest-rectangle-in-a-histogram" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Largest Rectangle in a Histogram</h2>
+<p><tc><c>0x1104</c><e>Easy</e><t>单调栈</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑对于每一个 \(x\) 坐标，都尝试找出以它为右边界的最大的矩形的面积。那么可能成为答案的矩形在左侧一定终止于在它左侧，且比它矮的一个位置。所以在它左侧，且比它高的东西没有用，直接用单调栈扔掉就行。</p>
+<p>在原位置在 \(i\) 的一个数 \(k\) 在位置 \(j\) 时被推出栈的时候统计答案，答案为 \((j-i+d(k))\times k\)，其中 \(d(k)\) 代表这个数 \(k\) 顶掉的数的个数（即不在栈中，但可以算进矩形的宽的数，包括直接顶掉和间接顶掉）。在整个数列末尾追加一个 0，顶掉所有数。</p>
+<p>按照书上做法，其实也可以把被顶掉的压一压高度，栈内宽度不变，这样就不用分「直接顶掉」和「间接顶掉」了，不过差不多。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, a;
+std::stack&lt;std::pair&lt;int, int&gt;&gt; s;
+int d[1000001];
+
+int main() {
+    while (true) {
+        n = read();
+        if (!n) break;
+        for (int i = 1; i &lt;= n; ++i) d[i] = 0;
+        while (s.size()) s.pop();
+        long long ans = 0;
+        for (int i = 1; i &lt;= n + 1; i++) {
+            a = (i &lt;= n) ? read() : 0;
+            while (s.size() &amp;&amp; s.top().second &gt; a) {
+                const int u = s.top().first, h = s.top().second;
+                ans = std::max(ans, (long long)(i - u + d[u]) * h), d[i] += d[u] + 1;
+                s.pop();
+            }
+            s.push({i, a});
+        }
+        printf(&quot;%lld\n&quot;, ans);
+    }
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x112 表达式求值]]></title>
+    <link href="oi.afobject.ml/0x112.html"/>
+    <updated>2022-04-27T08:36:45+08:00</updated>
+    <id>oi.afobject.ml/0x112.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E4%B8%AD%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%BD%AC%E4%B8%BA%E5%90%8E%E7%BC%80%E6%B1%82%E5%80%BC" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>中缀表达式转为后缀求值</h2>
+<p>首先举个例子：</p>
+<p>中缀：<code>3 * (1 - 2)</code><br />
+后缀：<code>3 1 2 - *</code></p>
+<p>所有数的顺序肯定是一样的，然后就是运算符的问题（不管括号），同一优先级的情况下（如 <code>1 + 1 - 4</code> \(\to\) <code>1 1 4 - +</code>）就可以把运算符倒序输出，如果非同一优先级（如 <code>5 * 1 + 4</code> \(\to\) <code>5 1 * 4 +</code>），那就在一个运算符入栈的同时，看一下有没有比它优先级高的在栈里，如果有，顶掉输出。</p>
+<p>现在考虑括号问题，括号内当一个子问题求解就行了（碰到一个右括号就把左括号及之后的所有内容输出，有点像递归的栈的写法）。</p>
+<pre class="line-numbers"><code class="language-cpp">std::string s;
+std::stack&lt;char&gt; st;
+int priority[151];
+
+int type[100001], n = 0;
+double m[100001]; char o[100001];
+std::stack&lt;double&gt; h;
+
+int main() {
+    std::cin &gt;&gt; s;
+    s = '(' + s + ')';
+
+    priority['*'] = priority['/'] = 2;
+    priority['+'] = priority['-'] = 1;
+    priority[')'] = 3; priority['('] = 0;
+
+    double num = 0.0; bool flag = false;
+    for (char x : s) {
+        if (x &gt;= '0' &amp;&amp; x &lt;= '9') {
+            flag = true;
+            num *= 10, num += x - '0';
+        } else {
+            if (flag)
+                type[++n] = 1, m[n] = num,
+                num = 0, flag = false;
+            if (x == ')')  {
+                while (st.top() != '(')
+                    type[++n] = 2, o[n] = st.top(), st.pop();
+                st.pop();
+                continue;
+            } else if (x != '(') {
+                while (st.size() &amp;&amp; priority[st.top()] &gt;= priority[x])
+                    type[++n] = 2, o[n] = st.top(), st.pop();
+            }
+            st.push(x);
+        }
+    }
+
+    for (int i = 1; i &lt;= n; ++i) {
+        if (type[i] == 1) {
+            h.push(m[i]);
+        } else {
+            double rhs = h.top(); h.pop();
+            double lhs = h.top(); h.pop();
+            if (o[i] == '+') h.push(lhs + rhs);
+            if (o[i] == '-') h.push(lhs - rhs);
+            if (o[i] == '*') h.push(lhs * rhs);
+            if (o[i] == '/') h.push(lhs / rhs);
+        }
+    }
+
+    std::cout &lt;&lt; h.top() &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+<h2><a id="%E4%B8%AD%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E9%80%92%E5%BD%92%E6%B3%95%E6%B1%82%E5%80%BC" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>中缀表达式的递归法求值</h2>
+<p>这个比较简单好写，但时间复杂度是平方的。</p>
+<pre class="line-numbers"><code class="language-cpp">std::string s;
+
+double solve(int l, int r) {
+    int add = -1, mul = -1, t = 0;
+    for (int i = r; i &gt;= l; --i) {
+        if (s[i] == ')') ++t;
+        else if (s[i] == '(') --t;
+        if (t == 0 &amp;&amp; add == -1 &amp;&amp; (s[i] == '+' || s[i] == '-'))
+            add = i;
+        if (t == 0 &amp;&amp; mul == -1 &amp;&amp; (s[i] == '*' || s[i] == '/'))
+            mul = i;
+    }
+    if (add != -1) {
+        if (s[add] == '+') return solve(l, add - 1) + solve(add + 1, r);
+        else return solve(l, add - 1) - solve(add + 1, r);
+    } else if (mul != -1) {
+        if (s[mul] == '*') return solve(l, mul - 1) * solve(mul + 1, r);
+        else return solve(l, mul - 1) / solve(mul + 1, r);
+    } else if (s[l] == '(' &amp;&amp; s[r] == ')') {
+        return solve(l + 1, r - 1);
+    } else {
+        double ans = 0;
+        for (int i = l; i &lt;= r; i++) {
+            ans *= 10;
+            ans += s[i] - '0';
+        }
+        return ans;
+    }
+}
+
+int main() {
+    std::cin &gt;&gt; s;
+    std::cout &lt;&lt; solve(0, s.size() - 1) &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x111 栈基础]]></title>
+    <link href="oi.afobject.ml/0x111.html"/>
+    <updated>2022-04-25T08:20:03+08:00</updated>
+    <id>oi.afobject.ml/0x111.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="push-pop-getmin" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Push, Pop, GetMin</h2>
+<p><tc><c>0x1101</c><e>Easy-</e><t>栈</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>维护两个栈，一个是题目中给出的栈，一个保存每个时刻最小值。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">class MinStack {
+public:
+    std::stack&lt;int&gt; o, m;
+    MinStack() {}
+    void push(int x) {
+        o.push(x);
+        if (m.size())
+            m.push(std::min(m.top(), x));
+        else
+            m.push(x);
+    }
+    void pop() {
+        o.pop();
+        m.pop();
+    }
+    int top() {
+        return o.top();
+    }
+    int getMin() {
+        return m.top();
+    }
+};
+</code></pre>
+<hr />
+<h2><a id="editor" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Editor</h2>
+<p><tc><c>0x1102</c><e>Easy</e><t>栈</t><t>模拟</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑建立对顶栈，这样前四种操作都可以实现。</p>
+<p>对于第五种操作，可以再建立两个栈，一个保存所有时刻的前缀和，另一个用 0x1101 的方式维护最小值，只不过这里要用数组模拟栈（需要直接访问）。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>注意第一个数为负数时的处理。</p>
+<pre class="line-numbers"><code class="language-cpp">int n;
+std::stack&lt;int&gt; a, b;
+int s[1000001], f[1000001], top;
+
+void pushA(int t) {
+    a.push(t);
+    s[top + 1] = s[top] + t;
+    if (top) f[top + 1] = std::max(f[top], s[top + 1]);
+    else f[top + 1] = s[top + 1];
+    ++top;
+}
+
+void popA() {
+    a.pop();
+    --top;
+}
+
+int main() {
+    std::cin &gt;&gt; n;
+    while (n--) {
+        char c; int t;
+        std::cin &gt;&gt; c;
+        switch (c) {
+            case 'I':
+                std::cin &gt;&gt; t; pushA(t);
+                break;
+            case 'D':
+                if (a.size()) popA();
+                break;
+            case 'L':
+                if (a.size()) b.push(a.top()), popA();
+                break;
+            case 'R':
+                if (b.size()) pushA(b.top()), b.pop();
+                break;
+            case 'Q':
+                std::cin &gt;&gt; t;
+                std::cout &lt;&lt; f[t] &lt;&lt; std::endl;
+                break;
+        }
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E8%BF%9B%E5%87%BA%E6%A0%88%E5%BA%8F%E5%88%97%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>进出栈序列问题</h2>
+<p><tc><c>0x1103</c><m>Medium</m><t>栈</t><t>数学</t><t>DP</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%951" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 1</h3>
+<p>\(O(n^2)\)。</p>
+<p>设 \(f(k)\) 为 \(n=k\) 时的答案。显然，\(f(0)=f(1)=1,f(2)=2\)。</p>
+<p>假设最后一个出栈的选手是 \(k\)。一个数入栈时，栈里不可能有比它还大的数，如果想要压着 \(k\) 留到最后一个出栈，那必须把比它小的先踢掉，让它到栈底。因此在它之前入栈的共有 \(f(k-1)\) 种排列方式，跳过它，比它大的共有 \(f(n-k)\) 种方式。总方案数是</p>
+\[\sum_{k=1}^nf(k-1) \cdot f(n-k)
+\]
+<p>这样的拆分是可行的。同样，也可以分析 \(1\) 来得到这个结论。</p>
+<h3><a id="%E7%AE%97%E6%B3%952" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 2</h3>
+<p>\(O(n^2)\)。</p>
+<p>设 \(f(i,j)\) 为其中出了 \(i\) 个，还有 \(j\) 个没出的方案数。目标状态为 \(f(n,0)\)。</p>
+<p>每一步要么弹入一个，要么弹出栈顶。</p>
+\[f(i,j)=f(i-1,j+1)+f(i,j-1)
+\]
+<h3><a id="%E7%AE%97%E6%B3%953" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 3</h3>
+<p>这玩意就是卡特兰数。</p>
+\[Cat_n=\dfrac{2n \choose n}{n+1}
+\]
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>贺就完了。</p>
+<pre class="line-numbers"><code class="language-python">from math import factorial
+n = int(input())
+a = factorial(2 * n)
+b = factorial(n)
+print(a // b // b // (n + 1))
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ABC249]]></title>
+    <link href="oi.afobject.ml/abc249.html"/>
+    <updated>2022-04-23T20:54:17+08:00</updated>
+    <id>oi.afobject.ml/abc249.html</id>
+    <content type="html"><![CDATA[
+<p>为什么每次打 ABC 都碰上蓝色的 E（恼）</p>
+<p>Rated, 4/8, 977 \(\to\) 987</p>
+<h2><a id="d-index-trio" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D Index Trio</h2>
+<p><tc><m>Medium- *983</m><t>数论</t><t>组合</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%951" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 1</h3>
+<p>从乘积出发。</p>
+<p>考虑对于每一个数，根号复杂度分解质因数。如果分到的恰好都是数列里的数，则答案加上两边出现次数的乘积再乘以二。有一些小细节。</p>
+<h3><a id="%E7%AE%97%E6%B3%952" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 2</h3>
+<p>从乘数出发。</p>
+<p>在记录每个数的出现次数后，对于每对 \((i,j)\)，答案直接加上 \(c_i \cdot c_j \cdot c_{i \times j}\)。时间复杂度能过。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>（算法 1）</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n;
+int b[1000001];
+
+signed main() {
+    n = read();
+    for (int i = 1; i &lt;= n; i++)
+        ++b[read()];
+    int ans = 0;
+    for (int i = 1; i &lt;= 200000; i++) {
+        if (!b[i]) continue;
+        for (int x = 1; x * x &lt;= i; ++x)
+            if (i % x == 0)
+                if (b[x] &amp;&amp; b[i / x]) {
+                    if (x * x == i) ans += b[i] * b[x] * b[x];
+                    else ans += b[i] * b[x] * b[i / x] * 2;
+                }
+    }
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="f-ignore-operations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Ignore Operations</h2>
+<p><tc><m>Medium *1786</m><t>堆</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑一下如果一定要删一个操作，那么肯定是看一下删哪个对最终的结果最好。如果该操作后面有替换操作，那么屁用没有；否则对最终答案的贡献就是进行到那一步和前一步操作后的结果差。</p>
+<p>那如果一定要删两个呢？</p>
+<p>在替换操作前面删屁用没有。所以要么在这之后选 \(y\) 最小的两个修改操作，要么就干脆直接把这个替换操作删了。所以有三种：</p>
+<ul>
+<li>在最后一个替换操作后面选两个 \(y\) 最小的删；</li>
+<li>删了最后一个替换操作，然后在倒数第二个后面选一个最小的删；</li>
+<li>直接删掉最后两个替换操作。</li>
+</ul>
+<p>扩展到选 \(k\) 个删，且没必要删完：</p>
+<ul>
+<li>在最后一个替换操作后面选至多 \(k\) 个 \(y\) 最小且为负的删；</li>
+<li>删了最后一个替换操作，然后在倒数第二个后面选至多 \(k-1\) 个最小且为负的删；</li>
+<li>……</li>
+<li>把最后 \(k\) 个替换操作全删了（如果有）。</li>
+</ul>
+<p>在以上 \(k+1\) 种答案中选一个最小的即可。到这里时间复杂度为 \(O(n \log n + k^2)\)，不太行。</p>
+<p>接下来考虑怎么更高效地维护信息。可以从后往前，动态维护所有修改操作 \(y\) 的前 \(k\) 小，并维护这个顺序，碰到一个替换操作的时候就可以计算出一种可能的答案了。</p>
+<p>设两个相邻的替换操作在 \(i,j\) 这两个位置，并且我已经在 \((j,n]\) 范围内的修改操作中找到了删去最优的 \(k\) 个的和。我现在要找 \((i,n]\) 范围内最优 \(k-1\) 个的和。这个相对比较容易，首先先踢出去一个，然后优先队列（大根堆）维护就行了（同时另外维护一个总和），在 \((i,j)\) 的修改操作中碰到有比优先队列中相对最不优的那个更优的，把它顶掉就行了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, k;
+std::stack&lt;int&gt; rep;
+std::priority_queue&lt;long long&gt; q;
+long long t[200005], y[200005];
+long long suf[200005];
+
+int main() {
+    n = read(), k = read();
+    rep.push(0);
+    for (int i = 1; i &lt;= n; i++) {
+        t[i] = read(), y[i] = read();
+        if (t[i] == 1)
+            rep.push(i);
+    }
+
+    for (int i = n; i; --i)
+        if (t[i] == 2)
+            suf[i] = suf[i + 1] + y[i];
+        else
+            suf[i] = suf[i + 1];
+
+    int now, last = n;
+    long long sum = 0, ans = -1e18;
+    do {
+        now = rep.top() + 1;
+        rep.pop();
+        for (int i = now; i &lt;= last; ++i)
+            if (t[i] == 2 &amp;&amp; y[i] &lt; 0) {
+                if (q.size() &lt; k) {
+                    sum += y[i];
+                    q.push(y[i]);
+                } else if (k &amp;&amp; q.top() &gt; y[i]) {
+                    sum += y[i] - q.top();
+                    q.pop();
+                    q.push(y[i]);
+                }
+            }
+        ans = std::max(ans, y[now - 1] + suf[now] - sum);
+        last = now - 2;
+        if (k &amp;&amp; q.size() == k) sum -= q.top(), q.pop();
+        --k;
+    } while (k &gt;= 0 &amp;&amp; rep.size());
+
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="e-rle" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E RLE</h2>
+<p><tc><m>Medium+ *1970</m><t>DP</t><t>前缀和</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>设 \(f(i,j)\) 为原长为 \(i\)，压缩后长为 \(j\) 的个数。</p>
+<p>接下来考虑转移。首先假如连续段长度都只有个位数，则</p>
+\[f(i,j)=\sum_{k=1}^9 f(i-k,j-2)
+\]
+<p>扩展：</p>
+\[\begin{aligned}
+f(i,j)&amp;=\sum_{k=1}^i f(i-k,j-\lfloor\log_{10}(k)\rfloor-1)
+\end{aligned}
+\]
+<p>\(k\) 从 \(1\) 到 \(i\) 的遍历相当于逐个尝试这个字符串最后连续相同字符的个数。</p>
+<p>但上面这个方程不完全对，还要考虑到每个字符都不一样，转移时都要乘上系数 \(25\)。</p>
+<p>但是这样的效率还是不够高，我们考虑对于 \(f\) 的每一行进行一个前缀和，由于 \(i,j\) 显然最多只是四位数，状态转移方程变为：</p>
+\[\begin{aligned}
+f(i,j)&amp;=25 \cdot [ s(i-1,j-2)-s(i-10,j-2)\\
+&amp;+s(i-10,j-3)-s(i-100,j-3)\\
+&amp;+s(i-100,j-4)-s(i-1000,j-4)\\
+&amp;+s(i-1000,j-5)-s(i-10000,j-5) ]
+\end{aligned}
+\]
+<p>计数的时候从小到大对于每个 \(i\) 分别讨论，注意到当原长为 \(i\) 时，\(j\) 至少为 \(\lfloor \log_{10}(i)  \rfloor+1\)，因此初始值 \(f(i,\lfloor \log_{10}(i)\rfloor+1)=26\)，其余的直接 \(0\)，懒得考虑边界问题。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">long long n, p; // npk48
+long long f[3005][3005], s[3005][3005];
+
+int len(int x) {
+    if (x &lt; 10) return 2;
+    if (x &lt; 100) return 3;
+    if (x &lt; 1000) return 4;
+    return 5;
+}
+
+int main() {
+    n = read(), p = read();
+    for (int i = 1; i &lt;= n; ++i) {
+        f[i][len(i)] = 26ll;
+        for (int j = 1; j &lt; n; ++j) {
+            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 1)][T(j - 2)]     - s[T(i - 10)][T(j - 2)]));
+            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 10)][T(j - 3)]    - s[T(i - 100)][T(j - 3)]));
+            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 100)][T(j - 4)]   - s[T(i - 1000)][T(j - 4)]));
+            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 1000)][T(j - 5)]  - s[T(i - 3001)][T(j - 5)]));
+            s[i][j] = M(s[i - 1][j] + f[i][j]);
+        }
+    }
+    long long ans = 0;
+    for (int i = 1; i &lt; n; ++i)
+        ans = M(ans + f[n][i]);
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
 
 ]]></content>
   </entry>
@@ -78,707 +930,184 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x01 位运算]]></title>
-    <link href="oi.afobject.ml/0x01-.html"/>
-    <updated>2022-01-08T11:01:10+08:00</updated>
-    <id>oi.afobject.ml/0x01-.html</id>
+    <title type="html"><![CDATA[ABC248]]></title>
+    <link href="oi.afobject.ml/abc248.html"/>
+    <updated>2022-04-16T23:32:16+08:00</updated>
+    <id>oi.afobject.ml/abc248.html</id>
     <content type="html"><![CDATA[
-<h2><a id="%E8%A1%A5%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>补码</h2>
-<ul>
-<li>对于 <code>unsigned int</code>：补码等于原码。</li>
-<li>对于 <code>signed int</code>：正数部分补码等于原码，负数部分 \([-2^{31}, -1]\) 相当于 <code>unsigned int</code> \([2^{31}+1, 2^{32}]\)。即原来的<strong>负数的绝对值减去 1 后取反</strong>。<br />
-\(-45 \to -(00101101)_2 \to \operatorname{rev}(00101101-1)_2 \to (11010011)_2\)。</li>
-</ul>
-<hr />
-<h2><a id="%E6%88%90%E5%AF%B9%E5%8F%98%E6%8D%A2" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>成对变换</h2>
-<p>\((0,1), (2,3), (4,5)\) 这些二元组中的一个数可以通过 <code>xor</code> 运算得到另一个数。应用：双向边邻接表。</p>
-<hr />
-<h2><a id="lowbit%E8%BF%90%E7%AE%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>lowbit 运算</h2>
-<p>lowbit 是<strong>二进制下最低位的 1 及其右边的所有 0 构成的数值</strong>。</p>
-\[\operatorname{lowbit}(n)=n\ \&amp;\ (-n)
-\]
-<p>应用：哈希、树状数组等。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x011 位运算基础]]></title>
-    <link href="oi.afobject.ml/0x011.html"/>
-    <updated>2022-01-07T22:44:17+08:00</updated>
-    <id>oi.afobject.ml/0x011.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E5%BF%AB%E9%80%9F%E5%B9%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>快速幂</h2>
-<p><tc><c>0x0101</c><e>Easy-</e><t>快速幂</t></tc></p>
-<p>求 \(a^b \bmod p\) 的值。</p>
+<p>VP</p>
+<h2><a id="e-k-colinear-line" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E K-colinear Line</h2>
+<p><tc><m>Medium- *1292</m><t>计算几何</t><t>STL</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>\(b\) 可以拆分为这样的二进制：\(b=\sum\limits_{i=0}^{n-1} k_i \times 2^i\)（\(k_i \in \{0, 1\}\)）。</p>
-<p>因此 \(a^b = \prod\limits_{i=0}^{n-1} a^{k_i \times 2^{i}}\)。</p>
-<p>可以看成递推：\(p_i=a^{2^i}\)，则 \(a^b = \prod\limits_{i=0}^{n-1} p_{i}^{k_i}\)，其中 \(p_{i}= p_{i-1}^2\)。</p>
-<p>做的时候直接把数组免了。</p>
+<p>主要问题在于如何精确、省力地表示一条直线。</p>
+<p>对于过点 \((x_1,y_1),(x_2,y_2)\) 的直线，设其为 \(y=kx+b\)，则有 \(k=\dfrac{y_2-y_1}{x_2-x_1}\)，\(b=\dfrac{y_1x_2-y_2x_1}{x_2-x_1}\)。下面那个分母实在是太烦了，消掉，于是就变成了 \((x_2-x_1)y=(y_2-y_1)x+y_1x_2-y_2x_1\)。</p>
+<p>于是可以用 \(x_2-x_1\)，\(y_2-y_1\)，\(y_1x_2-y_2x_1\) 这三个东西（全部除去 \(\gcd\)，且使 \(x_2-x_1\) 非负）来鉴定一条直线。可以使用 <code>std::tuple</code>。</p>
+<p>这也正好解决了平行于 \(x\) 轴的直线的问题。</p>
+<p>可以使用 <code>std::multiset</code> 维护信息。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int pow(int a, int b, int p) {
-	int ans = 1 % p;
-	while (b) {
-		if (b &amp; 1)
-			ans = (ans * a) % p;
-		a = (a * a) % p;
-		b &gt;&gt;= 1;
-	}
-	return ans;
-}
-</code></pre>
-<hr />
-<h2><a id="raising-modulo-numbers" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raising Modulo Numbers</h2>
-<p><tc><c>0x0102</c><e>Easy-</e><t>快速幂</t></tc></p>
-<p>给你 \(N\) 组数，让你求 \(\sum a_i^{b_i} \bmod M\)（\(N, M \le 4.5 \times 10^4\)）。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>暴力。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, p, a, b, T;
-signed main() {
-	T = read();
-	while (T--) {
-		p = read(), n = read();
-		int ans = 0;
-		while (n--) {
-			a = read(), b = read();
-			ans = (ans + pow(a, b, p)) % p;
-		}
-		printf(&quot;%lld\n&quot;, ans);
-	}
-}
-</code></pre>
-<hr />
-<h2><a id="64%E4%BD%8D%E6%95%B4%E6%95%B0%E4%B9%98%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>64 位整数乘法</h2>
-<p><tc><c>0x0103</c><e>Easy-</e><t>快速幂</t></tc></p>
-<p>求 \(a \times b \bmod p\) 的值。\(1 \le a,b,p \le 10^{18}\)。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>除非用 <code>__int128</code>，否则必须要将 \(a,b\) 拆分成更小的数再合并求积。这时就可以用到位运算了。</p>
-<p>和快速幂几乎完全一样，改几个符号而已。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int mul(int a, int b, int p) {
-	int ans = 0;
-	while (b) {
-		if (b &amp; 1)
-			ans = (ans + a) % p;
-		a = (a &lt;&lt; 1) % p;
-		b &gt;&gt;= 1;
-	}
-	return ans;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x012 二进制状态压缩]]></title>
-    <link href="oi.afobject.ml/0x012.html"/>
-    <updated>2022-01-07T22:44:57+08:00</updated>
-    <id>oi.afobject.ml/0x012.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E6%9C%80%E7%9F%ADhamilton%E8%B7%AF%E5%BE%84" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>最短 Hamilton 路径</h2>
-<p><tc><c>0x0104</c><c>LG1171</c><e>Easy+</e><t>状压</t><t>DP</t></tc></p>
-<p>在一张点数小于等于 \(20\) 的带权无向图中找出一条从 \(0\) 到 \(n-1\) <strong>不重不漏地经过每一个点</strong>且<strong>边权和最短</strong>的路径。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>很容易想到用一个二进制数来表示已路过的点的状态（路径状态）。</p>
-<p>令 \(f(s,i)\) 为路径状态为 \(s\)，当前点在 \(i\) 的最短路。然后转移即可。</p>
-\[f(s,i) = \min_{s' \to s}\{f(s',k) + w(k,i)\}
-\]
-<p>注意细节：\(s'\) 能通向 \(s\) 需要满足 <strong>\(k\) 包含在 \(s'\) 中</strong>，即 \(k\) 包含在 \(s\) 中且 \(k \neq i\)。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n;
-int w[21][21];
-int dis[1 &lt;&lt; 21][21];
-
-int main() {
-    memset(dis, 0x3f, sizeof dis);
-	dis[1][0] = 0;
-	for (int s = 2; s &lt; (1 &lt;&lt; n); ++s) {
-		for (int i = 0; i &lt; n; ++i) {
-			if (!((s &gt;&gt; i) &amp; 1)) continue; // 要求 s 包含 i。
-			for (int k = 0; k &lt; n; ++k) { // 选择上一个点。
-				if ((s &gt;&gt; k) &amp; 1 &amp;&amp; k != i) // 要求 s 包含 k 且 k 不等于 i。
-					dis[s][i] = std::min(dis[s][i], dis[s ^ (1 &lt;&lt; i)][k] + w[k][i]);
-			}
-		}
-	}
-	printf(&quot;%d\n&quot;, dis[(1 &lt;&lt; n) - 1][n - 1]);
-	return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E8%B5%B7%E5%BA%8A%E5%9B%B0%E9%9A%BE%E7%BB%BC%E5%90%88%E7%97%87" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>起床困难综合症</h2>
-<p><tc><c>0x0105</c><c>NOI 2014</c><e>Easy+</e><t>位运算</t><t>贪心</t></tc></p>
-<p>\([0, m]\) 之间选择一个数，使得经过 \(n\) 次位运算后值最大，求最大值。\(m \le 10^9\)，\(n \le 10^5\)。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>很牛的一点：<strong>题目中这些操作在二进制中都不会产生进位。</strong></p>
-<p>所以每一位分讨，结果能是 1 就是 1，原数能是 0 就是 0（因为要满足 \(\le m\) 的条件）。</p>
-<p>即如果只有填 1 结果才能是 1，且当前还 \(\le m\) 的情况下，就填 1。否则一律填 0。</p>
-<p>从高到低分位讨论。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, m, arg[1000001];
-std::string op[1000001];
-
-bool calc(int k, bool val) {
-	for (int i = 1; i &lt;= n; ++i) {
-		if (op[i] == &quot;AND&quot;)
-			val &amp;= (arg[i] &gt;&gt; k) &amp; 1;
-		else if (op[i] == &quot;OR&quot;)
-			val |= (arg[i] &gt;&gt; k) &amp; 1;
-		else
-			val ^= (arg[i] &gt;&gt; k) &amp; 1;
-	}
-	return val;
-}
-
-int main() {
-	std::cin &gt;&gt; n &gt;&gt; m;
-	for (int i = 1; i &lt;= n; ++i)
-		std::cin &gt;&gt; op[i] &gt;&gt; arg[i];
-		
-	int sel = 0, ans = 0;
-	for (int i = 30; i &gt;= 0; --i) {
-		if (sel + (1 &lt;&lt; i) &lt;= m &amp;&amp;
-			calc(i, 0) == 0 &amp;&amp; calc(i, 1) == 1)
-			sel += (1 &lt;&lt; i), ans += (1 &lt;&lt; i);
-		else if (calc(i, 0))
-			ans += (1 &lt;&lt; i);
-	}
-	printf(&quot;%d\n&quot;, ans);
-	return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x02 递推与递归]]></title>
-    <link href="oi.afobject.ml/0x02-.html"/>
-    <updated>2022-01-15T10:33:03+08:00</updated>
-    <id>oi.afobject.ml/0x02-.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E5%AE%8F%E8%A7%82%E6%8F%8F%E8%BF%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>宏观描述</h2>
-<h3><a id="%E9%80%92%E5%BD%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归</h3>
-<p>从原大问题出发到小问题，然后将小问题推广到大问题。</p>
-<p>缩小、求解、扩展。</p>
-<p>Key Points：</p>
-<ul>
-<li>自身调用自身</li>
-<li>回溯时还原现场。</li>
-</ul>
-<h3><a id="%E9%80%92%E6%8E%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递推</h3>
-<p>正向，由小问题直接推到大问题。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x021 递推与递归的简单应用]]></title>
-    <link href="oi.afobject.ml/0x021.html"/>
-    <updated>2022-01-15T10:36:36+08:00</updated>
-    <id>oi.afobject.ml/0x021.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%8C%87%E6%95%B0%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现指数型枚举</h2>
-<p><tc><c>0x0201</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
-<pre class="line-numbers"><code class="language-cpp">bool c[21];
-void recursive(int t) {
-	if (t == n + 1) {
-		for (int i = 1; i &lt;= n; ++i)
-			if (c[i])
-				printf(&quot;%d &quot;, i);
-		putchar('\n');
-		return;
-	}
-	c[t] = true;
-	recursive(t + 1);
-	c[t] = false;
-	recursive(t + 1);
-}
-</code></pre>
-<h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E7%BB%84%E5%90%88%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现组合型枚举</h2>
-<p><tc><c>0x0202</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
-<pre class="line-numbers"><code class="language-cpp">bool c[21];
-void recursive(int t, int sel) {
-	if (sel &gt; m || sel + n - t + 1 &lt; m)
-		return;
-	if (t == n + 1) {
-		for (int i = 1; i &lt;= n; ++i)
-			if (c[i])
-				printf(&quot;%d &quot;, i);
-		putchar('\n');
-		return;
-	}
-	c[t] = true;
-	recursive(t + 1, sel + 1);
-	c[t] = false;
-	recursive(t + 1, sel);
-}
-</code></pre>
-<h2><a id="%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%8E%92%E5%88%97%E5%9E%8B%E6%9E%9A%E4%B8%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>递归实现排列型枚举</h2>
-<p><tc><c>0x0203</c><e>Easy-</e><t>递归</t><t>搜索</t></tc></p>
-<pre class="line-numbers"><code class="language-cpp">bool c[21];
-int sel[21];
-void recursive(int t) {
-	if (t == n + 1) {
-		for (int i = 1; i &lt;= n; ++i)
-			printf(&quot;%d &quot;, sel[i]);
-		putchar('\n');
-		return;
-	}
-	for (int i = 1; i &lt;= n; ++i) {
-		if (!c[i]) {
-			sel[t] = i;
-			c[i] = true;
-			recursive(t +  1);c[i] = false;
-		}
-	}
-}
-</code></pre>
-<hr />
-<h2><a id="%E8%B4%B9%E8%A7%A3%E7%9A%84%E5%BC%80%E5%85%B3" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>费解的开关</h2>
-<p><tc><c>0x0204</c><m>Medium-</m><t>结论</t><t>贪心</t></tc></p>
-<p>\(5\times 5\) 的 01 矩阵中，点击一个位置，它及它上下左右格内的数都会变化，最少多少次点击变成全 0？</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p><strong>考虑特殊情况：</strong> 假如不能动第一行，则对于第一行的任意一个数，如果它是 1，那么只能点击它下面的那个格子。</p>
-<p>又有：<strong>点击的顺序不影响最终的结果。</strong> 一个格子被翻转的次数等于它四周的格子被点按次数之和。所以可以以任意顺序考虑点击的位置。</p>
-<p>因此只用枚举第一行的 \(2^5\) 种状态即可。后面的方案都是确定的。假如最后不都为 0 那么这种做法就是寄的，继续搜索求解。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>第一次在 OI 里写异常处理。</p>
-<pre class="line-numbers"><code class="language-cpp">int T;
-int m[7][7];
-int t[7][7];
-
-int cnt = 0;
-void doOper(int x, int y) {
-	t[x][y] ^= 1;
-	t[x - 1][y] ^= 1;
-	t[x + 1][y] ^= 1;
-	t[x][y - 1] ^= 1;
-	t[x][y + 1] ^= 1;
-	++cnt;
-	if (cnt &gt; 6)
-		throw -1;
-}
-
-int main() {
-	scanf(&quot;%d&quot;, &amp;T);
-	while (T--) {
-		for (int i = 1; i &lt;= 5; ++i)
-			for (int j = 1; j &lt;= 5; ++j)
-				scanf(&quot;%1d&quot;, &amp;m[i][j]);
-		int ans = 0x3f3f3f3f;
-		for (int s = 0; s &lt; 32; ++s) {
-			cnt = 0;
-			try {
-				for (int i = 1; i &lt;= 5; ++i)
-					for (int j = 1; j &lt;= 5; ++j)
-						t[i][j] = m[i][j];
-				for (int i = 1, s0 = s; s0; s0 &gt;&gt;= 1, ++i)
-					if (s0 &amp; 1)
-						doOper(1, i);
-				for (int r = 2; r &lt;= 5; ++r) {
-					for (int c = 1; c &lt;= 5; ++c)
-						if (!t[r - 1][c])
-							doOper(r, c);
-				}
-			} catch (int e) {
-				continue;
-			}
-			int sum = 1;
-			for (int i = 1; i &lt;= 5; ++i)
-				sum &amp;= t[5][i];
-			if (sum)
-				ans = std::min(ans, cnt);
-		}
-		printf(&quot;%d\n&quot;, (ans == 0x3f3f3f3f) ? -1 : ans);
-	}
-	return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="strange-towers-of-hanoi" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Strange Towers of Hanoi</h2>
-<p><tc><c>0x0205</c><m>Medium</m><t>递推</t><t>DP</t></tc></p>
-<p>求 \(n\) 盘 4 塔的汉诺塔步数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>考虑 \(n\) 盘 3 塔：</p>
-<ul>
-<li>\(n-1\) 盘：A \(\to\) B</li>
-<li>第 \(n\) 盘：A \(\to\) C</li>
-<li>\(n-1\) 盘：B \(\to\) C</li>
-</ul>
-<p>因此 \(f_3(n)=2 \times f_3(n-1) + 1\)，其中 \(f_3(1)=1\)。可以知道 \(f_3(n)=2^n-1\)。</p>
-<p>再考虑 \(n\) 盘 4 塔：</p>
-\[f_4(n) \le \min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}
-\]
-<p>注意此处使用小于等于号。</p>
-<p>参照具体数学上证明等于的方法：</p>
-<p>我们迟早都必须要移动最下面的那 \(n-i\) 个盘子移动到 D 柱，当我们这么做的时候，上面 \(i\) 个必须已经在某个柱子上。而把下面的这 \(n-i\) 个盘子摆好以后，又要用 \(f_4(i)\) 次移动将上面的盘子放置在它上方（胡言乱语 /tuu）。因此至少需要有 \(\min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}\) 次移动。</p>
-\[\therefore f_4(n) = \min_{1 \le i \lt n} \{2 \times f_4(i) + f_3(n-i)\}
-\]
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define f3(x) ((1 &lt;&lt; (x)) - 1)
-
-int f4[13];
-
-int main() {
-    f4[1] = 1;
-    for (int x = 2; x &lt;= 12; ++x) {
-    	f4[x] = 0x3f3f3f3f;
-    	for (int i = 1; i &lt; x; ++i)
-    		f4[x] = std::min(f4[x], 2 * f4[i] + f3(x - i));
-    }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x022 分治]]></title>
-    <link href="oi.afobject.ml/0x022.html"/>
-    <updated>2022-01-15T22:34:54+08:00</updated>
-    <id>oi.afobject.ml/0x022.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="sumdiv" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sumdiv</h2>
-<p><tc><c>0x0206</c><c>LG1593</c><m>Medium</m><t>数论</t><t>分治</t><t>快速幂</t></tc></p>
-<p>求 \(a^b\) 的因子和 \(\bmod 9901\)。\(a, b \le 5 \times 10^7\)。</p>
-<h2><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h2>
-<p>假设 \(a = \prod p_i^{c_i}\)，则 \(a^b=\prod p_i^{c_i \times b}\) 因子和为</p>
-\[\prod{\sum_{k=0}^{c_i \times b} {p_i}^k}
-\]
-<p>求个 \(p\) 是 \(\sqrt a\) 级别的，现在要快速求 \(\sum_{k=0}^{c_i \times b} {p_i}^k\)。</p>
-<p>考虑使用等比数列求和公式：</p>
-\[\begin{aligned}
-S&amp;=1+p+p^2+p^3+\cdots+p^k\\
-p\cdot S&amp;=p+p^2+p^3+\cdots+p^k+p^{k+1}\\
-S&amp;=\frac{p^{k+1}-1}{p-1}
-\end{aligned}
-\]
-<p>但要取模所以不能除啊……</p>
-<p>于是，开始分治（\(k \in \mathbb N\)）！</p>
-\[\begin{aligned}
-\sum_{i=0}^{2k+1}p^i &amp;= \sum_{i=0}^k p^i+ p^{k+1} \cdot \sum_{i=0}^k p^i \\
-&amp;=(1+p^{k+1}) \cdot\sum_{i=0}^k p^i\\
-
-\sum_{i=0}^{2k}p^i &amp;= \sum_{i=0}^{k-1} p^i+ p^{k} \cdot \sum_{i=0}^{k-1} p^i+p^{2k} \\
-&amp;=(1+p^k) \cdot\sum_{i=0}^{k-1} p^i+p^{2k}
-\end{aligned}
-\]
-<p>拆完了！\(\log\) 时间内可以求到结果。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>随时取模；特判个 \(0\)。</p>
-<pre class="line-numbers"><code class="language-cpp">#define MOD 9901
-
-int a, b;
-std::map&lt;int, int&gt; m;
-
-int pow(int a, int b, int p = MOD) {
-	int ans = 1 % MOD;
-	while (b) {
-		if (b &amp; 1)
-			ans = (ans * a) % MOD;
-		a = (a * a) % MOD;
-		b &gt;&gt;= 1;
-	}
-	return ans;
-}
-
-int sum(int p, int c) {
-	if (c == 0) return 1;
-	if (c == 1) return p + 1;
-	const int k = c / 2;
-	if (c &amp; 1) {
-		const int t = (1 + pow(p, k + 1)) % MOD;
-		return (t * sum(p, k)) % MOD;
-	} else {
-		const int t = (1 + pow(p, k)) % MOD;
-		return (t * sum(p, k - 1) + pow(p, 2 * k)) % MOD; 
-	}
-}
-
-int main() {
-	a = read(), b = read();
-	for (int i = 2; i * i &lt;= a; ) {
-		if (a % i == 0)
-			++m[i], a /= i;
-		else
-			++i;
-	}
-	if (a != 1)
-		++m[a];
-    if (!a) return puts(&quot;0&quot;), 0;
-	int ans = 1;
-	for (auto [p, k] : m) {
-		ans = (ans * sum(p % MOD, k * b)) % MOD;
-	}
-	printf(&quot;%d\n&quot;, ans);
-	return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x023 分形]]></title>
-    <link href="oi.afobject.ml/0x023.html"/>
-    <updated>2022-01-18T08:06:55+08:00</updated>
-    <id>oi.afobject.ml/0x023.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="fractal-streets" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal Streets</h2>
-<p><tc><c>0x0207</c><e>Easy+</e><t>递归</t><t>模拟</t><t>数学</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>一个 \(N\) 级城市可以分为 4 个 \(N-1\) 级小城市。以此为依据进行递推。</p>
-<p><strong>以城市的中心为原点，建立平面直角坐标系。</strong></p>
-<p>首先我们令 \(k = \lfloor \frac {i-1} {4^{n-1}} \rfloor\)（实现的时候所有 \(i\) 自动减一）。\(k=0\) 在第二象限，\(k=1\) 在第一象限，\(k=2\) 在第四象限，\(k=3\) 在第三象限。</p>
-<p>以第一、四象限的城市为标准图形。<strong>第二象限的是把标准图形沿 \(y\) 轴翻折然后逆时针旋转 \(90^{\circ}\)</strong>，就能把编号顺序和标准图形对应上，第三象限同理，是<strong>沿 \(y\) 轴翻折然后顺时针旋转 \(90^{\circ}\)</strong>。</p>
-<p>设以标准图形求出来的是 \((x,y)\)，\(\Delta = 2^{N-2}\)。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: center">\(k\)</th>
-<th style="text-align: center">坐标</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center">\(\quad0\quad\)</td>
-<td style="text-align: center">\((-y-\Delta,-x+\Delta)\)</td>
-</tr>
-<tr>
-<td style="text-align: center">\(\quad1\quad\)</td>
-<td style="text-align: center">\((x+\Delta,y+\Delta)\)</td>
-</tr>
-<tr>
-<td style="text-align: center">\(\quad2\quad\)</td>
-<td style="text-align: center">\((x+\Delta,y-\Delta)\)</td>
-</tr>
-<tr>
-<td style="text-align: center">\(\quad3\quad\)</td>
-<td style="text-align: center">\((y-\Delta,x-\Delta)\)</td>
-</tr>
-</tbody>
-</table>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>退钱，精度问题卡了巨久，，，</p>
-<p>「所有房屋在格子中间」这条有点烦，可以把每个格子长度设为 2，然后房屋在正中间。最后答案乘以 5。</p>
-<p>虽然开了 <code>__int128</code> 以后大概不用这样。</p>
-<pre class="line-numbers"><code class="language-cpp">#define sq(x) ((x) * (x))
-#define int __int128
-#define x first
-#define y second
-
-int T, n, s, d;
-
-int read() {
-    int ans = 0, neg = 1; char ch = getchar();
-    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
-    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
-    return ans * neg;
-}
-
-std::pair&lt;int, int&gt; solve(int n, int i) {
-	if (n == 0) return std::make_pair(0, 0);
-	if (n == 1) {
-		if (i == 0) return std::make_pair(-1, 1);
-		if (i == 1) return std::make_pair(1, 1);
-		if (i == 2) return std::make_pair(1, -1);
-		if (i == 3) return std::make_pair(-1, -1);
-	}
-	const int k = i / (1ll &lt;&lt; (2 * n - 2)),
-				 r = i % (1ll &lt;&lt; (2 * n - 2)),
-				 d = (1ll &lt;&lt; (n - 2)) * 2ll;
-	auto a = solve(n - 1, r);
-	if (k == 0) return std::make_pair(-a.y - d, -a.x + d);
-	if (k == 1) return std::make_pair(a.x + d, a.y + d);
-	if (k == 2) return std::make_pair(a.x + d, a.y - d);
-	if (k == 3) return std::make_pair(a.y - d, a.x - d);
-	return std::make_pair(0, 0);
-}
-
-signed main() {
-	T = read();
-	while (T--) {
-		n = read(), s = read(), d = read();
-		auto l = solve(n, s - 1), r = solve(n, d - 1);
-		printf(&quot;%.0lf\n&quot;, (double)sqrt(sq(r.x - l.x) + sq(r.y - l.y)) * 5);
-	}
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x031 前缀和]]></title>
-    <link href="oi.afobject.ml/0x031.html"/>
-    <updated>2022-01-18T11:54:19+08:00</updated>
-    <id>oi.afobject.ml/0x031.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E6%BF%80%E5%85%89%E7%82%B8%E5%BC%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>激光炸弹</h2>
-<p><tc><c>0x0301</c><c>HNOI 2003</c><e>Easy</e><t>前缀和</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>使用二维前缀和。</p>
-\[\begin{aligned}
-&amp;\operatorname{sum}((x_1,y_1),(x_2,y_2)) \\
-&amp; =
-\operatorname{pre}(x_2,y_2) -
-\operatorname{pre}(x_1-1,y_2) -\operatorname{pre}(x_2,y_1-1) +
-\operatorname{pre}(x_1-1,y_1-1)
-\end{aligned}
-\]
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>思维没有任何难度，主要是实现上。题意不清楚，也没解释是什么坐标系。</p>
-<ol>
-<li>
-<blockquote>
-<p>若目标位于爆破正方形的边上，该目标不会被摧毁。</p>
-</blockquote>
-<p>显然对于 \(m\) 没有任何影响。因为目标在整点处，正方形相当于包围着它们的边，只不过加了 \(0.5\) 的 padding。</p>
-</li>
-<li>
-<blockquote>
-<p>\(0 \le x_i, y_i \le 5 \times 10^3\)。</p>
-</blockquote>
-<p>所以区域范围是 \((0,0)\) 到 \((5\times 10^3, 5 \times 10^3)\)。</p>
-</li>
-</ol>
-<p>因此遍历正方形左上角的范围应该是 \((0,0)\) 到 \((5\times10^3-m+1,5\times10^3-m+1)\)。</p>
-<p>细节挺多的，除了数组边界问题（其实全 +1 更方便但忘了懒得改了），还有尤其是关于 \(m\) 的那条一开始想对就对了，一开始想错很难发现。所以避免在脑子不清醒时做题！</p>
-<pre class="line-numbers"><code class="language-cpp">int n, m;
-int pre[5001][5001];
-
-int sum(int x1, int y1, int x2, int y2) {
-	return pre[x2][y2] - (x1 ? pre[x1 - 1][y2] : 0) - (y1 ? pre[x2][y1 - 1] : 0) + ((x1 &amp;&amp; y1) ? pre[x1 - 1][y1 - 1] : 0);
-}
-
-int main() {
-	n = read(), m = read();
-	int max = 0;
-	while (n--) {
-		int x = read(), y = read();
-		pre[x][y] += read();
-		max = std::max(max, pre[x][y]);
-	}
-	for (int r = 0; r &lt;= 5000; ++r)
-		for (int c = 0; c &lt;= 5000; ++c) {
-			if (!r &amp;&amp; !c) continue;
-			else if (!r) pre[r][c] += pre[r][c - 1];
-			else if (!c) pre[r][c] += pre[r - 1][c];
-			else pre[r][c] += pre[r - 1][c] + pre[r][c - 1] - pre[r - 1][c - 1];
-		}
-	for (int x = 0; x + m - 1 &lt;= 5000; ++x)
-		for (int y = 0; y + m - 1 &lt;= 5000; ++y)
-			max = std::max(max, sum(x, y, x + m - 1, y + m - 1));
-	printf(&quot;%d\n&quot;, max);
-	return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x032 差分]]></title>
-    <link href="oi.afobject.ml/0x032.html"/>
-    <updated>2022-01-19T07:55:42+08:00</updated>
-    <id>oi.afobject.ml/0x032.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="incdec-sequence" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>IncDec Sequence</h2>
-<p><tc><c>0x0302</c><e>Easy</e><t>差分</t></tc></p>
-<p>给定个长度为 \(n\) 的数列，每次可以选择一个区间同加 \(1\) 或减 \(1\)，要求最终所有数一样，求最小操作次数和满足最小操作次数的方案数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>比较显然的差分：每次操作是对差分数列 \(c\) 中任两个数一个加 \(1\)，一个减 \(1\)。最终要求差分数组的除第一项、末项均为 \(0\)。</p>
-<p>分析一下样例：<code>1 1 2 2 (0)</code></p>
-<p>差分数组为：<code>1 0 1 0 -2</code></p>
-<p>两种方案为：</p>
-<ul>
-<li>\(c_1 \gets c_1+1\)，\(c_3 \gets c_3-1\)：<code>2 0 0 0 -2</code></li>
-<li>\(c_3 \gets c_3-1,c_5 \gets c_5+1\)：<code>1  0 0 0 -1</code></li>
-</ul>
-<p>观察到：</p>
-<ul>
-<li><strong>差分数组的第一个数的种数就是最后数列的种数</strong>；</li>
-<li>差分数组的和始终保持为 \(0\)。</li>
-</ul>
-<h4><a id="%E7%AC%AC%E4%B8%80%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%9C%80%E5%B0%8F%E6%93%8D%E4%BD%9C%E6%AC%A1%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第一小问：最小操作次数</h4>
-<p>那就是<strong>尽量在 \([2,n]\) 中正、负配对</strong>，配对不过来再考虑用上首项和末项。</p>
-<p>令 \(p = \sum_{c=2}^{n} \vert c_i \vert [c_i &lt; 0]\)，\(q = \sum_{c=2}^{n} c_i[c_i &gt;0]\)。</p>
-<ol>
-<li>能正负配对的对数应该是 \(\min\{p,q\}\)。还不够的，就要拿首、末来凑了。</li>
-<li>所以还需要的操作次数是此时的 \(\sum_{c=2}^{n} \vert c_i \vert\)，即 \(\vert p-q \vert\)。</li>
-</ol>
-<h4><a id="%E7%AC%AC%E4%BA%8C%E5%B0%8F%E9%97%AE%EF%BC%9A%E6%95%B0%E5%88%97%E7%A7%8D%E6%95%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>第二小问：数列种数</h4>
-<p>上述第 1 步不会对 \(c_1\) 产生影响，关键是第二步如何消灭中间的数。</p>
-<p>其实很容易发现，最终 \(c_1\) 的值域范围是：</p>
-<ul>
-<li>如果 \([2,n]\) 留下的数全是正数
-<ul>
-<li>最小：\(c_1-\vert p-q \vert\)。全拿 \(c_1\) 来抵了。</li>
-<li>最大：\(c_1\)。不会更多。</li>
-</ul>
-</li>
-<li>如果 \([2,n]\) 留下的全是负数
-<ul>
-<li>最小：\(c_1\)。</li>
-<li>最大：\(c_1+ \vert p-q \vert\)。</li>
-</ul>
-</li>
-</ul>
-<p>因此数列种数就是第一小问求得的 \(\vert p-q \vert +1\)。</p>
-<p>这波啊，之前为了方便在差分数组末尾加的数也没必要了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>时间 \(\Theta(n)\)，空间 \(\Theta(1)\)。</p>
 <pre class="line-numbers"><code class="language-cpp">#define int long long
 
+int n, k;
+int x[301], y[301];
+
+std::multiset&lt;std::tuple&lt;int, int, int&gt;&gt; m;
+int t[90001];
+
+auto line(int i, int j) {
+    int a = x[i] - x[j];
+    int b = y[i] - y[j];
+    int c = x[j] * y[i] - x[i] * y[j];
+    if (a &lt; 0) a = -a, b = -b, c = -c;
+    const int g = gcd(a, gcd(b, c));
+    a /= g, b /= g, c /= g;
+    return std::make_tuple(a, b, c);
+}
+
+signed main() {
+    n = read(), k = read();
+    if (k == 1) return puts(&quot;Infinity&quot;), 0;
+    for (int i = 1; i &lt;= n; ++i)
+        x[i] = read(), y[i] = read();
+    for (int i = 1; i &lt; n; ++i)
+        for (int j = i + 1; j &lt;= n; ++j)
+            m.insert(line(i, j));
+    for (int i = 1; i &lt;= n; ++i)
+        t[i * (i - 1) / 2] = i;
+    int ans = 0;
+    for (auto i = m.begin(); i != m.end(); i = m.upper_bound(*i))
+        ans += (t[m.count(*i)] &gt;= k);
+    printf(&quot;%lld\n&quot;, (int)ans);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="f-keep-connect" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Keep Connect</h2>
+<p><tc><m>Medium+ *1828</m><t>DP</t><t>图论</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p><strong>考虑一个子图 \(G_k\)</strong>，它包含点 \((1,1),(1,2)\) 至 \((k,1),(k,2)\)。在 DP 进行过程中，它的 \((k-1,1) \to (k,1)\)，\((k,1) \to (k,2)\) 和 \((k-1,2) \to (k,2)\) 这三条边（分别叫做 \(a,b,c\) 边）未确定是否存在。</p>
+<p><strong>考虑它在什么情况下才能让最终的图连通。</strong> 第一种是它本身连通；第二种是它有两个连通块，分别包含 \((k,1)\) 和 \((k,2)\)（注意一个点也算一个连通块！）。</p>
+<p>接下来设计状态。\(f(k,j,s)\) 为 DP 进行到 \(G_k\) 时，已删了 \(j\) 条边，且连通状态为 \(s\)（\(s \in \{1,2\}\)）时的答案。</p>
+<p>接下来考虑转移：</p>
+<ol>
+<li>从 1 转移到 1。这个时候可能的状态有：\((a,b),(b,c),(a,c),(a,b,c)\)，共 4 种。</li>
+<li>从 2 转移到 2。可选择的只有 \((a,c)\)。</li>
+<li>从 1 转移到 2。可以选择 \(a,c\)，2 种。</li>
+<li>从 2 转移到 1。只能选择 \((a,b,c)\)。</li>
+</ol>
+<p>因此有：</p>
+\[\begin{aligned}
+f(k,j,1) &amp;= 3 \cdot f(k-1,j-1,1)+f(k-1,j,1)+f(k-1,j,2) \\
+f(k,j,2) &amp;= f(k-1,j-1,2)+2 \cdot f(k-1,j-2,1)
+\end{aligned}
+\]
+<p>最后考虑初始值。\(f(1,0,1)=f(1,1,2)=1\)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n, p;
+int f[3001][3001][3];
+
+void add(int &amp;x, int d) {
+    x = (x + d) % p;
+}
+
+signed main() {
+    n = read(), p = read();
+    f[1][0][1] = f[1][1][2] = 1;
+    for (int i = 2; i &lt;= n; ++i) {
+        for (int j = 0; j &lt; n; ++j) {
+            if (j &gt;= 1) add(f[i][j][1], 3 * f[i - 1][j - 1][1]);
+            add(f[i][j][1], f[i - 1][j][1] + f[i - 1][j][2]);
+            if (j &gt;= 1) add(f[i][j][2], f[i - 1][j - 1][2]);
+            if (j &gt;= 2) add(f[i][j][2], 2 * f[i - 1][j - 2][1]);
+        }
+    }
+    for (int i = 1; i &lt; n; ++i)
+        printf(&quot;%lld &quot;, f[n][i][1]);
+    putchar('\n');
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[2022 联合省选]]></title>
+    <link href="oi.afobject.ml/shoi-2022.html"/>
+    <updated>2022-04-10T20:58:03+08:00</updated>
+    <id>oi.afobject.ml/shoi-2022.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="d1t1-preprocessor" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D1T1 Preprocessor</h2>
+<p><tc><e>Easy+</e><t>模拟</t></tc></p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>纯纯的模拟，每一行分别处理。</p>
+<p>处理「递归」是标准的 dfs。</p>
+<pre class="line-numbers"><code class="language-cpp">#include &lt;map&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+#define isId(x) (x &gt;= '0' &amp;&amp; x &lt;= '9' || x &gt;= 'a' &amp;&amp; x &lt;= 'z' || x &gt;= 'A' &amp;&amp; x &lt;= 'Z' || x == '_')
+
 int n;
-signed main() {
-	n = read();
-	int p = 0, q = 0, last = 0, c;
-	for (int i = 1; i &lt;= n; ++i) {
-		c = read() - last, last += c;
-		if (i &gt; 1) {
-			if (c &gt; 0) p += c;
-			else q -= c;
-		}
-	}
-	printf(&quot;%lld\n%lld\n&quot;, std::min(p, q) + abs(p - q), abs(p - q) + 1);
-	return 0;
+std::map&lt;std::string, std::string&gt; dict;
+std::map&lt;std::string, bool&gt; state;
+
+void tryReplace(std::string s);
+void processText(std::string s) {
+    std::string current;
+    for (char x : s)
+        if (isId(x))
+            current += x;
+        else {
+            tryReplace(current);
+            std::cout &lt;&lt; x;
+            current = &quot;&quot;;
+        }
+    if (current.size())
+        tryReplace(current);
 }
-</code></pre>
-<hr />
-<h2><a id="tallest-cow" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tallest Cow</h2>
-<p><tc><c>0x0303</c><c>USACO</c><c>LG2879</c><e>Easy</e><t>差分</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>sb 诈骗题，假设所有牛都最高，然后把每个区间内的牛砍一刀就行了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>判重。</p>
-<pre class="line-numbers"><code class="language-cpp">#define MP std::make_pair
 
-int n, h, r;
-int c[100001];
+void processPreprocessor(std::string s) {
+    int pos1 = s.find(&quot; &quot;);
+    auto command = s.substr(1, pos1 - 1);
+    if (command == &quot;define&quot;) {
+        int pos2 = s.find(&quot; &quot;, pos1 + 1);
+        auto id = s.substr(pos1 + 1, pos2 - pos1 - 1),
+             replacement = s.substr(pos2 + 1);
+        dict[id] = replacement;
+    } else {
+        auto id = s.substr(pos1 + 1);
+        dict.erase(dict.find(id));
+    }
+} 
 
-std::set&lt;std::pair&lt;int, int&gt;&gt; s;
+int main() {
+    std::cin &gt;&gt; n;
+    std::string t;
+    getline(std::cin, t);
+    while (n--) {
+        std::string line;
+        getline(std::cin, line);
+        if (line[0] == '#')
+            processPreprocessor(line);
+        else
+            processText(line);
+        std::cout &lt;&lt; std::endl;
+    }
+    return 0;
+}
 
-signed main() {
-	n = read(), h = read(), h = read(), r = read();
-	while (r--) {
-		int x = read(), y = read();
-		if (x &gt; y) std::swap(x, y);
-		if (s.find(MP(x, y)) == s.end()) {
-			--c[x + 1], ++c[y];
-			s.insert(MP(x, y));
-		}
-	}
-	int a = h;
-	for (int i = 1; i &lt;= n; ++i) {
-		a += c[i];
-		printf(&quot;%d\n&quot;, a);
-	}
-	return 0;
+void tryReplace(std::string s) {
+    if (dict.find(s) != dict.end()) {
+        if (!state[s])
+            state[s] = true, processText(dict[s]);
+        else
+            std::cout &lt;&lt; s;
+        state[s] = false;
+    } else
+        std::cout &lt;&lt; s;
 }
 </code></pre>
 
@@ -786,488 +1115,178 @@ signed main() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x04 二分]]></title>
-    <link href="oi.afobject.ml/0x04-.html"/>
-    <updated>2022-01-19T17:24:58+08:00</updated>
-    <id>oi.afobject.ml/0x04-.html</id>
+    <title type="html"><![CDATA[0x0809 ~ 0x0812]]></title>
+    <link href="oi.afobject.ml/0x08-3.html"/>
+    <updated>2022-04-06T07:39:26+08:00</updated>
+    <id>oi.afobject.ml/0x08-3.html</id>
     <content type="html"><![CDATA[
-<p><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gymucbb50ej30wc0dkabf.jpg" alt="" /></p>
-<h2><a id="%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88%E4%B8%8A%E7%9A%84%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>整数集合上的二分</h2>
-<p>现在开始更换成主流二分写法：</p>
-<pre class="line-numbers"><code class="language-cpp">int l, r;
-while (l &lt; r) {
-    int mid = (l + r) &gt;&gt; 1;
-    if (check(mid)) r = mid;
-    else l = mid + 1;
-}
-
-while (l &lt; r) {
-    int mid = (l + r + 1) &gt;&gt; 1;
-    if (check(mid)) l = mid;
-    else r = mid - 1;
-}
-</code></pre>
-<p>两种写法中 \(mid\) 部分不同。</p>
-<p>我们一定要选取一个正确的 \(mid\) 值，使得<strong>二分过程中任何一组 \((l, r)\) 都不同</strong>。否则，就会陷入死循环。</p>
-<p>例如，在 \([2, 3]\) 进行二分：</p>
-<ul>
-<li>如果我们把 \(mid\) 选在 \(2\)（<code>(2 + 3) &gt;&gt; 1</code>），并且转移是 \(l \gets mid\) 的话，就会陷入死循环；</li>
-<li>如果选在 \(3\)（<code>(2 + 3 + 1) &gt;&gt; 1</code>），且转移是 \(r \gets mid\) 的话，也会陷入死循环。</li>
-</ul>
-<p>因此：</p>
-<ul>
-<li>但凡选择了 \(l \gets mid + 1\)，\(r \gets mid\)，就必须选择 <code>(l + r) &gt;&gt; 1</code>；</li>
-<li>但凡选择了 \(l \gets mid\)，\(r \gets mid - 1\)，就必须选择 <code>(l + r + 1) &gt;&gt; 1</code>。</li>
-</ul>
-<p>至于转移方式的选择，就要看 \(mid\) 算在右半边还是算在左半边了。</p>
-<hr />
-<h2><a id="%E4%BA%8C%E5%88%86%E7%9A%84%E9%BB%98%E8%AE%A4%E5%80%BC" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>二分的默认值</h2>
-<ul>
-<li><code>(l + r) &gt;&gt; 1</code> 型二分不会搜到 \(r\)，可以把默认值放在 \(r\) 处。</li>
-<li><code>(l + r + 1) &gt;&gt; 1</code> 型二分不会搜到 \(l\)，可以把默认值放在 \(l\) 处。</li>
-</ul>
-<hr />
-<h2><a id="%E5%AE%9E%E6%95%B0%E5%9F%9F%E4%B8%8A%E7%9A%84%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实数域上的二分</h2>
-<p>可以采取这种方便的写法：</p>
-<pre class="line-numbers"><code class="language-cpp">for (int i = 0; i &lt; 100; ++i) {
-    double mid = (l + r) / 2;
-    if (check(mid)) r = mid;
-    else l = mid;
-}
-</code></pre>
-<hr />
-<h2><a id="%E4%B8%89%E5%88%86%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>三分法</h2>
-<p><tc><c>LG3382</c></tc></p>
-<p>在 \([l, r]\) 内任意取两个点 \(mid_l, mid_r\)。</p>
-<ul>
-<li>若前者小于后者，则要么最高点在它们中间，要么在它们右边。\(l \gets mid_l\)。</li>
-<li>反之，则 \(r \gets mid_r\)。</li>
-</ul>
-<p>注意实现时的数据类型应为 <code>double</code>。</p>
-<pre class="line-numbers"><code class="language-cpp">for (int i = 1; i &lt;= 1000000; ++i) {
-	double lMid = (r - l) / 3 + l;
-	double rMid = r - (r - l) / 3;
-	if (f(lMid) &lt; f(rMid)) l = lMid;
-	else r = rMid;
-}
-</code></pre>
-<hr />
-<h2><a id="best-cow-fences" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Best Cow Fences</h2>
-<p><tc><c>0x0401</c><c>USACO</c><e>Easy</e><t>二分答案</t><t>前缀和</t></tc></p>
-<p>给定正整数数列 \(A\)（\(N \le 10^5\)），求一个平均数最大的、长度不小于 \(L\) 的连续子段。</p>
-<h2><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h2>
-<p>平均数最大是 naive 套路了，每个数都减去平均数数列和就是 \(0\)。二分的过程中全部减去二分值 \(x\)，如果有区间和是 \(\ge 0\) 的，就说明存在平均数大于 \(\ge x\) 的区间。</p>
-<p>然后来个最大子段和（前缀和求法，其中求 \(\max_{j=1}^{i}\operatorname{pre}(j)\) 改为 \(\max_{j=1}^{i-L}\operatorname{pre}(j)\)）操作操作就行了。</p>
-<h2><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h2>
-<p>卡精度屑题属实没什么意思 /qd</p>
-<pre class="line-numbers"><code class="language-cpp">int n, len;
-double a[100001], sum[100001];
-
-bool check(double x) {
-	double ans = -1e10, min = 1e10;
-	for (int i = 1; i &lt;= n; ++i) {
-		sum[i] = sum[i - 1] + a[i] - x;
-		if (i &gt;= len)
-			min = std::min(min, sum[i - len]),
-			ans = std::max(ans, sum[i] - min);
-	}
-	return ans &gt;= 0;
-}
-
-signed main() {
-	std::cin &gt;&gt; n &gt;&gt; len;
-	for (int i = 1; i &lt;= n; ++i)
-		std::cin &gt;&gt; a[i];
-	double l = -20000001, r = 20000001;
-	while (r - l &gt; 1e-5) {
-		double mid = (l + r) / 2;
-		if (check(mid)) l = mid;
-		else r = mid;
-	}
-	std::cout &lt;&lt; int(r * 1000) &lt;&lt; std::endl;
-	return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="innovative-business" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Innovative Business</h2>
-<p><tc><c>0x0402</c><e>Easy+</e><t>交互</t><t>二分</t></tc></p>
+<h2><a id="number-base-conversion" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Number Base Conversion</h2>
+<p><tc><c>0x0809</c><e>Easy+</e><t>高精</t><t>模拟</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>虽然原图不具有传递性但最后的结果具有传递性。所以可以进行二分。二分插入排序的方式。</p>
-<p>诈骗题。</p>
+<p>什么模拟题乱入，，，</p>
+<p>考虑随便找个数模拟一下，\(964\) 转化 7 进制：</p>
+\[\begin{aligned}
+964 \div 7 &amp;= 137 &amp;\ldots 5 \\
+137 \div 7 &amp;= 19 &amp;\ldots 4 \\
+19 \div 7 &amp;= 2 &amp;\ldots 5 \\
+2 \div 7 &amp;= 2 &amp;\ldots2 \\
+(964)_{10}&amp;=(2545)_7
+\end{aligned}
+\]
+<p>其实就是高精除低精，高精取模低精。</p>
+<p>后面那个很容易，再看一下前者是怎么做的。</p>
+\[\begin{aligned}
+\underline 9 \div 7 &amp;= 1 &amp;\ldots 2 \\
+\underline{26} \div 7 &amp;= 3 &amp;\ldots5 \\
+\underline{54} \div 7&amp;=7 &amp;\ldots5
+\end{aligned}
+\]
+<p>可以发现过程中有一个很重要的中间变量 \(k\)，也就是下划线的部分。它是计算过程中原数前若干位的十进制表示形式，只不过都及时按位模了 \(7\)。</p>
+<p>……还说啥呢，可以开始写了。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>二分没复习到位，调了巨久（悲</p>
-<pre class="line-numbers"><code class="language-cpp">
-class Solution {
-public:
-	std::vector&lt;int&gt; specialSort(int n) {
-		std::vector&lt;int&gt; ans = {-1, 1}; // -1 占位符。
-		for (int i = 2; i &lt;= n; ++i) {
-			int l = 0, r = i - 1; // 搜到谁代表插在谁后面。(l + r + 1) &gt;&gt; 1 型二分不会搜到 l，所以用 l 当默认值。
-			while (l &lt; r) {
-				const int mid = (l + r + 1) &gt;&gt; 1;
-				if (compare(i, ans[mid])) r = mid - 1; // i &lt; mid，i 不可能插在 mid 后面，mid 不可能是答案。
-				else l = mid; // i &gt; mid，i 可能插在 mid 后面。
-			}
-			ans.insert(ans.begin() + l + 1, i);
-		}
-		ans.erase(ans.begin());
-		return ans;
-	}
-} s;
-</code></pre>
+<pre class="line-numbers"><code class="language-cpp">int T, a, b;
+char s[1000001], ans[1000001];
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x051 离散化]]></title>
-    <link href="oi.afobject.ml/0x051.html"/>
-    <updated>2022-01-23T10:52:57+08:00</updated>
-    <id>oi.afobject.ml/0x051.html</id>
-    <content type="html"><![CDATA[
-<p>即把一堆值域巨大的数映射到更小的有限集合中。</p>
-<p>一般有以下几个步骤：</p>
-<ul>
-<li>排序；</li>
-<li>去重；</li>
-<li>得到原数在去重数组中的排名（第几小）。</li>
-</ul>
-<pre class="line-numbers"><code class="language-cpp">for (int i = 1; i &lt;= n; ++i)
-    b[i] = a[i];
-std::sort(b + 1, b + n + 1);
-const int c = std::unique(b + 1, b + n + 1) - b;
-for (int i = 1; i &lt;= n; ++i)
-    printf(&quot;%d &quot;, (int)(std::lower_bound(b + 1, b + c + 1, a[i]) - b));
+int to10(char x) {
+    if (x &gt;= '0' &amp;&amp; x &lt;= '9') return x - '0';
+    if (x &gt;= 'A' &amp;&amp; x &lt;= 'Z') return x - 'A' + 10;
+    return x - 'a' + 36;
+}
+char from10(int x) {
+    if (x &lt;= 9) return x + '0';
+    if (x &lt;= 35) return x - 10 + 'A';
+    return x - 36 + 'a';
+}
+
+int main() {
+    scanf(&quot;%d&quot;, &amp;T);
+    while (T--) {
+        scanf(&quot;%d%d&quot;, &amp;a, &amp;b);
+        scanf(&quot;%s&quot;, s);
+        printf(&quot;%d %s\n%d &quot;, a, s, b);
+        int len = strlen(s), t = 0, ansSize = 0;
+        while (t &lt; len) {
+            int k = 0;
+            for (int i = t; i &lt; len; ++i) {
+                k = k * a + to10(s[i]);
+                s[i] = from10(k / b);
+                k %= b;
+            }
+            ans[++ansSize] = from10(k);
+            while (t &lt; len &amp;&amp; s[t] == '0') ++t;
+        }
+        for (int i = ansSize; i; --i)
+            printf(&quot;%c&quot;, ans[i]);
+        printf(&quot;\n\n&quot;);
+    }
+    return 0;
+}
 </code></pre>
 <hr />
-<h2><a id="cinema" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cinema</h2>
-<p><tc><c>0x0501</c><c>CF670C</c><e>Easy-</e><t>排序</t><t>离散化</t></tc></p>
-<p>有 \(n\) 个人和 \(m\) 场电影，一个人只会一种语言，一场电影会有原声语言和字幕语言。选择一场电影，在最大化能理解原声的人数的情况下最大化能理解字幕的人数。</p>
-<p>其中语言用 \(1\) 到 \(10^9\) 的数来表示。</p>
+<h2><a id="cow-acrobats" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cow Acrobats</h2>
+<p><tc><c>0x0810</c><m>Medium-</m><t>贪心</t><t>数学</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>首先离散化语言，并统计每种语言的人数。</p>
-<p>把电影按照第一关键字（理解其原声的人数）和第二关键字（理解其字母的人数）排序。当然直接 \(O(n)\) 做也是可以的。</p>
+<p>0x0704 改编版。</p>
+<p>第 \(x\) 头奶牛的风险值为 \(a=\sum\limits_{i=1}^{x-1} w_i - s_x\)。第 \(x+1\) 头牛风险值为 \(b=\sum\limits_{i=1}^{x} w_i - s_{x+1}\)。</p>
+<p>最后奶牛一定是按照某个顺序排列的，一旦打破这个顺序（交换），答案一定会增加。假设第 \(x\) 头牛与第 \(x+1\) 头牛交换。</p>
+<p>此时，第 \(x\) 头牛的风险值为 \(c=\sum\limits_{i=1}^{x-1} w_i+w_{x+1}-s_x\)，第 \(x+1\) 头牛的风险值为 \(d=\sum\limits_{i=1}^{x-1} w_i-s_{x+1}\)。</p>
+\[\begin{aligned}
+\Delta=&amp;\max\{c,d\}-\max\{a,b\}\\
+=&amp;\max\{w_{x+1}-s_x, -s_{x+1}\}-\max\{-s_x, w_x - s_{x+1}\}\text{   (统加 }\sum_{i=1}^{x-1}w_i\text{ )}\\
+=&amp;\max\{w_{x+1}+s_{x+1}, s_x\}-\max\{s_{x+1}, w_x + s_x\}\text{   (统加 }s_x+s_{x+1}\text{ )}
+\end{aligned}
+\]
+<p>好好好，当 \(w_x+s_x&gt;w_{x+1}+s_{x+1}\) 时，左边 \(s_x\) 再大也铁定大不了 \(w_x+s_x\)，\(\Delta&lt;0\)，交换更优。</p>
+<p>当 \(w_x+s_x &lt; w_{x+1}+s_{x+1}\) 时，同理，\(\Delta&gt;0\)，不交换更优。</p>
+<p>因此，按 \(w_i+s_i\) 从小到大排序最优。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, m;
-std::vector&lt;int&gt; lang;
-int a[200001];
-int d0[200001], d1[200001], d2[200001];
-int buc[600001];
-
-bool comp(int lhs, int rhs) {
-    if (buc[d1[lhs]] == buc[d1[rhs]])
-        return buc[d2[lhs]] &gt; buc[d2[rhs]];
-    return buc[d1[lhs]] &gt; buc[d1[rhs]];
-}
+<pre class="line-numbers"><code class="language-cpp">int n;
+struct Cow {
+    int w, s;
+    bool operator &lt; (const Cow &amp;rhs) const {
+        return w + s &lt; rhs.w + rhs.s;
+    }
+} c[1000001];
 
 int main() {
     n = read();
     for (int i = 1; i &lt;= n; ++i)
-        a[i] = read(), lang.push_back(a[i]);
-    m = read();
-    for (int i = 1; i &lt;= m; ++i)
-        d1[i] = read(), lang.push_back(d1[i]);
-    for (int i = 1; i &lt;= m; ++i)    
-        d2[i] = read(), lang.push_back(d2[i]);
-    std::sort(lang.begin(), lang.end());
-    auto p = std::unique(lang.begin(), lang.end());
-    for (int i = 1; i &lt;= n; ++i)
-        ++buc[std::lower_bound(lang.begin(), p, a[i]) - lang.begin()];
-    for (int i = 1; i &lt;= m; ++i)
-        d0[i] = i,
-        d1[i] = std::lower_bound(lang.begin(), p, d1[i]) - lang.begin(),
-        d2[i] = std::lower_bound(lang.begin(), p, d2[i]) - lang.begin();
-    std::sort(d0 + 1, d0 + m + 1, comp);
-    printf(&quot;%d\n&quot;, d0[1]);
-    return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x052 中位数]]></title>
-    <link href="oi.afobject.ml/0x052.html"/>
-    <updated>2022-01-23T11:45:04+08:00</updated>
-    <id>oi.afobject.ml/0x052.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E8%B4%A7%E4%BB%93%E9%80%89%E5%9D%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>货仓选址</h2>
-<p><tc><c>0x0502</c><e>Easy-</e><t>数学</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>先排序，然后开始「换根」。</p>
-<p>假如从建在 \(i\) 处转移到建在 \(i + 1\) 处，则 \(i\) 左边的商店很倒霉，右边的商店获益。反之同理。</p>
-<p>最好使得左右商店均衡。</p>
-<p>因此如果是奇数就建在中位数处，否则哪怕左右移动 1 毫米就会有超过一半的商店开始叫了。</p>
-<p>如果是偶数，同理，建在中间的两个商店的区间内就行了。</p>
-<p>答案是排序后的</p>
-\[\sum_{i=1}^n \lvert a_i-a_{\lceil \frac n 2 \rceil} \rvert
-\]
-<hr />
-<h2><a id="%E4%B8%83%E5%A4%95%E7%A5%AD" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>七夕祭</h2>
-<p><tc><c>0x0503</c><m>Medium+</m><t>前缀和</t><t>数学</t><t>环上问题</t></tc></p>
-<p>\(n \times m\) 的方格中，有 \(t\) 个点为「目标点」。通过一定次数的<strong>相邻</strong>上下、左右格内的交换，使得<strong>每行、每列内的目标点数相同</strong>。但这里比较特殊，一行或一列可以看成一个<strong>环</strong>，首行和末行在同一列上的格子可以交换，首列和末列在同一行上的格子可以交换。</p>
-<p>求最少的交换次数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>拆分问题：</p>
-<ul>
-<li>通过最少次数的左右交换使每列目标点数相同。</li>
-<li>通过最少次数的上下交换使每行目标点数相同。</li>
-</ul>
-<p>这两个互不干涉。</p>
-<blockquote>
-<h4><a id="%E7%AE%80%E5%8C%96%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>简化问题</h4>
-<p>一条长度为 \(n\) 的数组 \(a\)，要求最终每个数都相等。一次操作可以将相邻两个数一个 \(+1\) 一个 \(-1\)，求最小的操作次数。</p>
-<hr />
-<ul>
-<li>首先要求 \(n \mid \sum a_i\)，否则显然无解。</li>
-<li>否则，从第一个数开始考虑：
-<ul>
-<li>如果多了，给 2；</li>
-<li>少了，2 给。</li>
-</ul>
-</li>
-<li>同理继续。如果出现负数也无所谓，反正操作顺序可以任意调换。</li>
-</ul>
-<p>计算答案：</p>
-<ul>
-<li>由第一个数发起的操作次数为 \(\lvert a_1 - d \rvert\)，其中 \(d = \dfrac{\sum a_i}{n}\)；</li>
-<li>由第二个数发起的操作次数为 \(\lvert a_1 + a_2 - 2 \cdot d \rvert\)；</li>
-</ul>
-<p><strong>总操作次数为 \(\sum\limits_{i=1}^n \lvert \operatorname{pre_a}(i)-i \cdot d \rvert\)。</strong></p>
-<p>如果一开始每个人就减去 \(d\)（设减去后的数组为 \(b\)），则<strong>总操作次数就是 \(\sum_\limits{i=1}^n\lvert \operatorname{pre_b}(i)_ \rvert\)。</strong></p>
-</blockquote>
-<p>与本题的任意一个子问题的区别就在于本题可以成环。很容易想到经典的破环成链，下面来验证正确性。</p>
-<p>我们观察到在简化问题中，<strong>即使允许首项和末项之间的操作，也不会对最优结果产生任何影响</strong>。一个数比 \(d\) 多的部分就雷打不动要移走，移走的时候直接顺着 \(1,2,3, \ldots ,n\) 的顺序就行了，没必要非得直接跳到 \(n\)。所以<strong>破环成链</strong>是正确的。</p>
-<p>当破环破在第 \(k\) 个数之后时，则长成这样：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: center">转化后的 \(b\) 数组</th>
-<th>\(b_{k+1}\)</th>
-<th>\(b_{k+2}\)</th>
-<th style="text-align: left">\(b_n\)</th>
-<th style="text-align: left">\(b_1\)</th>
-<th style="text-align: left">\(b_k\)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center">前缀和 \(p\) 数组</td>
-<td>\(p_{k+1}-p_k\)</td>
-<td>\(p_{k+2}-p_k\)</td>
-<td style="text-align: left">\(p_n-p_k\)</td>
-<td style="text-align: left">\(p_1+p_n-p_k\)</td>
-<td style="text-align: left">\(p_n\)</td>
-</tr>
-</tbody>
-</table>
-<p>很容易发现，总操作次数是 \(\sum\limits_{i=1}^n \lvert p_i-p_k \rvert\)。</p>
-<p>震惊，就是上一题的货仓选址！将 \(p\) 排序后，\(k\) 应取中位数。</p>
-<p>神 仙 题！</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>大数据题都开 <code>long long</code>。</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-#define abs(x) ((x) &gt; 0 ? (x) : -(x))
-
-int n, m, t;
-int r[100001], c[100001];
-
-int p[100001];
-int solve(int n, int a[]) {
-    int sum = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        sum += a[i];
-    if (sum % n)
-        return -1;
-    const int d = sum / n;
-    for (int i = 1; i &lt;= n; ++i)
-        p[i] = p[i - 1] + a[i] - d;
-    std::sort(p + 1, p + n + 1);
-    int ans = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        ans += abs(p[i] - p[(n + 1) / 2]);
-    return ans;
-}
-
-signed main() {
-    n = read(), m = read(), t = read();
-    while (t--)
-        ++r[read()], ++c[read()];
-    int x = solve(n, r), y = solve(m, c);
-    if (x == -1 &amp;&amp; y == -1) puts(&quot;impossible&quot;);
-    else if (x == -1) printf(&quot;column %lld\n&quot;, y);
-    else if (y == -1) printf(&quot;row %lld\n&quot;, x);
-    else printf(&quot;both %lld\n&quot;, x + y);
+        c[i].w = read(), c[i].s = read();
+    std::sort(c + 1, c + n + 1);
+    int ans = -1e9, p = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        ans = std::max(ans, p - c[i].s);
+        p += c[i].w;
+    }
+    printf(&quot;%d\n&quot;, ans);
     return 0;
 }
 </code></pre>
 <hr />
-<h2><a id="running-median" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Median</h2>
-<p><tc><c>0x0503</c><e>Easy</e><t>对顶堆</t></tc></p>
+<h2><a id="to-the-max" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>To The Max</h2>
+<p><tc><c>0x0811</c><e>Easy</e><t>贪心</t><t>前缀和</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>维护两个堆（<code>std::priority_queue</code>），第一个大根堆维护 \(1 \sim \lfloor \dfrac n 2 \rfloor\)，第二个小根堆维护  \(\lfloor \dfrac n 2 \rfloor + 1 \sim n\)。第二个堆的首项为中位数。</p>
-<p>当任意一个堆的个数超了的时候，移到另外一个去。</p>
+<p>考虑从一维的最大子段和转移。不就多了一个维度吗。</p>
+<p>枚举矩形的上底和下底就行了。</p>
+<p>时间复杂度 \(O(n^3)\)。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">void solve() {
-    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::less&lt;int&gt;&gt; q1;
-    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::greater&lt;int&gt;&gt; q2;
-    int x = read();
-    q2.push(x), printf(&quot;%d &quot;, x);
-    for (int i = 2; i &lt;= n; ++i) {
-        int x = read();
-        if (x &lt; q2.top()) q1.push(x);
-        else q2.push(x);
-        if (q1.size() &gt; (i &gt;&gt; 1))
-            q2.push(q1.top()), q1.pop();
-        if (q2.size() &gt; (i + 1) &gt;&gt; 1)
-            q1.push(q2.top()), q2.pop();
-        if (i &amp; 1)
-            printf(&quot;%d &quot;, q2.top());
-    }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x053 快速排序与 kth-element]]></title>
-    <link href="oi.afobject.ml/0x053.html"/>
-    <updated>2022-01-24T20:02:17+08:00</updated>
-    <id>oi.afobject.ml/0x053.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>快速排序</h2>
-<p><tc><c>LG1177</c></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>在区间内 rand 一个数，比它小的放左边，大的放右边。</p>
-<p>可以使用三路快速排序的优化：分为 <strong>小于基准｜等于基准｜大于基准</strong> 三类。</p>
-<h3><a id="%E4%B8%89%E8%B7%AF%E4%BC%98%E5%8C%96%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>三路优化实现</h3>
-<pre class="line-numbers"><code class="language-cpp">void qSort(int l, int r) {
-    if (l &gt;= r) return;
-
-    int s = a[(l + r) / 2];
-    int x = l, y = l, z = r;
-    // y：左侧指针  z：右侧指针
-    // x：存数指针
-    while (y &lt; z + 1) {
-        if (a[y] &lt; s) std::swap(a[x++], a[y++]); // 左侧指针数合法，入库
-        else if (a[y] &gt; s) std::swap(a[z--], a[y]); // 左侧指针数不合法，右边调一个过来，咕着下一轮循环再检查
-        else ++y; // 左侧指针数卡线，放过
-    }
-    // 循环结束：
-    // 所有小于 s 的数都被压在了 [l, x);
-    // 所有大于 s 的数都被压在了 (z, r]。
-    
-    qSort(l, x - 1);
-    qSort(z + 1, r);
-}
-</code></pre>
-<hr />
-<h2><a id="kth-element" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>kth-element</h2>
-<p><tc><c>LG1923</c></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>快排排一半。</p>
-<h3><a id="%E4%B8%89%E8%B7%AF%E4%BC%98%E5%8C%96%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>三路优化实现</h3>
-<p>注意一些细节。</p>
-<pre class="line-numbers"><code class="language-cpp">#include &lt;cstdio&gt;
-#include &lt;algorithm&gt;
-
-int n, k, a[5000001];
-
-int read() {
-    int ans = 0, neg = 1; char ch = getchar();
-    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
-    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
-    return ans * neg;
-}
-
-int kthElement(int l, int r, int k) {
-    if (l &gt;= r) return a[l];
-
-    int s = a[(l + r) / 2];
-    int x = l, y = l, z = r;
-
-    while (y &lt; z + 1) {
-        if (a[y] &lt; s) std::swap(a[x++], a[y++]);
-        else if (a[y] &gt; s) std::swap(a[z--], a[y]);
-        else ++y;
-    }
-    
-    if (l + k - 1 &lt; x) return kthElement(l, x - 1, k);
-    else if (l + k - 1 &gt; z) return kthElement(z + 1, r, l + k - 1 - z);
-    else return s;
-}
+<pre class="line-numbers"><code class="language-cpp">int n;
+int s[101][101];
 
 int main() {
-    n = read(), k = read() + 1;
+    n = read();
     for (int i = 1; i &lt;= n; ++i)
-        a[i] = read();
-    printf(&quot;%d\n&quot;, kthElement(1, n, k));
+        for (int j = 1; j &lt;= n; ++j)
+            s[i][j] = read() + s[i][j - 1];
+    int ans = -1e9;
+    for (int i = 1; i &lt;= n; ++i)
+        for (int j = i; j &lt;= n; ++j) {
+            int max = -1e9, cur = 0;
+            for (int k = 1; k &lt;= n; ++k) {
+                cur += s[k][j] - s[k][i - 1];
+                max = std::max(max, cur);
+                cur = std::max(cur, 0);
+            }
+            ans = std::max(ans, max);
+        }
+    printf(&quot;%d\n&quot;, ans);
     return 0;
 }
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x054 逆序对]]></title>
-    <link href="oi.afobject.ml/0x054.html"/>
-    <updated>2022-02-17T22:48:13+08:00</updated>
-    <id>oi.afobject.ml/0x054.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E6%B1%82%E9%80%86%E5%BA%8F%E5%AF%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>归并排序求逆序对</h2>
-<p><tc><c>LG1908</c></tc></p>
-<pre class="line-numbers"><code class="language-cpp">int ans = 0;
-void mergeSort(int l, int r) {
-    if (l &gt;= r) return;
-    const int mid = (l + r) &gt;&gt; 1;
-    mergeSort(l, mid);
-    mergeSort(mid + 1, r);
-
-    int p = l, pl = l, pr = mid + 1;
-    while (pl &lt;= mid &amp;&amp; pr &lt;= r)
-        if (a[pl] &lt;= a[pr]) t[p++] = a[pl++];
-        else t[p++] = a[pr++], ans += mid - pl + 1;
-    while (pl &lt;= mid) t[p++] = a[pl++];
-    while (pr &lt;= r) t[p++] = a[pr++];
-    for (int i = l; i &lt;= r; ++i) a[i] = t[i];
-}
-</code></pre>
 <hr />
-<h2><a id="ultra-quicksort" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ultra-QuickSort</h2>
-<p><tc><c>0x0505</c><e>Easy-</e><t>逆序对</t></tc></p>
+<h2><a id="task" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task</h2>
+<p><tc><c>0x0812</c><m>Medium-</m><t>贪心</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>大眼观察答案就是逆序对。</p>
-<p>一次交换少一个逆序对，啊对对对，显然有构成逆序对的相邻的两个。</p>
-<hr />
-<h2><a id="%E5%A5%87%E6%95%B0%E7%A0%81%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>奇数码问题</h2>
-<p><tc><c>0x0506</c><m>Medium</m><t>逆序对</t></tc></p>
-<p>给两个 \(n \times n\) 的数字华容道，问一个能否变成另外一个。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>先忽略 0 把这俩写成一串数（8 个）；</p>
-<ul>
-<li>若左右移动 0 的位置，则这串数不变；</li>
-<li>若上下移动 0 的位置，则相当于将一个数后移 \(n-1\) 个位置。</li>
-</ul>
-<p>上下移动的操作中逆序对的个数的奇偶性不会改变（这个数与 \(n-1\) 个数发生了相对位置改变，每处相对位置改变会增加或减少一个逆序对，而 \(n-1\) 是偶数）。</p>
-<p>因此这两串数逆序对个数的奇偶性相同是<strong>必要</strong>的。充分性猜一下大概是可以找出一种移动 0 的方案的。</p>
+<p>Ref: 0x0701</p>
+<p>考虑对于每个任务以 \(x\) 为第一关键字、\(y\) 为第二关键字从大到小排序，优先保证上面的任务。</p>
+<p>对于每个任务，选用 \(x,y\) 均满足要求且 \(y\) 最小的机器。这样确保对于接下来处理的任务，\(x\) 的要求都能满足，且 \(y\) 的要求也尽量能满足。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">signed main() {
-    while (std::cin &gt;&gt; n) {
-        for (int i = 1, j = 1; i &lt;= n * n; ++i) {
-            std::cin &gt;&gt; a[j];
-            if (a[j]) ++j;
+<p>考虑使用 <code>std::multiset</code> 维护信息。每次将 \(x\) 满足要求的取出并放入 <code>std::multiset</code> 里，用 <code>lower_bound</code> 查询符合要求且最小的 \(y\)。</p>
+<pre class="line-numbers"><code class="language-cpp">int n, m;
+std::pair&lt;int, int&gt; a[100001], b[100001];
+std::multiset&lt;int&gt; s;
+
+int main() {
+    while (std::cin &gt;&gt; n &gt;&gt; m) {
+        s.clear();
+        for (int i = 1; i &lt;= n; ++i)
+            std::cin &gt;&gt; a[i].first &gt;&gt; a[i].second;
+        for (int i = 1; i &lt;= m; ++i)
+            std::cin &gt;&gt; b[i].first &gt;&gt; b[i].second;
+        std::sort(a + 1, a + n + 1);
+        std::sort(b + 1, b + m + 1);
+        int j = n, cnt = 0; long long ans = 0;
+        for (int i = m; i; --i) {
+            while (j &amp;&amp; a[j].first &gt;= b[i].first)
+                s.insert(a[j--].second);
+            auto it = s.lower_bound(b[i].second);
+            if (it != s.end()) {
+                ++cnt;
+                ans += b[i].first * 500ll + b[i].second * 2;
+                s.erase(it);
+            }
         }
-        int ans1 = mergeSort(1, n * n - 1);
-        for (int i = 1, j = 1; i &lt;= n * n; ++i) {
-            std::cin &gt;&gt; a[j];
-            if (a[j]) ++j;
-        }
-        int ans2 = mergeSort(1, n * n - 1);
-        puts(((ans1 - ans2) % 2) ? &quot;NIE&quot; : &quot;TAK&quot;);
+        std::cout &lt;&lt; cnt &lt;&lt; ' ' &lt;&lt; ans &lt;&lt; std::endl;
     }
     return 0;
 }
@@ -1277,167 +1296,521 @@ void mergeSort(int l, int r) {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x06 倍增]]></title>
-    <link href="oi.afobject.ml/0x06-.html"/>
-    <updated>2022-02-19T13:19:02+08:00</updated>
-    <id>oi.afobject.ml/0x06-.html</id>
+    <title type="html"><![CDATA[0x0805 ~ 0x0808]]></title>
+    <link href="oi.afobject.ml/0x08-2.html"/>
+    <updated>2022-04-04T22:22:36+08:00</updated>
+    <id>oi.afobject.ml/0x08-2.html</id>
     <content type="html"><![CDATA[
-<p>倍增：将状态空间划分成若干个 2 的次幂的大小。</p>
-<h2><a id="%E9%93%BA%E5%9E%AB" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>铺垫</h2>
-<p>给定一个数列 \(A\) 和若干次询问，每次给出一个 \(T\)，求 \(k_{\max}\ s.t.\ \sum_{i=1}^k \le T\)。</p>
+<h2><a id="%E9%98%B2%E7%BA%BF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>防线</h2>
+<p><tc><c>0x0805</c><e>Easy</e><t>二分</t><t>前缀和</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<h4><a id="%E6%96%B9%E6%A1%881%EF%BC%9A%E5%9C%A8%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%AD-naive%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 1：在前缀和中 naive 二分</h4>
-<p>复杂度恒定是 <strong>\(\log n\)</strong> 把大概。</p>
-<h4><a id="%E6%96%B9%E6%A1%882%EF%BC%9A%E5%80%8D%E5%A2%9E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 2：倍增</h4>
-<p>这个 \(k\) 是要找的这个前缀的长度，<strong>每次尝试往 \(k\) 里面加 \(2\) 的次幂（\(2^p\)）</strong> 就行了。如果加了以后符合要求那么 \(k \gets k + 2^p\)，\(p \gets p+1\)，否则不加且 \(p \gets p - 1\)。\(p &lt; 0\) 的时候结束。</p>
-<p>区别就是复杂度是 <strong>\(\log \text{答案}\)</strong> 差不多。这玩意相对于 \(\log\) 感觉有一定常数（差不多 3）。我也不清楚为什么要这么做。就是这样。</p>
-<p>感觉有一种平凡优化这里不写了。</p>
-<hr />
-<h2><a id="genius-acm" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Genius ACM</h2>
-<p><tc><c>0x0601</c><h>Hard</h><t>数学</t><t>排序</t><t>倍增</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>首先 \(\sum\limits_{i=1}^{m}(a_i - b_i)^2 = \sum\limits_{i=1}^{m} a_i^2 + \sum\limits_{i=1}^{m} b_i^2 -\sum\limits_{i=1}^{m} a_i b_i\)，所以要使两两的乘积最小。</p>
-<blockquote>
-<h4><a id="%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>排序不等式</h4>
-<ol>
-<li>给定 \(a,b\) 两个数列，证明：当 \(a_i,b_i\) 均不降时，\(\sum a_ib_i\) 最大。</li>
-</ol>
-<p>简略证明：</p>
-<ul>
-<li>假设 \(x_1\le x_2,x_3 \le x_4\)，由于 \((x_1-x_2)(x_3-x_4) \ge 0\)，则 \(x_1x_4+x_2x_3 \ge x_1x_3+x_2x_4\)（1）。</li>
-<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不降），设存在 \(b_i, b_j\) 乱序，且它们分别对应 \(a_i, a_j\)（\(b_i&gt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i&gt;b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不降，结果最优。</li>
-<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不降），同理。</li>
-</ul>
-<p>所以要求 \(a,b\) 均不降。</p>
-<hr />
-<ol start="2">
-<li>在（1）的条件下，当 \(a,b\) 中的一个倒序时，证明：此时 \(\sum a_ib_i\) 最小。</li>
-</ol>
-<p>简略证明：</p>
-<ul>
-<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不升），设存在 \(b_i, b_j\) 非逆序，且它们分别对应 \(a_i, a_j\)（\(b_i&lt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i &lt; b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不升，结果最优。</li>
-<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不升），同理。</li>
-<li>得证。</li>
-</ul>
-</blockquote>
-<p>由<strong>排序不等式</strong>，知应当最大对最大，第二大对第二大……最小对最小，此时的 \(\sum (a_i-b_i)^2\) 就是「校验值」。</p>
-<p>但这并不是重点。</p>
-<p>问题转化为固定一个 \(L\)，求最小的 \(R &gt; L\) 使得 \(f([L, R]) \le T\)。要求「校验值」，必须排序，至少用时 \(O(n \log n)\)。然后 \(n \le 5 \times 10^5\)，好好好，如果每段都很少那么二分屁用没有（\(n\) 级别段，每一段找 \(R\) 二分 \(\log n\) 次总排序 \(n \log n\) 级，感觉得卡成 \(n^2 \log n\)，寄了）。</p>
-<p>😅 倍增，固定一个左端点往右扩展，复杂度 \(\sum len \log len\)（块数次倍增，每次倍增对一段排序，排序的总时间 \(n \log n\)，归并以及计算「校验值」的总时间差不多 \(O(n)\) 带点常数）左右吧，总复杂度大约 \(n \log n\) 可以接受（吧），自带巨大常数但是时限 10s。</p>
-<blockquote>
-<p>776 告诉我 \(\sum len \log len \le n \log n\)。</p>
-</blockquote>
+<p>《人工 h1》<strong>最多只有一个事奇数的位置！</strong>《/人工 h1》</p>
+<p>所以直接二分出第一个出现前缀和为奇数的位置就好了。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<ol>
-<li>固定一个 \(l\)</li>
-<li>倍增求 \(r\)
-<ol>
-<li>对未排序的部分进行归并排序</li>
-<li>求出「校验值」</li>
-<li>根据「校验值」大小判断当前的 \(r\) 是否满足条件</li>
-<li>回到 1，直到倍增结束（\(p=0\)）</li>
-</ol>
-</li>
-<li>回到 1，直到得到结果（\(r=n\)）</li>
-</ol>
-<p>谢邀，人在太平间，写吐了</p>
+<p>样例搞偷袭不讲武德！!1</p>
 <pre class="line-numbers"><code class="language-cpp">#define int long long
 
-int T, n, m, k;
-// a 原数组不动
-// t 是排好序的
-// q 是辅助
-// copy 是缓存
-int a[5000001], t[5000001], q[5000001], copy[5000001];
+int T, n;
+int s[200001], e[200001], d[200001];
 
-void mergeSort(int l0, int l, int r) {
-    r = std::min(r, n);
-    for (int i = l; i &lt;= r; ++i)
-        t[i] = a[i];
-    
-    std::sort(t + l, t + r + 1);
-
-    int lp = l0, tp = l0, rp = l;
-    while (lp &lt; l &amp;&amp; rp &lt;= r)
-        if (t[lp] &lt; t[rp]) q[tp++] = t[lp++];
-        else q[tp++] = t[rp++];
-    while (lp &lt; l) q[tp++] = t[lp++];
-    while (rp &lt;= r) q[tp++] = t[rp++];
-
-    for (int i = l0; i &lt;= r; ++i)
-        t[i] = q[i];
+int upper(int x, int y) {
+    if (x % y) return x / y + 1;
+    else return x / y;
 }
 
-int captcha(int l, int r) {
-    r = std::min(r, n);
+int sum(int x) {
+    if (x &lt; 0) return 0;
     int ans = 0;
-    for (int i = 0; i &lt; m &amp;&amp; l &lt; r; ++i, --r, ++l)
-        ans += (t[r] - t[l]) * (t[r] - t[l]);
+    for (int i = 1; i &lt;= n; ++i)
+        if (s[i] &lt;= x)
+            ans += upper(std::min(e[i], x) - s[i] + 1, d[i]);
     return ans;
 }
 
 signed main() {
     T = read();
     while (T--) {
-        n = read(), m = read(), k = read();
+        n = read();
         for (int i = 1; i &lt;= n; ++i)
-            a[i] = read();
-        int l0 = 1, ans = 0; // 1
-        while (l0 &lt;= n) {
-            int l = l0, p = 1; bool r = false;
-            while (p) {
-                for (int i = l0; i &lt; l + p; ++i)
-                    copy[i] = t[i]; // 保存当前的快照，以在 c &gt; k 时得以返回上一状态
-                mergeSort(l0, l, l + p - 1); // 2.1
-                const int c = captcha(l0, l + p - 1); // 2.2
-                if (c &lt;= k) { // 2.3
-                    l += p;
-                    if (l &gt; n) break; // 2.4
-                    if (!r)
-                        p &lt;&lt;= 1;
-                } else {
-                    p &gt;&gt;= 1;
-                    r = true;
-                    for (int i = l0; i &lt; l + p; ++i)
-                        t[i] = copy[i];
-                }
-            }
-            ++ans;
-            l0 = l;
+            s[i] = read(), e[i] = read(), d[i] = read();
+        int l = 0, r = 1ll &lt;&lt; 31;
+        while (l &lt; r) {
+            const int mid = (l + r) &gt;&gt; 1;
+            if (sum(mid) &amp; 1) r = mid;
+            else l = mid + 1;
         }
-        printf(&quot;%lld\n&quot;, ans); // 3
+        if (l == 1ll &lt;&lt; 31) puts(&quot;There's no weakness.&quot;);
+        else printf(&quot;%lld %lld\n&quot;, l, sum(l) - sum(l - 1));
     }
+    return 0;
 }
 </code></pre>
 <hr />
-<h2><a id="st%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>ST 表</h2>
-<p><tc><c>LG3865</c></tc></p>
+<h2><a id="corral-the-cows" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Corral the Cows</h2>
+<p><tc><c>0x0806</c><c>USACO</c><e>Easy+</e><t>二分</t><t>前缀和</t><t>离散化</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>\(f(l,k)\) 为 \([l, l + 2^k)\) 的 \(\max\)。</p>
-<ul>
-<li>\(\forall i, f(i,0) = a_i\)。</li>
-<li>\(f(l,k) = \max\{f(l,k-1),f(l+2^{k-1},k-1)\}\)</li>
-</ul>
-<p>求和：令 \(k=\log_2(r-l+1)\)。</p>
-<p>\(f(l,r) = \max\{f(l,k),f(r-2^k+1,k)\}\)（这两个区间能覆盖 \([l, r]\)）。</p>
-<p>最小值同理。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%9C%80%E5%A4%A7%E5%80%BC%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现（最大值）</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, q;
-int f[5000001][31];
+<p>由于 \(n\) 极小，考虑离散化。</p>
+<p>离散化完了以后照样二分就完了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>注意：</p>
+<ol>
+<li>处理重合的点；</li>
+<li>边界情况。</li>
+</ol>
+<pre class="line-numbers"><code class="language-cpp">int n, c;
+int x[501], y[501];
+int a[501], b[501];
+int sizeA, sizeB;
+int x1[501], y1[501];
+int g[501][501];
 
-int query(int l, int r) {
-    const int k = log2(r - l + 1);
-    return std::max(f[l][k], f[r - (1 &lt;&lt; k) + 1][k]);
+int xid(int x) {
+    return std::lower_bound(a + 1, a + sizeA, x) - a;
+}
+int yid(int y) {
+    return std::lower_bound(b + 1, b + sizeB, y) - b;
 }
 
-void cal() {
+bool check(int d) {
+    for (int a2 = 1; a2 &lt; sizeA; ++a2)
+        for (int b2 = 1; b2 &lt; sizeB; ++b2) {
+            const int a1 = xid(x1[a2] - d + 1),
+                      b1 = yid(y1[b2] - d + 1);
+            const int sum = g[a2][b2] - g[a1 - 1][b2] - g[a2][b1 - 1] + g[a1 - 1][b1 - 1];
+            if (sum &gt;= c)
+                return true;
+        }
+    return false;
+}
+
+int main() {
+    c = read(), n = read();
+    for (int i = 1; i &lt;= n; ++i) {
+        x[i] = a[i] = read();
+        y[i] = b[i] = read();
+    }
+
+    std::sort(a + 1, a + n + 1);
+    std::sort(b + 1, b + n + 1);
+    sizeA = std::unique(a + 1, a + n + 1) - a;
+    sizeB = std::unique(b + 1, b + n + 1) - b;
+    for (int i = 1; i &lt;= n; ++i) {
+        const int p = xid(x[i]), q = yid(y[i]);
+        x1[p] = x[i], y1[q] = y[i];
+        ++g[p][q];
+    }
     for (int i = 1; i &lt;= n; ++i)
-        f[i][0] = read();
-    for (int k = 1; k &lt;= 30; ++k)
-        for (int i = 1; i + (1 &lt;&lt; (k - 1)) &lt;= n; ++i)
-            f[i][k] = std::max(f[i][k - 1], f[i + (1 &lt;&lt; (k - 1))][k - 1]);
+        for (int j = 1; j &lt;= n; ++j)
+            g[i][j] += g[i - 1][j] + g[i][j - 1] - g[i - 1][j - 1];
+
+    int l = 1, r = 1e5;
+    while (l &lt; r) {
+        const int mid = (l + r) &gt;&gt; 1;
+        if (check(mid)) r = mid;
+        else l = mid + 1;
+    }
+    printf(&quot;%d\n&quot;, l);
+    return 0;
 }
 </code></pre>
+<hr />
+<h2><a id="%E7%B3%96%E6%9E%9C%E4%BC%A0%E9%80%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>糖果传递</h2>
+<p><tc><c>0x0807</c><c>HAOI 2008</c><e>Easy+</e><t>前缀和</t><t>数学</t><t>环上问题</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>0x0503 简化版，这里重新推导一遍，思路可能不同。</p>
+<p>先破环成链。假如在 \(a_1\) 与 \(a_n\) 之间断开。</p>
+<p>要让 \(a_1\) 达到 \(\overline{a}\)，则需要 \(a_2\) 提供它 \(\overline{a}-a_1\)（不管正负），贡献增加 \(\mid\overline{a}-a_1\mid\)。</p>
+<p>此时 \(a_2 \gets a_1 + a_2 - \overline{a}\)。想让 \(a_2\) 达到 \(\overline{a}\)，那么就要 \(a_3\) 给它 \(\overline{a}-(a_1+a_2-\overline{a})=2\cdot\overline{a}-(a_1+a_2)\)，贡献增加 \(\mid2\cdot\overline{a}-(a_1+a_2)\mid\)。</p>
+<p>可以发现，总答案为</p>
+\[\sum_{i=1}^n\left|i \cdot \overline{a}-\sum_{j=1}^ia_j\right|
+\]
+<p>假如双倍一下，进一步推广，破环破在 \(a_{k+1}\) 与 \(a_k\) 之间的，总答案为</p>
+\[\sum_{i=1}^{n}\left|i \cdot \overline{a}-\sum_{j=k+1}^{i+k}a_j\right|
+\]
+<p>设前缀和数组为 \(s\)，即 \(s_i = \sum\limits_{j=1}^ia_j\)。</p>
+<p>答案变形为</p>
+\[\sum_{i=1}^{n}\left|i \cdot \overline{a}-s_{i+k}+s_{k}\right|
+\]
+<p>前面那个东西实在是不顺眼，所以我们让 \(a_i \gets a_i-\overline{a}\) 再计算前缀和 \(s\)，答案变形为：</p>
+\[\sum_{i=1}^{n}\left|s_{k}-s_{i+k}\right|
+\]
+<p>\(s_k\) 定，考虑到 \(s_n=0\)，而因为珈贝了，我们这里的前缀和 \(s\) 的值域是 \(2n\)，\(s_{n+j}=s_{j}\)，所以式子里的 \(s_{i+k}\) 可以取到 \(s_1 \sim s_n\) 的任何值，所以答案也就是</p>
+\[\sum_{i=1}^{n}\left|s_{k}-s_i\right|
+\]
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+
+int n;
+int a[1000001], s[1000001];
+
+signed main() {
+    n = read();
+    int sum = 0;
+    for (int i = 1; i &lt;= n; ++i)
+        a[i] = read(), sum += a[i];
+    const int aver = sum / n;
+    for (int i = 1; i &lt;= n; ++i)
+        s[i] = s[i - 1] + a[i] - aver;
+    std::sort(s + 1, s + n + 1);
+    int ans = 0;
+    for (int i = 1; i &lt;= n; ++i)
+        ans += abs(s[(n + 1) &gt;&gt; 1] - s[i]);
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="soldiers" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Soldiers</h2>
+<p><tc><c>0x0808</c><m>Medium-</m><t>数学</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>纵坐标移到中位数容易证明，接下来考虑横坐标。</p>
+<p>首先证明一个事：按 \(x\) 坐标排序后，每个点的顺序与最终结果相同。</p>
+<blockquote>
+<h4><a id="%E8%AF%81%E6%98%8E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>证明</h4>
+<p>若交换一组 \((i,j)\)（\(x_i&gt;x_j\) 且 \(a_i&gt;a_j\)）那么答案将减少 \(\Delta=\mid x_i - a_i \mid + \mid  x_j - a_j \mid - \mid x_i - a_j \mid - \mid x_j - a_i \mid\)</p>
+<ul>
+<li>
+<p>若 \(x_j &gt; a_i\) 或 \(x_i &lt; a_j\)：\(\Delta=0\)</p>
+</li>
+<li>
+<p>若 \(a_j&lt;x_j&lt;a_i&lt;x_i\)：\(\Delta=x_i-a_i+x_j-a_j-x_i+a_j+x_j-a_i=2\cdot x_j-2\cdot a_i&lt;0\)</p>
+</li>
+<li>
+<p>若 \(a_j&lt;x_j&lt;x_i&lt;a_i\)：\(\Delta=a_i-x_i+x_j-a_j-x_i+a_j+x_j-a_i=2\cdot x_j-2\cdot x_i&lt;0\)</p>
+</li>
+<li>
+<p>若 \(x_j&lt;a_j&lt;x_i&lt;a_i\)：\(\Delta=a_i-x_i+a_j-x_j-x_i+a_j+x_j-a_i=2\cdot a_j-2\cdot x_i&lt;0\)</p>
+</li>
+<li>
+<p>若 \(x_j&lt;a_j&lt;a_i&lt;x_i\)：\(\Delta=x_i-a_i+a_j-x_j-x_i+a_j+x_j-a_i=2\cdot a_j-2\cdot a_i&lt;0\)</p>
+</li>
+</ul>
+<p>所以是正确的。</p>
+</blockquote>
+<p>然后就容易了，因为本来 \(x\) 坐标很小或者很大的，到时候相对于其他点就一定可以少移动一点。所以先把这个东西消掉，因此这个时候就处理好，向最右边的看齐，从右到左第 \(i\) 个点的横坐标加上 \(i\)（也可以当成，向最左边的对齐，从左到右第 \(i\) 个点的横坐标减去 \(i\)）。</p>
+<p>更理性一点，设最终移到 \( a+1, a+2, \ldots, a+n\)。那么第 \(i\) 个点的贡献是 \(\mid x_i-(a+i) \mid=\mid (x_i-i)-a \mid\)。所以 \(x_i \gets x_i-i\) 即可。</p>
+<p>这个时候，就可以照常取中位数然后算答案了。管他上一步是加还是减，相对坐标差不变，答案不变就完了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+
+int n, x[10001], y[10001];
+
+int main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i)
+        x[i] = read(), y[i] = read();
+    std::sort(x + 1, x + n + 1);
+    for (int i = 1; i &lt;= n; ++i)
+        x[i] -= i;
+    std::sort(y + 1, y + n + 1);
+    std::sort(x + 1, x + n + 1);
+    int ans = 0, x0 = x[(n + 1) &gt;&gt; 1], y0 = y[(n + 1) &gt;&gt; 1];
+    for (int i = 1; i &lt;= n; ++i)
+        ans += abs(x[i] - x0) + abs(y[i] - y0);
+    printf(&quot;%d\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x0801 ~ 0x0804]]></title>
+    <link href="oi.afobject.ml/0x08-1.html"/>
+    <updated>2022-04-03T23:51:45+08:00</updated>
+    <id>oi.afobject.ml/0x08-1.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="the-pilots-brothers-refrigerator" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Pilots Brothers' Refrigerator</h2>
+<p><tc><c>0x0801</c><e>Easy</e><t>状压</t><t>枚举</t><t>模拟</t></tc></p>
+<p>给定一个 \(4\times4\) 的 0-1 矩阵，每次选择一个 \((i,j)\)，使得第 \(i\) 行、第 \(j\) 列上所有的数反转。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>枚举每一个位置是否反转，并模拟。时间复杂度 O(能过)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">bool m[5][5], c[5][5];
+
+int main() {
+    for (int i = 1; i &lt;= 4; ++i)
+        for (int j = 1; j &lt;= 4; ++j) {
+            char q; std::cin &gt;&gt; q;
+            m[i][j] = (q == '-');
+        }
+    int min = 17, minS = 0;
+    for (int s = 0; s &lt; 1 &lt;&lt; 16; ++s) {
+        memcpy(c, m, sizeof c);
+        int cnt = 0;
+        for (int i = 0; i &lt; 16; ++i)
+            if (s &amp; (1 &lt;&lt; i)) {
+                ++cnt;
+                const int row = i / 4 + 1, col = i % 4 + 1;
+                for (int j = 1; j &lt;= 4; ++j)
+                    c[row][j] ^= 1;
+                for (int j = 1; j &lt;= 4; ++j)
+                    c[j][col] ^= 1;
+                c[row][col] ^= 1;
+            }
+        bool sum = 1;
+        for (int i = 1; i &lt;= 4; ++i)
+            for (int j = 1; j &lt;= 4; ++j)
+                sum &amp;= c[i][j];
+        if (sum &amp;&amp; cnt &lt; min)
+            min = cnt, minS = s;
+    }
+    printf(&quot;%d\n&quot;, min);
+    for (int i = 0; i &lt; 16; ++i)
+        if (minS &amp; (1 &lt;&lt; i))
+            printf(&quot;%d %d\n&quot;, i / 4 + 1, i % 4 + 1);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E5%8D%A0%E5%8D%9Cdiy" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>占卜 DIY</h2>
+<p><tc><c>0x0802</c><e>Easy</e><t>模拟</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>？？？？？？？</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">struct Node {
+    int num;
+    bool state;
+};
+std::deque&lt;Node&gt; q[14];
+
+int trans(char c) {
+    if (c &gt;= '2' &amp;&amp; c &lt;= '9')
+        return c - '0';
+    switch (c) {
+        case '0': return 10;
+        case 'J': return 11;
+        case 'Q': return 12;
+        case 'K': return 13;
+        case 'A': return 1;
+    }
+    return 0;
+}
+
+int buc[14];
+
+int main() {
+    for (int i = 1; i &lt;= 13; ++i) {
+        char c;
+        for (int j = 1; j &lt;= 4; ++j) {
+            std::cin &gt;&gt; c;
+            // front 上，back 下。
+            q[i].push_back({trans(c), false});
+        }
+    }
+    while (q[13].size()) {
+        auto current = q[13].front();
+        q[13].pop_front();
+        while (true) {
+            const int t = current.num;
+            if (t == 13)
+                break;
+            q[t].push_front({t, true});
+            current = q[t].back();
+            q[t].pop_back();
+        }
+    }
+    for (int i = 1; i &lt;= 13; ++i)
+        while (q[i].size())
+            buc[q[i].front().num] += q[i].front().state,
+            q[i].pop_front();
+    int ans = 0;
+    for (int i = 1; i &lt; 13; ++i)
+        if (buc[i] == 4)
+            ++ans;
+    std::cout &lt;&lt; ans &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="fractal" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal</h2>
+<p><tc><c>0x0803</c><e>Easy</e><t>模拟</t><t>分形</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>？？？？？？？</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n;
+int pow3[1001];
+char res[1001][1001];
+
+void fractal(int x, int y, int level) {
+    if (level == 1) {
+        res[x][y] = 'X';
+        return;
+    }
+    const int t = pow3[level - 2];
+    fractal(x, y, level - 1);
+    fractal(x + (t &lt;&lt; 1), y, level - 1);
+    fractal(x, y + (t &lt;&lt; 1), level - 1);
+    fractal(x + (t &lt;&lt; 1), y + (t &lt;&lt; 1), level - 1);
+    fractal(x + t, y + t, level - 1);
+}
+
+int main() {
+    pow3[0] = 1;
+    for (int i = 1; i &lt;= 7; ++i)
+        pow3[i] = pow3[i - 1] * 3;
+    while (scanf(&quot;%d&quot;, &amp;n)) {
+        if (n == -1)
+            break;
+        memset(res, ' ', sizeof res);
+        fractal(1, 1, n);
+        for (int i = 1; i &lt;= pow3[n - 1]; ++i) {
+            for (int j = 1; j &lt;= pow3[n - 1]; ++j)
+                printf(&quot;%c&quot;, res[i][j]);
+            putchar('\n');
+        }
+        puts(&quot;-&quot;);
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="raid" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raid</h2>
+<p><tc><c>0x0804</c></tc></p>
+<p>疑似只能用玄学算法卡过，最坏情况 \(n^2\)。。。先跳过了。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[NOI Online 2022 Junior]]></title>
+    <link href="oi.afobject.ml/noiol-junior-2022.html"/>
+    <updated>2022-03-27T16:14:49+08:00</updated>
+    <id>oi.afobject.ml/noiol-junior-2022.html</id>
+    <content type="html"><![CDATA[
+<p>场外，不会做 T2。</p>
+<h2><a id="%E6%95%B0%E5%AD%A6%E6%B8%B8%E6%88%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>数学游戏</h2>
+<p><tc><m>Medium+</m><t>数学</t><t>GCD</t></tc></p>
+<p>对于每一组 \((x,z)\)，求最小的 \(y\)，使得 \(x \times y \times \gcd(x,y) = z\)。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>设 \(x = \gcd(x,y) \cdot a\)，\(y = \gcd(x,y)\cdot b\)。</p>
+<p>则 \(\dfrac zx = \gcd(x,y) \cdot y = \gcd(x,y)^2 \cdot b\)。注意到 \(x^2=\gcd(x,y)^2 \cdot a^2\)，考虑消去没用的 \(a\)。</p>
+<p>因为 \(a \perp b\)，所以 \(\gcd\left(\dfrac zx, x^2\right)=\gcd(x,y)^2\)。所以 \(\gcd(x,y) = \sqrt{\gcd\left(\dfrac zx, x^2\right)}\)。</p>
+<p>所以 \(y = \dfrac z {x \cdot \sqrt{\gcd\left(\dfrac zx, x^2\right)}}\)。</p>
+<p>没法用以上方法复原 \(y\) 的，均为无解。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int t, x, z;
+
+int gcd(int a, int b) {
+    return b ? gcd(b, a % b) : a;
+}
+
+signed main() {
+    t = read();
+    while (t--) {
+        x = read(), z = read();
+        if (z % x) { puts(&quot;-1&quot;); continue; }
+        const int k = z / x;
+        const int g = gcd(x * x, k);
+        const int rt = sqrt(g);
+        if (rt * rt != g) { puts(&quot;-1&quot;); continue; }
+        printf(&quot;%lld\n&quot;, z / (x * rt));
+    }
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[NOI Online 2022 Senior]]></title>
+    <link href="oi.afobject.ml/noiol-senior-2022.html"/>
+    <updated>2022-03-26T16:46:05+08:00</updated>
+    <id>oi.afobject.ml/noiol-senior-2022.html</id>
+    <content type="html"><![CDATA[
+<p>场外，口胡了 T1。</p>
+<h2><a id="%E4%B8%B9%E9%92%93%E5%8D%A0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>丹钓占</h2>
+<p><tc><m>Medium+</m><t>DS</t><t>树状数组</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>初步思考：对于第 \(i\) 个二元组，求出最左能使它优秀的端点 \(x_i\)，在这个端点及其右侧的任意一个位置，都能使它「优秀」。即开头模拟一遍预处理，每个二元组的 \(x\) 即为把该弹的都弹掉后栈顶的下标。</p>
+<p>之后对于每一组询问，输出 \(\sum_{i=l}^r[l \ge x_i]\) 就行了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>考虑将询问离线，按左端点从小到大排序。</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h0npr5t0lyj211h0u00v5.jpg" alt="" /></p>
+<p>实现过程是这样的：</p>
+<ol>
+<li>模拟，记录 \(x\)；</li>
+<li>将所有的询问按左端点从小到大排序，将 \(x\) 按从大到小的顺序依次压入一个栈（代码实现的时候随便什么东西维护一下就行，我懒，用了 <code>std::priority_queue</code>，还是因为我懒，所以用取相反数来达到小根堆的效果）中，栈顶为最小的 \(x\)；</li>
+<li>对于每一个下标 \(i\)，维护一个叫做 \(d_i\) 的布尔值，代表当前 \(l\) 是否 \(\ge x_i\)；</li>
+<li>遍历排序好的询问，对于每一次询问 \([l,r]\)：
+<ol>
+<li>将所有 \(\le l\) 的 \(x\) 从栈顶弹出，并将相应的 \(d\) 赋为 \(1\)；</li>
+<li>通过树状数组求出 \(\sum_{i=l}^r d_i\)。</li>
+</ol>
+</li>
+<li>按原顺序输出答案。</li>
+</ol>
+<pre class="line-numbers"><code class="language-cpp">struct Node {
+    int l, r, id;
+    bool operator &lt; (const Node &amp;rhs) const {
+        if (l == rhs.l)
+            return r &lt; rhs.r;
+        return l &lt; rhs.l;
+    }
+};
+
+int n, q;
+int a[1000001], b[1000001];
+int c[1000001];
+Node e[1000001];
+int ans[1000001];
+
+void update(int idx) {
+    while (idx &lt;= n)
+        ++c[idx], idx += idx &amp; (-idx);
+}
+int query(int idx) {
+    int ans = 0;
+    while (idx)
+        ans += c[idx], idx -= idx &amp; (-idx);
+    return ans;
+}
+
+int main() {
+    n = read(), q = read();
+    for (int i = 1; i &lt;= n; ++i)
+        a[i] = read();
+    for (int i = 1; i &lt;= n; ++i)
+        b[i] = read();
+
+    std::stack&lt;Node&gt; s;
+    std::priority_queue&lt;std::pair&lt;int, int&gt;&gt; p;
+    for (int i = 1; i &lt;= n; ++i) {
+        while (!s.empty() &amp;&amp; (s.top().l == a[i] || s.top().r &lt;= b[i]))
+            s.pop();
+        if (s.empty()) p.push({-1, i});
+        else p.push({-s.top().id - 1, i});
+        s.push({a[i], b[i], i});
+    }
+
+    for (int i = 1; i &lt;= q; ++i) {
+        const int l = read(), r = read();
+        e[i] = {l, r, i};
+    }
+    std::sort(e + 1, e + q + 1);
+    for (int i = 1; i &lt;= q; ++i) {
+        while (!p.empty() &amp;&amp; -p.top().first &lt;= e[i].l) {
+            update(p.top().second);
+            p.pop();
+        }
+        ans[e[i].id] = query(e[i].r) - query(e[i].l - 1);
+    }
+
+    for (int i = 1; i &lt;= q; ++i)
+        printf(&quot;%d\n&quot;, ans[i]);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E8%AE%A8%E8%AE%BA" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>讨论</h2>
+<p><tc><m>Medium+</m><t>？</t><t>？</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<h4><a id="30%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>30 分</h4>
+<p><code>std::bitset</code> 暴力，\(O(Tn^3)\)。</p>
 
 ]]></content>
   </entry>
@@ -1680,378 +2053,444 @@ int main() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x0801 ~ 0x0804]]></title>
-    <link href="oi.afobject.ml/0x08-1.html"/>
-    <updated>2022-04-03T23:51:45+08:00</updated>
-    <id>oi.afobject.ml/0x08-1.html</id>
+    <title type="html"><![CDATA[ABC242]]></title>
+    <link href="oi.afobject.ml/abc242.html"/>
+    <updated>2022-03-08T22:51:04+08:00</updated>
+    <id>oi.afobject.ml/abc242.html</id>
     <content type="html"><![CDATA[
-<h2><a id="the-pilots-brothers-refrigerator" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Pilots Brothers' Refrigerator</h2>
-<p><tc><c>0x0801</c><e>Easy</e><t>状压</t><t>枚举</t><t>模拟</t></tc></p>
-<p>给定一个 \(4\times4\) 的 0-1 矩阵，每次选择一个 \((i,j)\)，使得第 \(i\) 行、第 \(j\) 列上所有的数反转。</p>
+<p>VP</p>
+<h2><a id="d-abc-transform" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D ABC Transform</h2>
+<p><tc><m>Medium *1286</m><t>递归</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>枚举每一个位置是否反转，并模拟。时间复杂度 O(能过)。</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h02vhvw87kj20vl0u0q4f.jpg" alt="" /></p>
+<p>可以发现原树由 \(n\) 棵完全二叉树组成，然后发现可以暴力。具体地：</p>
+<ul>
+<li>对于节点 \((t,k)\)（第 \(t\) 层第 \(k\) 个） 它父亲一定是 \((t-1,\lfloor \dfrac k 2 \rfloor)\)，继续递归。回溯的时候，若 \(k \equiv 1 \pmod 2\)，则是左子节点，返回相应字母（原字母进一）；反之返回右子节点的字母（原字母进二 / 退一）。</li>
+<li>对于节点 \((0,k)\)，返回第 \(k\) 个源字母。</li>
+</ul>
+<p>然后发现暴力似乎太慢，但又发现 \(k \le 10^{18}\) 这样一个怪异的条件。假如能做到 \(\log k\) 也是能过的。</p>
+<p>考虑对于 \(k\) 已除到 \(0\) 的情况，即返回某一指定层的第一个字母。很容易发现第一个字母是循环的如 <code>ABCABC......</code> 所以结束了。复杂度 \(O(Q \log k)\)。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">bool m[5][5], c[5][5];
+<p>注意负数取模仍是负数。</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
 
-int main() {
-    for (int i = 1; i &lt;= 4; ++i)
-        for (int j = 1; j &lt;= 4; ++j) {
-            char q; std::cin &gt;&gt; q;
-            m[i][j] = (q == '-');
-        }
-    int min = 17, minS = 0;
-    for (int s = 0; s &lt; 1 &lt;&lt; 16; ++s) {
-        memcpy(c, m, sizeof c);
-        int cnt = 0;
-        for (int i = 0; i &lt; 16; ++i)
-            if (s &amp; (1 &lt;&lt; i)) {
-                ++cnt;
-                const int row = i / 4 + 1, col = i % 4 + 1;
-                for (int j = 1; j &lt;= 4; ++j)
-                    c[row][j] ^= 1;
-                for (int j = 1; j &lt;= 4; ++j)
-                    c[j][col] ^= 1;
-                c[row][col] ^= 1;
-            }
-        bool sum = 1;
-        for (int i = 1; i &lt;= 4; ++i)
-            for (int j = 1; j &lt;= 4; ++j)
-                sum &amp;= c[i][j];
-        if (sum &amp;&amp; cnt &lt; min)
-            min = cnt, minS = s;
-    }
-    printf(&quot;%d\n&quot;, min);
-    for (int i = 0; i &lt; 16; ++i)
-        if (minS &amp; (1 &lt;&lt; i))
-            printf(&quot;%d %d\n&quot;, i / 4 + 1, i % 4 + 1);
-    return 0;
+char a[1000001];
+int q, t, k;
+
+char solve(int t, int k) {
+	if (t == 0)
+		return a[k];
+    if (k == 1)
+        return (a[1] - 'A' + t) % 3 + 'A';
+
+    char c = solve(t - 1, (k + 1) &gt;&gt; 1);
+    return (c - 'A' - (k &amp; 1) + 2) % 3 + 'A';
+}
+
+signed main() {
+	scanf(&quot;%s&quot;, a + 1);
+	q = read();
+	while (q--) {
+		t = read(), k = read();
+		printf(&quot;%c\n&quot;, solve(t, k));
+	}
 }
 </code></pre>
 <hr />
-<h2><a id="%E5%8D%A0%E5%8D%9Cdiy" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>占卜 DIY</h2>
-<p><tc><c>0x0802</c><e>Easy</e><t>模拟</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>？？？？？？？</p>
+<h2><a id="e%E2%88%80-x%E2%88%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E (∀x∀)</h2>
+<p><tc><m>Medium- *1365</m><t>递归</t></tc></p>
+<h3><a id="%E5%88%86%E6%9E%90" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>分析</h3>
+<p>毛估估是 \(\le\) 取一半构成的那个回文串的回文串的个数，如果取一半构成的那个回文串不符合那么答案就减一。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">struct Node {
-    int num;
-    bool state;
-};
-std::deque&lt;Node&gt; q[14];
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+#define MOD 998244353
+#define m(x) (((x) + MOD) % MOD)
 
-int trans(char c) {
-    if (c &gt;= '2' &amp;&amp; c &lt;= '9')
-        return c - '0';
-    switch (c) {
-        case '0': return 10;
-        case 'J': return 11;
-        case 'Q': return 12;
-        case 'K': return 13;
-        case 'A': return 1;
-    }
-    return 0;
-}
+int T, n;
+int pow26[2500001];
+char s[2500001];
 
-int buc[14];
-
-int main() {
-    for (int i = 1; i &lt;= 13; ++i) {
-        char c;
-        for (int j = 1; j &lt;= 4; ++j) {
-            std::cin &gt;&gt; c;
-            // front 上，back 下。
-            q[i].push_back({trans(c), false});
-        }
-    }
-    while (q[13].size()) {
-        auto current = q[13].front();
-        q[13].pop_front();
-        while (true) {
-            const int t = current.num;
-            if (t == 13)
+signed main() {
+    pow26[0] = 1;
+    for (int i = 1; i &lt;= 2500000; ++i)
+        pow26[i] = m(26 * pow26[i - 1]);
+    scanf(&quot;%lld&quot;, &amp;T);
+    while (T--) {
+        scanf(&quot;%lld%s&quot;, &amp;n, s);
+        int ans = 1;
+        const int q = (n - 1) &gt;&gt; 1;
+        for (int i = q; i &gt;= 0; --i) 
+            ans = m(ans + m((s[i] - 'A') * pow26[q - i]));
+        bool valid = true;
+        for (int i = q; i &gt;= 0; --i)
+            if (s[n - i - 1] != s[i]) {
+                valid = s[n - i - 1] &gt; s[i];
                 break;
-            q[t].push_front({t, true});
-            current = q[t].back();
-            q[t].pop_back();
-        }
+            }
+        printf(&quot;%lld\n&quot;, m(ans - !valid));
     }
-    for (int i = 1; i &lt;= 13; ++i)
-        while (q[i].size())
-            buc[q[i].front().num] += q[i].front().state,
-            q[i].pop_front();
-    int ans = 0;
-    for (int i = 1; i &lt; 13; ++i)
-        if (buc[i] == 4)
-            ++ans;
-    std::cout &lt;&lt; ans &lt;&lt; std::endl;
-    return 0;
 }
 </code></pre>
-<hr />
-<h2><a id="fractal" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal</h2>
-<p><tc><c>0x0803</c><e>Easy</e><t>模拟</t><t>分形</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>？？？？？？？</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n;
-int pow3[1001];
-char res[1001][1001];
-
-void fractal(int x, int y, int level) {
-    if (level == 1) {
-        res[x][y] = 'X';
-        return;
-    }
-    const int t = pow3[level - 2];
-    fractal(x, y, level - 1);
-    fractal(x + (t &lt;&lt; 1), y, level - 1);
-    fractal(x, y + (t &lt;&lt; 1), level - 1);
-    fractal(x + (t &lt;&lt; 1), y + (t &lt;&lt; 1), level - 1);
-    fractal(x + t, y + t, level - 1);
-}
-
-int main() {
-    pow3[0] = 1;
-    for (int i = 1; i &lt;= 7; ++i)
-        pow3[i] = pow3[i - 1] * 3;
-    while (scanf(&quot;%d&quot;, &amp;n)) {
-        if (n == -1)
-            break;
-        memset(res, ' ', sizeof res);
-        fractal(1, 1, n);
-        for (int i = 1; i &lt;= pow3[n - 1]; ++i) {
-            for (int j = 1; j &lt;= pow3[n - 1]; ++j)
-                printf(&quot;%c&quot;, res[i][j]);
-            putchar('\n');
-        }
-        puts(&quot;-&quot;);
-    }
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="raid" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raid</h2>
-<p><tc><c>0x0804</c></tc></p>
-<p>疑似只能用玄学算法卡过，最坏情况 \(n^2\)。。。先跳过了。</p>
 
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x0805 ~ 0x0808]]></title>
-    <link href="oi.afobject.ml/0x08-2.html"/>
-    <updated>2022-04-04T22:22:36+08:00</updated>
-    <id>oi.afobject.ml/0x08-2.html</id>
+    <title type="html"><![CDATA[Codeforces Round #773 (Div.2)]]></title>
+    <link href="oi.afobject.ml/cf1642.html"/>
+    <updated>2022-02-28T22:52:43+08:00</updated>
+    <id>oi.afobject.ml/cf1642.html</id>
     <content type="html"><![CDATA[
-<h2><a id="%E9%98%B2%E7%BA%BF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>防线</h2>
-<p><tc><c>0x0805</c><e>Easy</e><t>二分</t><t>前缀和</t></tc></p>
+<p>[5/6] Rated, 3/6, 1353 \(\to\) 1448</p>
+<h2><a id="1641b-1642d-repetitions-decoding" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1641B (1642D) Repetitions Decoding</h2>
+<p><tc><m>Medium *2000</m><t>构造</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>《人工 h1》<strong>最多只有一个事奇数的位置！</strong>《/人工 h1》</p>
-<p>所以直接二分出第一个出现前缀和为奇数的位置就好了。</p>
+<p>场上思路：找到第一个 \(i\) 使得 \(a_i=a_1\)（例如 <code>ABCDADBC</code>）。在 \(i\) 后面插入 <code>ABCDDCBA</code> 这种形式的一串（<code>ABCDABCDDCBDBC</code>），然后发现前面可以消，只剩 <code>DCBDBC</code>。这个序列相较于原序列长度少 \(2\)，完全可行，操作次数也肉眼可见地不会太多。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>样例搞偷袭不讲武德！!1</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
+<p>随便开个 STL 模拟。</p>
+<pre class="line-numbers"><code class="language-cpp">
+#define MP std::make_pair
 
 int T, n;
-int s[200001], e[200001], d[200001];
+std::vector&lt;int&gt; a;
+std::map&lt;int, int&gt; m;
 
-int upper(int x, int y) {
-    if (x % y) return x / y + 1;
-    else return x / y;
+std::vector&lt;std::pair&lt;int, int&gt;&gt; op;
+std::vector&lt;int&gt; v;
+
+void solve(int d) {
+    if (a.size() &lt;= 1)
+        return;
+
+    int pos = 0, len = 0;
+    for (int i = 2; i &lt; a.size(); ++i)
+        if (a[i] == a[1]) {
+            pos = i;
+            len = pos - 1;
+            break;
+        }
+
+    for (int i = pos; i &lt; pos + len - 1; ++i)
+        op.push_back(MP(i + d, a[i - len + 1]));
+    v.push_back(len &lt;&lt; 1);
+
+    a.erase(a.begin() + pos);
+    a.erase(a.begin() + 1);
+    for (int i = 1, j = pos - 2; i &lt;= j; ++i, --j)
+        std::swap(a[i], a[j]);
+
+    solve(d + (len &lt;&lt; 1));
 }
 
-int sum(int x) {
-    if (x &lt; 0) return 0;
+int main() {
+    T = read();
+    while (T--) {
+        n = read();
+        m = std::map&lt;int, int&gt;();
+        a = std::vector&lt;int&gt;();
+        op = std::vector&lt;std::pair&lt;int, int&gt;&gt;();
+        v = std::vector&lt;int&gt;();
+        a.resize(n + 1);
+
+        for (int i = 1; i &lt;= n; ++i)
+            a[i] = read(), ++m[a[i]];
+        bool flag = true;
+        for (auto [x, y] : m)
+            if (y &amp; 1)
+                flag = false;
+        if (!flag) {
+            puts(&quot;-1&quot;);
+            continue;
+        }
+        solve(0);
+        printf(&quot;%d\n&quot;, (int)op.size());
+        for (auto [x, y] : op)
+            printf(&quot;%d %d\n&quot;, x, y);
+        printf(&quot;%d\n&quot;, (int)v.size());
+        for (int len : v)
+            printf(&quot;%d &quot;, len);
+        putchar('\n');
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="1641c-1642e-anonymity-is-important" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1641C (1642E) Anonymity Is Important</h2>
+<p><tc><m>Medium+ *2200</m><t>DS</t><t>线段树</t><t>STL</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>「1」型区间为至少包含一个病人的区间，「0」型区间为不包含病人的区间。</p>
+<ul>
+<li>回答 <code>NO</code>：\(x\) 号病人包含在任意一个「0」区间中。</li>
+<li>回答 <code>YES</code>：\(x\) 号病人包含且仅包含在「1」区间中，且<strong>存在一个包含它的「1」区间，使得除了它以外的所有病人都在「0」区间</strong>。</li>
+<li>回答 <code>N/A</code>：不属于以上两种情况。</li>
+</ul>
+<p>接下来我们用 C 表示确定不是病人，U 表示不确定是否是病人的人。</p>
+<p>一开始的数列一定是 <code>UUUU...UUU</code>。当报告一个区间内没有病人时，数列会变成类似这样：<code>UUCC...CCUUUU</code>。</p>
+<p>接下来考虑 <code>YES</code> 情况的维护。通俗一点来讲，显然当一个 U 周围也是 U 的时候，就很难确定它；当一个 U 左右都是 C 时，确定它是否是病人就更容易一些。进一步思考，可以发现：</p>
+<pre class="line-numbers"><code class="language-plain_text">...UUUCCCCCCUCCCCCUUU....
+      o     ^    o
+</code></pre>
+<p>假设被 <code>^</code> 标记的 U 是我们的研究对象。当且仅当在<strong>它以及它左右 C 的连续段（两个 <code>o</code> 标记中间）中</strong>，存在一个包含这个 U 的「1」区间，U 才可以被确定为病人。</p>
+<p>如果将所有的 U 用 <code>std::set</code> 维护，那么这就很简单了，直接就找中间那个 U（设其下标为 \(x\)）的前驱后继（设它们的下标为 \(l,r\)）即可。接下来，需要判定上述的区间是否存在。可以发现区间的左端点一定是在 U 左边那个 C 的连续段，因此<strong>只要存在一个以 \((l,x]\) 为起点的「1」区间，其右端点在 \([x, r)\)，那么 \(x\) 就确定是病人</strong>。</p>
+<p>这部分可以使用一个单点修改、区间查询最小值的线段树 \(t\) 来维护。当输入一个「1」区间时，将 \(t_l\) 单点赋值为 \(\min\{t_l, r\}\) 即可。查询时判断 \(\operatorname{query}(l+1,x)\) 与 \(r\) 的大小关系就行了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+#include &lt;set&gt;
+
+#define lt(x) ((x) &lt;&lt; 1)
+#define rt(x) (lt(x) + 1)
+
+int n, m;
+
+int read() {
+    int ans = 0, neg = 1; char ch = getchar();
+    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
+    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
+    return ans * neg;
+}
+
+namespace SegTree {
+    int t[1000001];
+
+    void build(int x = 1, int l = 1, int r = n) {
+        t[x] = n + 1;
+        if (l == r)
+            return;
+        const int mid = (l + r) &gt;&gt; 1;
+        build(lt(x), l, mid);
+        build(rt(x), mid + 1, r);
+    }
+
+    void modify(int p, int a, int x = 1, int _l = 1, int _r = n) {
+        if (_l == _r) {
+            t[x] = std::min(t[x], a);
+            return;
+        }
+        const int mid = (_l + _r) &gt;&gt; 1;
+        if (p &lt;= mid)
+            modify(p, a, lt(x), _l, mid);
+        else
+            modify(p, a, rt(x), mid + 1, _r);
+        t[x] = std::min(t[lt(x)], t[rt(x)]);
+    }
+
+    int query(int l, int r, int x = 1, int _l = 1, int _r = n) {
+        if (l &lt;= _l &amp;&amp; _r &lt;= r)
+            return t[x];
+        const int mid = (_l + _r) &gt;&gt; 1;
+        int ans = n + 1;
+        if (l &lt;= mid)
+            ans = std::min(ans, query(l, r, lt(x), _l, mid));
+        if (r &gt; mid)
+            ans = std::min(ans, query(l, r, rt(x), mid + 1, _r));
+        return ans;
+    }
+};
+
+std::set&lt;int&gt; s;
+
+int main() {
+    n = read(), m = read();
+    SegTree::build();
+    for (int i = 0; i &lt;= n + 1; ++i)
+        s.insert(i);
+    while (m--) {
+        int t = read();
+        if (!t) {
+            int l = read(), r = read(), op = read();
+            if (!op) {
+                while (!s.empty()) {
+                    int pos = *s.lower_bound(l);
+                    if (pos &lt;= r)
+                        s.erase(pos);
+                    else
+                        break;
+                }
+            } else {
+                SegTree::modify(l, r);
+            }
+        } else {
+            int x = read();
+            if (!s.count(x))
+                puts(&quot;NO&quot;);
+            else {
+                auto i = s.lower_bound(x), j = s.upper_bound(x);
+                --i;
+                if (SegTree::query((*i) + 1, x) &lt; *j)
+                    puts(&quot;YES&quot;);
+                else
+                    puts(&quot;N/A&quot;);
+            }
+        }
+    }
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[0x06 倍增]]></title>
+    <link href="oi.afobject.ml/0x06-.html"/>
+    <updated>2022-02-19T13:19:02+08:00</updated>
+    <id>oi.afobject.ml/0x06-.html</id>
+    <content type="html"><![CDATA[
+<p>倍增：将状态空间划分成若干个 2 的次幂的大小。</p>
+<h2><a id="%E9%93%BA%E5%9E%AB" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>铺垫</h2>
+<p>给定一个数列 \(A\) 和若干次询问，每次给出一个 \(T\)，求 \(k_{\max}\ s.t.\ \sum_{i=1}^k \le T\)。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<h4><a id="%E6%96%B9%E6%A1%881%EF%BC%9A%E5%9C%A8%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%AD-naive%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 1：在前缀和中 naive 二分</h4>
+<p>复杂度恒定是 <strong>\(\log n\)</strong> 把大概。</p>
+<h4><a id="%E6%96%B9%E6%A1%882%EF%BC%9A%E5%80%8D%E5%A2%9E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 2：倍增</h4>
+<p>这个 \(k\) 是要找的这个前缀的长度，<strong>每次尝试往 \(k\) 里面加 \(2\) 的次幂（\(2^p\)）</strong> 就行了。如果加了以后符合要求那么 \(k \gets k + 2^p\)，\(p \gets p+1\)，否则不加且 \(p \gets p - 1\)。\(p &lt; 0\) 的时候结束。</p>
+<p>区别就是复杂度是 <strong>\(\log \text{答案}\)</strong> 差不多。这玩意相对于 \(\log\) 感觉有一定常数（差不多 3）。我也不清楚为什么要这么做。就是这样。</p>
+<p>感觉有一种平凡优化这里不写了。</p>
+<hr />
+<h2><a id="genius-acm" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Genius ACM</h2>
+<p><tc><c>0x0601</c><h>Hard</h><t>数学</t><t>排序</t><t>倍增</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>首先 \(\sum\limits_{i=1}^{m}(a_i - b_i)^2 = \sum\limits_{i=1}^{m} a_i^2 + \sum\limits_{i=1}^{m} b_i^2 -\sum\limits_{i=1}^{m} a_i b_i\)，所以要使两两的乘积最小。</p>
+<blockquote>
+<h4><a id="%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>排序不等式</h4>
+<ol>
+<li>给定 \(a,b\) 两个数列，证明：当 \(a_i,b_i\) 均不降时，\(\sum a_ib_i\) 最大。</li>
+</ol>
+<p>简略证明：</p>
+<ul>
+<li>假设 \(x_1\le x_2,x_3 \le x_4\)，由于 \((x_1-x_2)(x_3-x_4) \ge 0\)，则 \(x_1x_4+x_2x_3 \ge x_1x_3+x_2x_4\)（1）。</li>
+<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不降），设存在 \(b_i, b_j\) 乱序，且它们分别对应 \(a_i, a_j\)（\(b_i&gt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i&gt;b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不降，结果最优。</li>
+<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不降），同理。</li>
+</ul>
+<p>所以要求 \(a,b\) 均不降。</p>
+<hr />
+<ol start="2">
+<li>在（1）的条件下，当 \(a,b\) 中的一个倒序时，证明：此时 \(\sum a_ib_i\) 最小。</li>
+</ol>
+<p>简略证明：</p>
+<ul>
+<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不升），设存在 \(b_i, b_j\) 非逆序，且它们分别对应 \(a_i, a_j\)（\(b_i&lt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i &lt; b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不升，结果最优。</li>
+<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不升），同理。</li>
+<li>得证。</li>
+</ul>
+</blockquote>
+<p>由<strong>排序不等式</strong>，知应当最大对最大，第二大对第二大……最小对最小，此时的 \(\sum (a_i-b_i)^2\) 就是「校验值」。</p>
+<p>但这并不是重点。</p>
+<p>问题转化为固定一个 \(L\)，求最小的 \(R &gt; L\) 使得 \(f([L, R]) \le T\)。要求「校验值」，必须排序，至少用时 \(O(n \log n)\)。然后 \(n \le 5 \times 10^5\)，好好好，如果每段都很少那么二分屁用没有（\(n\) 级别段，每一段找 \(R\) 二分 \(\log n\) 次总排序 \(n \log n\) 级，感觉得卡成 \(n^2 \log n\)，寄了）。</p>
+<p>😅 倍增，固定一个左端点往右扩展，复杂度 \(\sum len \log len\)（块数次倍增，每次倍增对一段排序，排序的总时间 \(n \log n\)，归并以及计算「校验值」的总时间差不多 \(O(n)\) 带点常数）左右吧，总复杂度大约 \(n \log n\) 可以接受（吧），自带巨大常数但是时限 10s。</p>
+<blockquote>
+<p>776 告诉我 \(\sum len \log len \le n \log n\)。</p>
+</blockquote>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<ol>
+<li>固定一个 \(l\)</li>
+<li>倍增求 \(r\)
+<ol>
+<li>对未排序的部分进行归并排序</li>
+<li>求出「校验值」</li>
+<li>根据「校验值」大小判断当前的 \(r\) 是否满足条件</li>
+<li>回到 1，直到倍增结束（\(p=0\)）</li>
+</ol>
+</li>
+<li>回到 1，直到得到结果（\(r=n\)）</li>
+</ol>
+<p>谢邀，人在太平间，写吐了</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int T, n, m, k;
+// a 原数组不动
+// t 是排好序的
+// q 是辅助
+// copy 是缓存
+int a[5000001], t[5000001], q[5000001], copy[5000001];
+
+void mergeSort(int l0, int l, int r) {
+    r = std::min(r, n);
+    for (int i = l; i &lt;= r; ++i)
+        t[i] = a[i];
+    
+    std::sort(t + l, t + r + 1);
+
+    int lp = l0, tp = l0, rp = l;
+    while (lp &lt; l &amp;&amp; rp &lt;= r)
+        if (t[lp] &lt; t[rp]) q[tp++] = t[lp++];
+        else q[tp++] = t[rp++];
+    while (lp &lt; l) q[tp++] = t[lp++];
+    while (rp &lt;= r) q[tp++] = t[rp++];
+
+    for (int i = l0; i &lt;= r; ++i)
+        t[i] = q[i];
+}
+
+int captcha(int l, int r) {
+    r = std::min(r, n);
     int ans = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        if (s[i] &lt;= x)
-            ans += upper(std::min(e[i], x) - s[i] + 1, d[i]);
+    for (int i = 0; i &lt; m &amp;&amp; l &lt; r; ++i, --r, ++l)
+        ans += (t[r] - t[l]) * (t[r] - t[l]);
     return ans;
 }
 
 signed main() {
     T = read();
     while (T--) {
-        n = read();
+        n = read(), m = read(), k = read();
         for (int i = 1; i &lt;= n; ++i)
-            s[i] = read(), e[i] = read(), d[i] = read();
-        int l = 0, r = 1ll &lt;&lt; 31;
-        while (l &lt; r) {
-            const int mid = (l + r) &gt;&gt; 1;
-            if (sum(mid) &amp; 1) r = mid;
-            else l = mid + 1;
+            a[i] = read();
+        int l0 = 1, ans = 0; // 1
+        while (l0 &lt;= n) {
+            int l = l0, p = 1; bool r = false;
+            while (p) {
+                for (int i = l0; i &lt; l + p; ++i)
+                    copy[i] = t[i]; // 保存当前的快照，以在 c &gt; k 时得以返回上一状态
+                mergeSort(l0, l, l + p - 1); // 2.1
+                const int c = captcha(l0, l + p - 1); // 2.2
+                if (c &lt;= k) { // 2.3
+                    l += p;
+                    if (l &gt; n) break; // 2.4
+                    if (!r)
+                        p &lt;&lt;= 1;
+                } else {
+                    p &gt;&gt;= 1;
+                    r = true;
+                    for (int i = l0; i &lt; l + p; ++i)
+                        t[i] = copy[i];
+                }
+            }
+            ++ans;
+            l0 = l;
         }
-        if (l == 1ll &lt;&lt; 31) puts(&quot;There's no weakness.&quot;);
-        else printf(&quot;%lld %lld\n&quot;, l, sum(l) - sum(l - 1));
+        printf(&quot;%lld\n&quot;, ans); // 3
     }
-    return 0;
 }
 </code></pre>
 <hr />
-<h2><a id="corral-the-cows" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Corral the Cows</h2>
-<p><tc><c>0x0806</c><c>USACO</c><e>Easy+</e><t>二分</t><t>前缀和</t><t>离散化</t></tc></p>
+<h2><a id="st%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>ST 表</h2>
+<p><tc><c>LG3865</c></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>由于 \(n\) 极小，考虑离散化。</p>
-<p>离散化完了以后照样二分就完了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>注意：</p>
-<ol>
-<li>处理重合的点；</li>
-<li>边界情况。</li>
-</ol>
-<pre class="line-numbers"><code class="language-cpp">int n, c;
-int x[501], y[501];
-int a[501], b[501];
-int sizeA, sizeB;
-int x1[501], y1[501];
-int g[501][501];
-
-int xid(int x) {
-    return std::lower_bound(a + 1, a + sizeA, x) - a;
-}
-int yid(int y) {
-    return std::lower_bound(b + 1, b + sizeB, y) - b;
-}
-
-bool check(int d) {
-    for (int a2 = 1; a2 &lt; sizeA; ++a2)
-        for (int b2 = 1; b2 &lt; sizeB; ++b2) {
-            const int a1 = xid(x1[a2] - d + 1),
-                      b1 = yid(y1[b2] - d + 1);
-            const int sum = g[a2][b2] - g[a1 - 1][b2] - g[a2][b1 - 1] + g[a1 - 1][b1 - 1];
-            if (sum &gt;= c)
-                return true;
-        }
-    return false;
-}
-
-int main() {
-    c = read(), n = read();
-    for (int i = 1; i &lt;= n; ++i) {
-        x[i] = a[i] = read();
-        y[i] = b[i] = read();
-    }
-
-    std::sort(a + 1, a + n + 1);
-    std::sort(b + 1, b + n + 1);
-    sizeA = std::unique(a + 1, a + n + 1) - a;
-    sizeB = std::unique(b + 1, b + n + 1) - b;
-    for (int i = 1; i &lt;= n; ++i) {
-        const int p = xid(x[i]), q = yid(y[i]);
-        x1[p] = x[i], y1[q] = y[i];
-        ++g[p][q];
-    }
-    for (int i = 1; i &lt;= n; ++i)
-        for (int j = 1; j &lt;= n; ++j)
-            g[i][j] += g[i - 1][j] + g[i][j - 1] - g[i - 1][j - 1];
-
-    int l = 1, r = 1e5;
-    while (l &lt; r) {
-        const int mid = (l + r) &gt;&gt; 1;
-        if (check(mid)) r = mid;
-        else l = mid + 1;
-    }
-    printf(&quot;%d\n&quot;, l);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E7%B3%96%E6%9E%9C%E4%BC%A0%E9%80%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>糖果传递</h2>
-<p><tc><c>0x0807</c><c>HAOI 2008</c><e>Easy+</e><t>前缀和</t><t>数学</t><t>环上问题</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>0x0503 简化版，这里重新推导一遍，思路可能不同。</p>
-<p>先破环成链。假如在 \(a_1\) 与 \(a_n\) 之间断开。</p>
-<p>要让 \(a_1\) 达到 \(\overline{a}\)，则需要 \(a_2\) 提供它 \(\overline{a}-a_1\)（不管正负），贡献增加 \(\mid\overline{a}-a_1\mid\)。</p>
-<p>此时 \(a_2 \gets a_1 + a_2 - \overline{a}\)。想让 \(a_2\) 达到 \(\overline{a}\)，那么就要 \(a_3\) 给它 \(\overline{a}-(a_1+a_2-\overline{a})=2\cdot\overline{a}-(a_1+a_2)\)，贡献增加 \(\mid2\cdot\overline{a}-(a_1+a_2)\mid\)。</p>
-<p>可以发现，总答案为</p>
-\[\sum_{i=1}^n\left|i \cdot \overline{a}-\sum_{j=1}^ia_j\right|
-\]
-<p>假如双倍一下，进一步推广，破环破在 \(a_{k+1}\) 与 \(a_k\) 之间的，总答案为</p>
-\[\sum_{i=1}^{n}\left|i \cdot \overline{a}-\sum_{j=k+1}^{i+k}a_j\right|
-\]
-<p>设前缀和数组为 \(s\)，即 \(s_i = \sum\limits_{j=1}^ia_j\)。</p>
-<p>答案变形为</p>
-\[\sum_{i=1}^{n}\left|i \cdot \overline{a}-s_{i+k}+s_{k}\right|
-\]
-<p>前面那个东西实在是不顺眼，所以我们让 \(a_i \gets a_i-\overline{a}\) 再计算前缀和 \(s\)，答案变形为：</p>
-\[\sum_{i=1}^{n}\left|s_{k}-s_{i+k}\right|
-\]
-<p>\(s_k\) 定，考虑到 \(s_n=0\)，而因为珈贝了，我们这里的前缀和 \(s\) 的值域是 \(2n\)，\(s_{n+j}=s_{j}\)，所以式子里的 \(s_{i+k}\) 可以取到 \(s_1 \sim s_n\) 的任何值，所以答案也就是</p>
-\[\sum_{i=1}^{n}\left|s_{k}-s_i\right|
-\]
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-#define abs(x) ((x) &gt; 0 ? (x) : -(x))
-
-int n;
-int a[1000001], s[1000001];
-
-signed main() {
-    n = read();
-    int sum = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        a[i] = read(), sum += a[i];
-    const int aver = sum / n;
-    for (int i = 1; i &lt;= n; ++i)
-        s[i] = s[i - 1] + a[i] - aver;
-    std::sort(s + 1, s + n + 1);
-    int ans = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        ans += abs(s[(n + 1) &gt;&gt; 1] - s[i]);
-    printf(&quot;%lld\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="soldiers" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Soldiers</h2>
-<p><tc><c>0x0808</c><m>Medium-</m><t>数学</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>纵坐标移到中位数容易证明，接下来考虑横坐标。</p>
-<p>首先证明一个事：按 \(x\) 坐标排序后，每个点的顺序与最终结果相同。</p>
-<blockquote>
-<h4><a id="%E8%AF%81%E6%98%8E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>证明</h4>
-<p>若交换一组 \((i,j)\)（\(x_i&gt;x_j\) 且 \(a_i&gt;a_j\)）那么答案将减少 \(\Delta=\mid x_i - a_i \mid + \mid  x_j - a_j \mid - \mid x_i - a_j \mid - \mid x_j - a_i \mid\)</p>
+<p>\(f(l,k)\) 为 \([l, l + 2^k)\) 的 \(\max\)。</p>
 <ul>
-<li>
-<p>若 \(x_j &gt; a_i\) 或 \(x_i &lt; a_j\)：\(\Delta=0\)</p>
-</li>
-<li>
-<p>若 \(a_j&lt;x_j&lt;a_i&lt;x_i\)：\(\Delta=x_i-a_i+x_j-a_j-x_i+a_j+x_j-a_i=2\cdot x_j-2\cdot a_i&lt;0\)</p>
-</li>
-<li>
-<p>若 \(a_j&lt;x_j&lt;x_i&lt;a_i\)：\(\Delta=a_i-x_i+x_j-a_j-x_i+a_j+x_j-a_i=2\cdot x_j-2\cdot x_i&lt;0\)</p>
-</li>
-<li>
-<p>若 \(x_j&lt;a_j&lt;x_i&lt;a_i\)：\(\Delta=a_i-x_i+a_j-x_j-x_i+a_j+x_j-a_i=2\cdot a_j-2\cdot x_i&lt;0\)</p>
-</li>
-<li>
-<p>若 \(x_j&lt;a_j&lt;a_i&lt;x_i\)：\(\Delta=x_i-a_i+a_j-x_j-x_i+a_j+x_j-a_i=2\cdot a_j-2\cdot a_i&lt;0\)</p>
-</li>
+<li>\(\forall i, f(i,0) = a_i\)。</li>
+<li>\(f(l,k) = \max\{f(l,k-1),f(l+2^{k-1},k-1)\}\)</li>
 </ul>
-<p>所以是正确的。</p>
-</blockquote>
-<p>然后就容易了，因为本来 \(x\) 坐标很小或者很大的，到时候相对于其他点就一定可以少移动一点。所以先把这个东西消掉，因此这个时候就处理好，向最右边的看齐，从右到左第 \(i\) 个点的横坐标加上 \(i\)（也可以当成，向最左边的对齐，从左到右第 \(i\) 个点的横坐标减去 \(i\)）。</p>
-<p>更理性一点，设最终移到 \( a+1, a+2, \ldots, a+n\)。那么第 \(i\) 个点的贡献是 \(\mid x_i-(a+i) \mid=\mid (x_i-i)-a \mid\)。所以 \(x_i \gets x_i-i\) 即可。</p>
-<p>这个时候，就可以照常取中位数然后算答案了。管他上一步是加还是减，相对坐标差不变，答案不变就完了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+<p>求和：令 \(k=\log_2(r-l+1)\)。</p>
+<p>\(f(l,r) = \max\{f(l,k),f(r-2^k+1,k)\}\)（这两个区间能覆盖 \([l, r]\)）。</p>
+<p>最小值同理。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%9C%80%E5%A4%A7%E5%80%BC%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现（最大值）</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, q;
+int f[5000001][31];
 
-int n, x[10001], y[10001];
+int query(int l, int r) {
+    const int k = log2(r - l + 1);
+    return std::max(f[l][k], f[r - (1 &lt;&lt; k) + 1][k]);
+}
 
-int main() {
-    n = read();
+void cal() {
     for (int i = 1; i &lt;= n; ++i)
-        x[i] = read(), y[i] = read();
-    std::sort(x + 1, x + n + 1);
-    for (int i = 1; i &lt;= n; ++i)
-        x[i] -= i;
-    std::sort(y + 1, y + n + 1);
-    std::sort(x + 1, x + n + 1);
-    int ans = 0, x0 = x[(n + 1) &gt;&gt; 1], y0 = y[(n + 1) &gt;&gt; 1];
-    for (int i = 1; i &lt;= n; ++i)
-        ans += abs(x[i] - x0) + abs(y[i] - y0);
-    printf(&quot;%d\n&quot;, ans);
-    return 0;
+        f[i][0] = read();
+    for (int k = 1; k &lt;= 30; ++k)
+        for (int i = 1; i + (1 &lt;&lt; (k - 1)) &lt;= n; ++i)
+            f[i][k] = std::max(f[i][k - 1], f[i + (1 &lt;&lt; (k - 1))][k - 1]);
 }
 </code></pre>
 

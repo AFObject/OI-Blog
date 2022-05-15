@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x06 倍增 - OI Blog
+    Educational Codeforces Round #128 (Div.2) - OI Blog
     
     </title>
     <link rel="shortcut icon" href="media/16415680135532/diana2.jpg" type="image/png" />
@@ -91,7 +91,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x06 倍增   
+                            Educational Codeforces Round #128 (Div.2)   
                       </h1>
                      
                     
@@ -108,10 +108,10 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/02/19</span>
+                                 <span class="date">2022/05/14</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
-                                      <span class="posted-in"><a href='0x06.html'>0x06 倍增</a></span>
+                                      <span class="posted-in"><a href='contests.html'>比赛记录</a></span>
                                          
                                   
 
@@ -120,13 +120,15 @@
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
                                   
-                                    <c><a href='tag_%E6%8E%92%E5%BA%8F.html'>#排序</a></c>
+                                    <c><a href='tag_DP.html'>#DP</a></c>
                                   
-                                    <c><a href='tag_%E5%80%8D%E5%A2%9E.html'>#倍增</a></c>
+                                    <c><a href='tag_CF.html'>#CF</a></c>
                                   
                                     <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
                                   
-                                    <c><a href='tag_ST.html'>#ST</a></c>
+                                    <c><a href='tag_%E4%BA%8C%E5%88%86.html'>#二分</a></c>
+                                  
+                                    <c><a href='tag_%E5%89%8D%E7%BC%80%E5%92%8C.html'>#前缀和</a></c>
                                      
 
                                 </p>
@@ -136,160 +138,94 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <p>倍增：将状态空间划分成若干个 2 的次幂的大小。</p>
-<h2><a id="%E9%93%BA%E5%9E%AB" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>铺垫</h2>
-<p>给定一个数列 \(A\) 和若干次询问，每次给出一个 \(T\)，求 \(k_{\max}\ s.t.\ \sum_{i=1}^k \le T\)。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<h4><a id="%E6%96%B9%E6%A1%881%EF%BC%9A%E5%9C%A8%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%AD-naive%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 1：在前缀和中 naive 二分</h4>
-<p>复杂度恒定是 <strong>\(\log n\)</strong> 把大概。</p>
-<h4><a id="%E6%96%B9%E6%A1%882%EF%BC%9A%E5%80%8D%E5%A2%9E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 2：倍增</h4>
-<p>这个 \(k\) 是要找的这个前缀的长度，<strong>每次尝试往 \(k\) 里面加 \(2\) 的次幂（\(2^p\)）</strong> 就行了。如果加了以后符合要求那么 \(k \gets k + 2^p\)，\(p \gets p+1\)，否则不加且 \(p \gets p - 1\)。\(p &lt; 0\) 的时候结束。</p>
-<p>区别就是复杂度是 <strong>\(\log \text{答案}\)</strong> 差不多。这玩意相对于 \(\log\) 感觉有一定常数（差不多 3）。我也不清楚为什么要这么做。就是这样。</p>
-<p>感觉有一种平凡优化这里不写了。</p>
+                    <p>[5/6] Alt (Rated), 3/6, 1071 \(\to\) 1278</p>
+<h2><a id="1680c-binary-string" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680C Binary String</h2>
+<p><tc><m>Medium-</m><t>二分</t><t>前缀和</t></tc></p>
+<p>场切了，想出二分没觉得特难，到时候看看 \(O(n)\) 做法是什么。</p>
 <hr />
-<h2><a id="genius-acm" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Genius ACM</h2>
-<p><tc><c>0x0601</c><h>Hard</h><t>数学</t><t>排序</t><t>倍增</t></tc></p>
+<h2><a id="1680d-dog-walking" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680D Dog Walking</h2>
+<p><tc><m>Medium+</m><t>数学</t><t>贪心</t><t>前缀和</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>首先 \(\sum\limits_{i=1}^{m}(a_i - b_i)^2 = \sum\limits_{i=1}^{m} a_i^2 + \sum\limits_{i=1}^{m} b_i^2 -\sum\limits_{i=1}^{m} a_i b_i\)，所以要使两两的乘积最小。</p>
-<blockquote>
-<h4><a id="%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>排序不等式</h4>
-<ol>
-<li>给定 \(a,b\) 两个数列，证明：当 \(a_i,b_i\) 均不降时，\(\sum a_ib_i\) 最大。</li>
-</ol>
-<p>简略证明：</p>
+<p>题面太长不看。稍微简化一下题面：将数列中的 \(0\) 都替换成 \([-k,k]\) 中的一个数后，令前缀和数组为 \(s\)，最大化 \(\max\{s\}-\min\{s\}\) 且 \(s_n=0\)（很容易判断，当 \(\mid s_n\mid\) 大于 0 的个数乘以 \(k\) 的时候，必然无解）。</p>
+<p>由这个式子不难想到最大子段和的前缀和解法，可以差不多地理解一下，这个 \(\max\{s\}-\min\{s\}\) 代表的是原数列中的<strong>一段区间和（的绝对值）</strong>。然后注意到 \(1 \le n \le 3000\) 的良心范围，考虑直接枚举这个区间的左、右端点。最优化的方案必然是要么 0 全替换为 \(k\)，要么全替换为 \(-k\)。</p>
+<p>但要求 \(s_n=0\)，怎么处理这个条件也是难点之一。关键点在于看被选择的区间内、外的和能否达到平衡，即「归零」：</p>
 <ul>
-<li>假设 \(x_1\le x_2,x_3 \le x_4\)，由于 \((x_1-x_2)(x_3-x_4) \ge 0\)，则 \(x_1x_4+x_2x_3 \ge x_1x_3+x_2x_4\)（1）。</li>
-<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不降），设存在 \(b_i, b_j\) 乱序，且它们分别对应 \(a_i, a_j\)（\(b_i&gt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i&gt;b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不降，结果最优。</li>
-<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不降），同理。</li>
+<li>当区间内的和为一个正数 \(p\)，区间外的和的最小值为 \(p'_{\min}\)，我们想要使 \(p+p'_{\min}=0\)，因此答案取 \(\min\{p, \mid p'_{\min} \mid\}\)；</li>
+<li>同理，当区间内的和为一个负数 \(-p\)，区间外的和的最大值为 \(p'_{\max}\)，答案取 \(\min\{\mid p \mid, p'_{\max}\}\)。</li>
 </ul>
-<p>所以要求 \(a,b\) 均不降。</p>
-<hr />
-<ol start="2">
-<li>在（1）的条件下，当 \(a,b\) 中的一个倒序时，证明：此时 \(\sum a_ib_i\) 最小。</li>
-</ol>
-<p>简略证明：</p>
-<ul>
-<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不升），设存在 \(b_i, b_j\) 非逆序，且它们分别对应 \(a_i, a_j\)（\(b_i&lt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i &lt; b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不升，结果最优。</li>
-<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不升），同理。</li>
-<li>得证。</li>
-</ul>
-</blockquote>
-<p>由<strong>排序不等式</strong>，知应当最大对最大，第二大对第二大……最小对最小，此时的 \(\sum (a_i-b_i)^2\) 就是「校验值」。</p>
-<p>但这并不是重点。</p>
-<p>问题转化为固定一个 \(L\)，求最小的 \(R &gt; L\) 使得 \(f([L, R]) \le T\)。要求「校验值」，必须排序，至少用时 \(O(n \log n)\)。然后 \(n \le 5 \times 10^5\)，好好好，如果每段都很少那么二分屁用没有（\(n\) 级别段，每一段找 \(R\) 二分 \(\log n\) 次总排序 \(n \log n\) 级，感觉得卡成 \(n^2 \log n\)，寄了）。</p>
-<p>😅 倍增，固定一个左端点往右扩展，复杂度 \(\sum len \log len\)（块数次倍增，每次倍增对一段排序，排序的总时间 \(n \log n\)，归并以及计算「校验值」的总时间差不多 \(O(n)\) 带点常数）左右吧，总复杂度大约 \(n \log n\) 可以接受（吧），自带巨大常数但是时限 10s。</p>
-<blockquote>
-<p>776 告诉我 \(\sum len \log len \le n \log n\)。</p>
-</blockquote>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<ol>
-<li>固定一个 \(l\)</li>
-<li>倍增求 \(r\)
-<ol>
-<li>对未排序的部分进行归并排序</li>
-<li>求出「校验值」</li>
-<li>根据「校验值」大小判断当前的 \(r\) 是否满足条件</li>
-<li>回到 1，直到倍增结束（\(p=0\)）</li>
-</ol>
-</li>
-<li>回到 1，直到得到结果（\(r=n\)）</li>
-</ol>
-<p>谢邀，人在太平间，写吐了</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int T, n, m, k;
-// a 原数组不动
-// t 是排好序的
-// q 是辅助
-// copy 是缓存
-int a[5000001], t[5000001], q[5000001], copy[5000001];
-
-void mergeSort(int l0, int l, int r) {
-    r = std::min(r, n);
-    for (int i = l; i &lt;= r; ++i)
-        t[i] = a[i];
-    
-    std::sort(t + l, t + r + 1);
-
-    int lp = l0, tp = l0, rp = l;
-    while (lp &lt; l &amp;&amp; rp &lt;= r)
-        if (t[lp] &lt; t[rp]) q[tp++] = t[lp++];
-        else q[tp++] = t[rp++];
-    while (lp &lt; l) q[tp++] = t[lp++];
-    while (rp &lt;= r) q[tp++] = t[rp++];
-
-    for (int i = l0; i &lt;= r; ++i)
-        t[i] = q[i];
-}
-
-int captcha(int l, int r) {
-    r = std::min(r, n);
-    int ans = 0;
-    for (int i = 0; i &lt; m &amp;&amp; l &lt; r; ++i, --r, ++l)
-        ans += (t[r] - t[l]) * (t[r] - t[l]);
-    return ans;
-}
+<pre class="line-numbers"><code class="language-cpp">int n, k, a[3001];
+int p[3001], d[3001];
 
 signed main() {
-    T = read();
-    while (T--) {
-        n = read(), m = read(), k = read();
-        for (int i = 1; i &lt;= n; ++i)
-            a[i] = read();
-        int l0 = 1, ans = 0; // 1
-        while (l0 &lt;= n) {
-            int l = l0, p = 1; bool r = false;
-            while (p) {
-                for (int i = l0; i &lt; l + p; ++i)
-                    copy[i] = t[i]; // 保存当前的快照，以在 c &gt; k 时得以返回上一状态
-                mergeSort(l0, l, l + p - 1); // 2.1
-                const int c = captcha(l0, l + p - 1); // 2.2
-                if (c &lt;= k) { // 2.3
-                    l += p;
-                    if (l &gt; n) break; // 2.4
-                    if (!r)
-                        p &lt;&lt;= 1;
-                } else {
-                    p &gt;&gt;= 1;
-                    r = true;
-                    for (int i = l0; i &lt; l + p; ++i)
-                        t[i] = copy[i];
-                }
-            }
-            ++ans;
-            l0 = l;
-        }
-        printf(&quot;%lld\n&quot;, ans); // 3
+    n = read(), k = read();
+    for (int i = 1; i &lt;= n; i++) {
+        a[i] = read();
+        d[i] = d[i - 1] + (a[i] == 0);
+        p[i] = p[i - 1] + a[i];
     }
+    if (abs(p[n]) &gt; k * d[n]) return puts(&quot;-1&quot;), 0;
+    int max = -1;
+    for (int l = 1; l &lt;= n; l++) {
+        for (int r = l; r &lt;= n; r++) {
+            int sum = p[r] - p[l - 1], cnt = d[r] - d[l - 1];
+            int lSum = p[n] - sum, lCnt = d[n] - cnt;
+            max = std::max(max, std::min(abs(sum + cnt * k), abs(lSum - lCnt * k)));
+            max = std::max(max, std::min(abs(sum - cnt * k), abs(lSum + lCnt * k)));
+        }
+    }
+    printf(&quot;%lld\n&quot;, max + 1);
+    return 0;
 }
 </code></pre>
 <hr />
-<h2><a id="st%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>ST 表</h2>
-<p><tc><c>LG3865</c></tc></p>
+<h2><a id="1680e-moving-chips" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680E Moving Chips</h2>
+<p><tc><m>Medium+</m><t>DP</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>\(f(l,k)\) 为 \([l, l + 2^k)\) 的 \(\max\)。</p>
+<p>这题里吃的路径其实是可逆的，比如说 A 吃了 B，C 再吃了 B 和 A 吃了 B 然后继续吃了 C 是一样的。所以我们的目标是找出代价最少的一条吃人路径，并且可以钦定任意一个星号作为最终状态。假如设最后留下来的是最右边的某个星号，那就是「从左吃到右」的过程，可以尝试用 DP 来最优化方案。</p>
+<p>设 \(f(i,0/1)\) 为把第 \(1\) 到第 \(i-1\) 列全部吃掉，且星号仅在 \((i,0/1)\) 时的最小步数。在对这一列进行 DP 的过程中，我们要考虑的问题是<strong>怎么把上一列的星号全部转移到这一列的目标位置中去</strong>。假如本列有两个星号，<strong>合并一定更优</strong>（否则同时移两个就是浪费），所以也要考虑合并。</p>
 <ul>
-<li>\(\forall i, f(i,0) = a_i\)。</li>
-<li>\(f(l,k) = \max\{f(l,k-1),f(l+2^{k-1},k-1)\}\)</li>
+<li>若全部转移到 \((i,0)\)：
+<ul>
+<li>从 \((i-1,0)\) 转移：代价为 \(1\)，但如果 \((i,1)\) 有星号，还需要再加一。</li>
+<li>从 \((i-1,1)\) 转移：可以顺便吃了 \((i,1)\)，无论如何代价始终为 \(2\)。</li>
 </ul>
-<p>求和：令 \(k=\log_2(r-l+1)\)。</p>
-<p>\(f(l,r) = \max\{f(l,k),f(r-2^k+1,k)\}\)（这两个区间能覆盖 \([l, r]\)）。</p>
-<p>最小值同理。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%9C%80%E5%A4%A7%E5%80%BC%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现（最大值）</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, q;
-int f[5000001][31];
+</li>
+<li>若全部转移到 \((i,1)\)：
+<ul>
+<li>从 \((i-1,1)\) 转移：代价为 \(1\)，但如果 \((i,0)\) 有星号，还需要再加一。</li>
+<li>从 \((i-1,0)\) 转移：代价始终为 \(2\)。</li>
+</ul>
+</li>
+</ul>
+<p>可以轻松写出状态转移方程。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int T, n;
+int g[200001][2], f[200001][2];
 
-int query(int l, int r) {
-    const int k = log2(r - l + 1);
-    return std::max(f[l][k], f[r - (1 &lt;&lt; k) + 1][k]);
-}
-
-void cal() {
-    for (int i = 1; i &lt;= n; ++i)
-        f[i][0] = read();
-    for (int k = 1; k &lt;= 30; ++k)
-        for (int i = 1; i + (1 &lt;&lt; (k - 1)) &lt;= n; ++i)
-            f[i][k] = std::max(f[i][k - 1], f[i + (1 &lt;&lt; (k - 1))][k - 1]);
+int main() {
+    std::cin &gt;&gt; T;
+    while (T--) {
+        std::cin &gt;&gt; n;
+        for (int i = 1; i &lt;= n; ++i)
+            f[i][0] = f[i][1] = 0;
+        for (int i = 0; i &lt; 2; ++i) {
+            for (int j = 1; j &lt;= n; ++j) {
+                char c; std::cin &gt;&gt; c;
+                g[j][i] = (c == '*');
+            }
+        }
+        int l = 1, r = n;
+        while (!g[l][0] &amp;&amp; !g[l][1]) ++l;
+        while (!g[r][0] &amp;&amp; !g[r][1]) --r;
+        for (int i = l; i &lt;= r; ++i) {
+            f[i][0] = std::min(f[i - 1][0] + g[i][1] + 1, f[i - 1][1] + 2);
+            f[i][1] = std::min(f[i - 1][1] + g[i][0] + 1, f[i - 1][0] + 2);
+        }
+        std::cout &lt;&lt; std::min(f[r][0], f[r][1]) - 1 &lt;&lt; std::endl;
+        // 之前没有特地算 f[l][0/1] 的初始值，循环直接从 l 开始，但是 l-1 -&gt; l 算了 1 步，所以这里减去一。
+    }
+    return 0;
 }
 </code></pre>
 
