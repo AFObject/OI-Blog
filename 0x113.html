@@ -133,7 +133,7 @@
                 </div>
                   <article class="markdown-body single-content">
                     <h2><a id="largest-rectangle-in-a-histogram" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Largest Rectangle in a Histogram</h2>
-<p><tc><c>0x1104</c><e>Easy</e><t>单调栈</t></tc></p>
+<p><tc><c>0x1104</c><e>Easy+</e><t>单调栈</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>考虑对于每一个 \(x\) 坐标，都尝试找出以它为右边界的最大的矩形的面积。那么可能成为答案的矩形在左侧一定终止于在它左侧，且比它矮的一个位置。所以在它左侧，且比它高的东西没有用，直接用单调栈扔掉就行。</p>
 <p>在原位置在 \(i\) 的一个数 \(k\) 在位置 \(j\) 时被推出栈的时候统计答案，答案为 \((j-i+d(k))\times k\)，其中 \(d(k)\) 代表这个数 \(k\) 顶掉的数的个数（即不在栈中，但可以算进矩形的宽的数，包括直接顶掉和间接顶掉）。在整个数列末尾追加一个 0，顶掉所有数。</p>

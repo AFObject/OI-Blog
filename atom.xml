@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-05-15T17:48:30+08:00</updated>
+  <updated>2022-05-22T00:11:35+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -13,18 +13,126 @@
   <generator uri="http://www.mweb.im/">MWeb</generator>
   
   <entry>
+    <title type="html"><![CDATA[0x12 队列]]></title>
+    <link href="oi.afobject.ml/0x12-.html"/>
+    <updated>2022-05-20T22:37:19+08:00</updated>
+    <id>oi.afobject.ml/0x12-.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="team-queue" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Team Queue</h2>
+<p><tc><c>0x1201</c><e>Easy</e><t>模拟</t><t>队列</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>开个队列记录下队伍之间的顺序；再对于每个队伍开个队列记录下内部的顺序。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n;
+std::map&lt;int, int&gt; m;
+std::queue&lt;int&gt; d, q[1001];
+
+int main() {
+    int T = 0;
+    while (std::cin &gt;&gt; n &amp;&amp; n) {
+        ++T;
+        std::cout &lt;&lt; &quot;Scenario #&quot; &lt;&lt; T &lt;&lt; '\n';
+
+        m.clear(); d = std::queue&lt;int&gt;();
+        for (int i = 1; i &lt;= n; ++i) {
+            q[i] = std::queue&lt;int&gt;();
+            int t; std::cin &gt;&gt; t;
+            while (t--) {
+                int g; std::cin &gt;&gt; g;
+                m[g] = i;
+            }
+        }
+
+        std::string s; int op;
+        while (std::cin &gt;&gt; s &amp;&amp; s != &quot;STOP&quot;) {
+            if (s == &quot;DEQUEUE&quot;) {
+                std::cout &lt;&lt; q[d.front()].front() &lt;&lt; '\n';
+                q[d.front()].pop();
+                if (q[d.front()].empty()) d.pop();
+            } else if (s == &quot;ENQUEUE&quot;) {
+                std::cin &gt;&gt; op;
+                if (q[m[op]].empty()) d.push(m[op]);
+                q[m[op]].push(op);
+            }
+        }
+        std::cout &lt;&lt; '\n';
+    }
+}
+</code></pre>
+<hr />
+<h2><a id="%E8%9A%AF%E8%9A%93" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>蚯蚓</h2>
+<p><tc><c>NOIP2016 D2T2</c><c>0x1202</c><m>Medium+</m><t>数学</t><t>队列</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>时间复杂度的瓶颈像是 \(O(m)\) 的，这也就是要求我们 \(O(1)\) 实现查询最大值、分裂、增长长度这三个操作。</p>
+<p>最直接地，可以想到通过大根堆找出最大值，但是顺序不保证，而且太慢了，想要 \(O(1)\) 的话最好使序列有序。接下来就是试图找出单调性。</p>
+<p>一次操作，等效于把一个数 \(x\) 分为 \(\lfloor px \rfloor - q\) 和 \(x - \lfloor px \rfloor - q\) 这两个数（实际值是全部数加上 \(\Delta=q\cdot T\)，\(T\) 为当前操作次数）。任何操作都只会让数列中的数变小，所以数列的最大值单调递减，被砍的数单调递减。</p>
+<p>可不想让被砍出来的数再放回原队列破坏单调性，所以继续探究被砍出来的数是否存在单调性。注意我们集体减了 \(\Delta\)，计算的时候要还原 \(\Delta\)（\(\Delta\) 为本轮操作前的 \(\Delta\)）。一个数被分为了 \(x_1=\lfloor p(x+\Delta) \rfloor - q - \Delta\) 和 \(x_2=x - \lfloor p(x+\Delta) \rfloor - q\)。假设在这个数后面被分裂的那个数是 \(y\)（\(y \le x\)），那么分出来的就是 \(y_1=\lfloor p(y+\Delta+q) \rfloor - q - \Delta-q\) 和 \(y_2=y - \lfloor p(y+\Delta+q) \rfloor - q\)。</p>
+<p>作差：</p>
+\[\begin{aligned}
+x_1-y_1
+&amp;=\lfloor p(x+\Delta) \rfloor-\lfloor p(y+\Delta+q) \rfloor+q\\
+&amp;=\lfloor p(x+xq) \rfloor-\lfloor p(y+q) \rfloor&gt;0\\
+
+x_2-y_2
+&amp;=x - \lfloor p(x+\Delta) \rfloor - y + \lfloor p(y+\Delta+q) \rfloor\\
+&amp;=\lfloor x-p(x)\rfloor-\lfloor y-p(y+q) \rfloor&gt;0
+\end{aligned}
+\]
+<p>也就是说，<strong>砍出来的那两截蚯蚓的长度也随着时间的推移而单调递减</strong>。在所有操作之前先把整个序列排序存进一个队列中，当进行分裂操作时，把大的取出来放进一个队列，把小的取出来放进另一个队列。可以保证这三个队列都是队首大，队尾小，这样就完成了 \(O(1)\) 地求最大值。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+#define top(x) ((x.empty()) ? -1e16 : x.front())
+
+int n, m, q, u, v, t;
+int d[100001];
+std::queue&lt;int&gt; a, b, c;
+
+signed main() {
+    n = read(), m = read(), q = read(), u = read(), v = read(), t = read();
+    for (int i = 1; i &lt;= n; ++i) d[i] = read();
+    std::sort(d + 1, d + n + 1);
+    for (int i = n; i; --i) a.push(d[i]);
+
+    int delta = 0;
+    for (int i = 1; i &lt;= m; ++i, delta += q) {
+        int a0 = top(a), b0 = top(b), c0 = top(c), max = 0;
+        if (a0 &gt;= b0 &amp;&amp; a0 &gt;= c0) max = a0, a.pop();
+        else if (b0 &gt;= c0) max = b0, b.pop();
+        else max = c0, c.pop();
+        if (i % t == 0) printf(&quot;%lld &quot;, max + delta);
+        b.push(floor((double)u / v * (max + delta)) - q - delta);
+        c.push(max - floor((double)u / v * (max + delta)) - q);
+    }
+    putchar('\n');
+    for (int i = 1; i &lt;= n + m; ++i) {
+        int a0 = top(a), b0 = top(b), c0 = top(c), max = 0;
+        if (a0 &gt;= b0 &amp;&amp; a0 &gt;= c0) max = a0, a.pop();
+        else if (b0 &gt;= c0) max = b0, b.pop();
+        else max = c0, c.pop();
+        if (i % t == 0) printf(&quot;%lld &quot;, max + delta);
+    }
+
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Educational Codeforces Round #128 (Div.2)]]></title>
     <link href="oi.afobject.ml/cf1680.html"/>
     <updated>2022-05-14T22:28:03+08:00</updated>
     <id>oi.afobject.ml/cf1680.html</id>
     <content type="html"><![CDATA[
 <p>[5/6] Alt (Rated), 3/6, 1071 \(\to\) 1278</p>
+<span id="more"></span><!-- more -->
 <h2><a id="1680c-binary-string" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680C Binary String</h2>
-<p><tc><m>Medium-</m><t>二分</t><t>前缀和</t></tc></p>
+<p><tc><m>Medium- *1600</m><t>二分</t><t>前缀和</t></tc></p>
 <p>场切了，想出二分没觉得特难，到时候看看 \(O(n)\) 做法是什么。</p>
 <hr />
 <h2><a id="1680d-dog-walking" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680D Dog Walking</h2>
-<p><tc><m>Medium+</m><t>数学</t><t>贪心</t><t>前缀和</t></tc></p>
+<p><tc><m>Medium+ *2400</m><t>数学</t><t>贪心</t><t>前缀和</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>题面太长不看。稍微简化一下题面：将数列中的 \(0\) 都替换成 \([-k,k]\) 中的一个数后，令前缀和数组为 \(s\)，最大化 \(\max\{s\}-\min\{s\}\) 且 \(s_n=0\)（很容易判断，当 \(\mid s_n\mid\) 大于 0 的个数乘以 \(k\) 的时候，必然无解）。</p>
 <p>由这个式子不难想到最大子段和的前缀和解法，可以差不多地理解一下，这个 \(\max\{s\}-\min\{s\}\) 代表的是原数列中的<strong>一段区间和（的绝对值）</strong>。然后注意到 \(1 \le n \le 3000\) 的良心范围，考虑直接枚举这个区间的左、右端点。最优化的方案必然是要么 0 全替换为 \(k\)，要么全替换为 \(-k\)。</p>
@@ -60,7 +168,7 @@ signed main() {
 </code></pre>
 <hr />
 <h2><a id="1680e-moving-chips" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680E Moving Chips</h2>
-<p><tc><m>Medium+</m><t>DP</t></tc></p>
+<p><tc><m>Medium+ *2000</m><t>DP</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>这题里吃的路径其实是可逆的，比如说 A 吃了 B，C 再吃了 B 和 A 吃了 B 然后继续吃了 C 是一样的。所以我们的目标是找出代价最少的一条吃人路径，并且可以钦定任意一个星号作为最终状态。假如设最后留下来的是最右边的某个星号，那就是「从左吃到右」的过程，可以尝试用 DP 来最优化方案。</p>
 <p>设 \(f(i,0/1)\) 为把第 \(1\) 到第 \(i-1\) 列全部吃掉，且星号仅在 \((i,0/1)\) 时的最小步数。在对这一列进行 DP 的过程中，我们要考虑的问题是<strong>怎么把上一列的星号全部转移到这一列的目标位置中去</strong>。假如本列有两个星号，<strong>合并一定更优</strong>（否则同时移两个就是浪费），所以也要考虑合并。</p>
@@ -119,6 +227,7 @@ int main() {
     <id>oi.afobject.ml/cf1674.html</id>
     <content type="html"><![CDATA[
 <p>[已通关] Rated, 4/7, 1364 \(\to\) 1438</p>
+<span id="more"></span><!-- more -->
 <p>E 大家都 fst 也就算了，F 就差造个极端数据拍一拍就过了 /fn</p>
 <h2><a id="1674f-desktop-rearrangement" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1674F Desktop Rearrangement</h2>
 <p><tc><e>Easy+ *1800</e><t>模拟</t></tc></p>
@@ -328,6 +437,7 @@ int main() {
     <id>oi.afobject.ml/cf1673.html</id>
     <content type="html"><![CDATA[
 <p>[3/6] Rated, 1/6, \(1448 \to 1364\)，我是天下第一🎤，哈哈哈哈！！！！！！！！！B 都不会！！！</p>
+<span id="more"></span><!-- more -->
 <h2><a id="1673b-a-perfectly-balanced-string" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1673B A Perfectly Balanced String?</h2>
 <p><tc><m>Medium- *1100</m><t>结论</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
@@ -456,7 +566,7 @@ signed main() {
     <id>oi.afobject.ml/0x113.html</id>
     <content type="html"><![CDATA[
 <h2><a id="largest-rectangle-in-a-histogram" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Largest Rectangle in a Histogram</h2>
-<p><tc><c>0x1104</c><e>Easy</e><t>单调栈</t></tc></p>
+<p><tc><c>0x1104</c><e>Easy+</e><t>单调栈</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>考虑对于每一个 \(x\) 坐标，都尝试找出以它为右边界的最大的矩形的面积。那么可能成为答案的矩形在左侧一定终止于在它左侧，且比它矮的一个位置。所以在它左侧，且比它高的东西没有用，直接用单调栈扔掉就行。</p>
 <p>在原位置在 \(i\) 的一个数 \(k\) 在位置 \(j\) 时被推出栈的时候统计答案，答案为 \((j-i+d(k))\times k\)，其中 \(d(k)\) 代表这个数 \(k\) 顶掉的数的个数（即不在栈中，但可以算进矩形的宽的数，包括直接顶掉和间接顶掉）。在整个数列末尾追加一个 0，顶掉所有数。</p>
@@ -726,6 +836,7 @@ print(a // b // b // (n + 1))
     <content type="html"><![CDATA[
 <p>为什么每次打 ABC 都碰上蓝色的 E（恼）</p>
 <p>Rated, 4/8, 977 \(\to\) 987</p>
+<span id="more"></span><!-- more -->
 <h2><a id="d-index-trio" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D Index Trio</h2>
 <p><tc><m>Medium- *983</m><t>数论</t><t>组合</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%951" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 1</h3>
@@ -936,6 +1047,7 @@ int main() {
     <id>oi.afobject.ml/abc248.html</id>
     <content type="html"><![CDATA[
 <p>VP</p>
+<span id="more"></span><!-- more -->
 <h2><a id="e-k-colinear-line" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E K-colinear Line</h2>
 <p><tc><m>Medium- *1292</m><t>计算几何</t><t>STL</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
@@ -1038,6 +1150,8 @@ signed main() {
     <updated>2022-04-10T20:58:03+08:00</updated>
     <id>oi.afobject.ml/shoi-2022.html</id>
     <content type="html"><![CDATA[
+<p>我为什么敢来做省选？</p>
+<span id="more"></span><!-- more -->
 <h2><a id="d1t1-preprocessor" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D1T1 Preprocessor</h2>
 <p><tc><e>Easy+</e><t>模拟</t></tc></p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
@@ -1681,6 +1795,7 @@ int main() {
     <id>oi.afobject.ml/noiol-junior-2022.html</id>
     <content type="html"><![CDATA[
 <p>场外，不会做 T2。</p>
+<span id="more"></span><!-- more -->
 <h2><a id="%E6%95%B0%E5%AD%A6%E6%B8%B8%E6%88%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>数学游戏</h2>
 <p><tc><m>Medium+</m><t>数学</t><t>GCD</t></tc></p>
 <p>对于每一组 \((x,z)\)，求最小的 \(y\)，使得 \(x \times y \times \gcd(x,y) = z\)。</p>
@@ -1723,6 +1838,7 @@ signed main() {
     <id>oi.afobject.ml/noiol-senior-2022.html</id>
     <content type="html"><![CDATA[
 <p>场外，口胡了 T1。</p>
+<span id="more"></span><!-- more -->
 <h2><a id="%E4%B8%B9%E9%92%93%E5%8D%A0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>丹钓占</h2>
 <p><tc><m>Medium+</m><t>DS</t><t>树状数组</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
@@ -2059,6 +2175,7 @@ int main() {
     <id>oi.afobject.ml/abc242.html</id>
     <content type="html"><![CDATA[
 <p>VP</p>
+<span id="more"></span><!-- more -->
 <h2><a id="d-abc-transform" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D ABC Transform</h2>
 <p><tc><m>Medium *1286</m><t>递归</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
@@ -2142,6 +2259,7 @@ signed main() {
     <id>oi.afobject.ml/cf1642.html</id>
     <content type="html"><![CDATA[
 <p>[5/6] Rated, 3/6, 1353 \(\to\) 1448</p>
+<span id="more"></span><!-- more -->
 <h2><a id="1641b-1642d-repetitions-decoding" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1641B (1642D) Repetitions Decoding</h2>
 <p><tc><m>Medium *2000</m><t>构造</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
@@ -2325,172 +2443,6 @@ int main() {
         }
     }
     return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x06 倍增]]></title>
-    <link href="oi.afobject.ml/0x06-.html"/>
-    <updated>2022-02-19T13:19:02+08:00</updated>
-    <id>oi.afobject.ml/0x06-.html</id>
-    <content type="html"><![CDATA[
-<p>倍增：将状态空间划分成若干个 2 的次幂的大小。</p>
-<h2><a id="%E9%93%BA%E5%9E%AB" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>铺垫</h2>
-<p>给定一个数列 \(A\) 和若干次询问，每次给出一个 \(T\)，求 \(k_{\max}\ s.t.\ \sum_{i=1}^k \le T\)。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<h4><a id="%E6%96%B9%E6%A1%881%EF%BC%9A%E5%9C%A8%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%AD-naive%E4%BA%8C%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 1：在前缀和中 naive 二分</h4>
-<p>复杂度恒定是 <strong>\(\log n\)</strong> 把大概。</p>
-<h4><a id="%E6%96%B9%E6%A1%882%EF%BC%9A%E5%80%8D%E5%A2%9E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>方案 2：倍增</h4>
-<p>这个 \(k\) 是要找的这个前缀的长度，<strong>每次尝试往 \(k\) 里面加 \(2\) 的次幂（\(2^p\)）</strong> 就行了。如果加了以后符合要求那么 \(k \gets k + 2^p\)，\(p \gets p+1\)，否则不加且 \(p \gets p - 1\)。\(p &lt; 0\) 的时候结束。</p>
-<p>区别就是复杂度是 <strong>\(\log \text{答案}\)</strong> 差不多。这玩意相对于 \(\log\) 感觉有一定常数（差不多 3）。我也不清楚为什么要这么做。就是这样。</p>
-<p>感觉有一种平凡优化这里不写了。</p>
-<hr />
-<h2><a id="genius-acm" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Genius ACM</h2>
-<p><tc><c>0x0601</c><h>Hard</h><t>数学</t><t>排序</t><t>倍增</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>首先 \(\sum\limits_{i=1}^{m}(a_i - b_i)^2 = \sum\limits_{i=1}^{m} a_i^2 + \sum\limits_{i=1}^{m} b_i^2 -\sum\limits_{i=1}^{m} a_i b_i\)，所以要使两两的乘积最小。</p>
-<blockquote>
-<h4><a id="%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>排序不等式</h4>
-<ol>
-<li>给定 \(a,b\) 两个数列，证明：当 \(a_i,b_i\) 均不降时，\(\sum a_ib_i\) 最大。</li>
-</ol>
-<p>简略证明：</p>
-<ul>
-<li>假设 \(x_1\le x_2,x_3 \le x_4\)，由于 \((x_1-x_2)(x_3-x_4) \ge 0\)，则 \(x_1x_4+x_2x_3 \ge x_1x_3+x_2x_4\)（1）。</li>
-<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不降），设存在 \(b_i, b_j\) 乱序，且它们分别对应 \(a_i, a_j\)（\(b_i&gt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i&gt;b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不降，结果最优。</li>
-<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不降），同理。</li>
-</ul>
-<p>所以要求 \(a,b\) 均不降。</p>
-<hr />
-<ol start="2">
-<li>在（1）的条件下，当 \(a,b\) 中的一个倒序时，证明：此时 \(\sum a_ib_i\) 最小。</li>
-</ol>
-<p>简略证明：</p>
-<ul>
-<li>假定 \(a\) 不降，且 \(b\) 乱序（非单调不升），设存在 \(b_i, b_j\) 非逆序，且它们分别对应 \(a_i, a_j\)（\(b_i&lt;b_j\)，\(a_i &lt; a_j\)）由（1），\(b_i a_j + b_ja_i &lt; b_ia_i + b_ja_j\)，将 \(b_i, b_j\) 交换结果更优。不断交换直到 \(b\) 不升，结果最优。</li>
-<li>假定 \(b\) 不降，且 \(a\) 乱序（非单调不升），同理。</li>
-<li>得证。</li>
-</ul>
-</blockquote>
-<p>由<strong>排序不等式</strong>，知应当最大对最大，第二大对第二大……最小对最小，此时的 \(\sum (a_i-b_i)^2\) 就是「校验值」。</p>
-<p>但这并不是重点。</p>
-<p>问题转化为固定一个 \(L\)，求最小的 \(R &gt; L\) 使得 \(f([L, R]) \le T\)。要求「校验值」，必须排序，至少用时 \(O(n \log n)\)。然后 \(n \le 5 \times 10^5\)，好好好，如果每段都很少那么二分屁用没有（\(n\) 级别段，每一段找 \(R\) 二分 \(\log n\) 次总排序 \(n \log n\) 级，感觉得卡成 \(n^2 \log n\)，寄了）。</p>
-<p>😅 倍增，固定一个左端点往右扩展，复杂度 \(\sum len \log len\)（块数次倍增，每次倍增对一段排序，排序的总时间 \(n \log n\)，归并以及计算「校验值」的总时间差不多 \(O(n)\) 带点常数）左右吧，总复杂度大约 \(n \log n\) 可以接受（吧），自带巨大常数但是时限 10s。</p>
-<blockquote>
-<p>776 告诉我 \(\sum len \log len \le n \log n\)。</p>
-</blockquote>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<ol>
-<li>固定一个 \(l\)</li>
-<li>倍增求 \(r\)
-<ol>
-<li>对未排序的部分进行归并排序</li>
-<li>求出「校验值」</li>
-<li>根据「校验值」大小判断当前的 \(r\) 是否满足条件</li>
-<li>回到 1，直到倍增结束（\(p=0\)）</li>
-</ol>
-</li>
-<li>回到 1，直到得到结果（\(r=n\)）</li>
-</ol>
-<p>谢邀，人在太平间，写吐了</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int T, n, m, k;
-// a 原数组不动
-// t 是排好序的
-// q 是辅助
-// copy 是缓存
-int a[5000001], t[5000001], q[5000001], copy[5000001];
-
-void mergeSort(int l0, int l, int r) {
-    r = std::min(r, n);
-    for (int i = l; i &lt;= r; ++i)
-        t[i] = a[i];
-    
-    std::sort(t + l, t + r + 1);
-
-    int lp = l0, tp = l0, rp = l;
-    while (lp &lt; l &amp;&amp; rp &lt;= r)
-        if (t[lp] &lt; t[rp]) q[tp++] = t[lp++];
-        else q[tp++] = t[rp++];
-    while (lp &lt; l) q[tp++] = t[lp++];
-    while (rp &lt;= r) q[tp++] = t[rp++];
-
-    for (int i = l0; i &lt;= r; ++i)
-        t[i] = q[i];
-}
-
-int captcha(int l, int r) {
-    r = std::min(r, n);
-    int ans = 0;
-    for (int i = 0; i &lt; m &amp;&amp; l &lt; r; ++i, --r, ++l)
-        ans += (t[r] - t[l]) * (t[r] - t[l]);
-    return ans;
-}
-
-signed main() {
-    T = read();
-    while (T--) {
-        n = read(), m = read(), k = read();
-        for (int i = 1; i &lt;= n; ++i)
-            a[i] = read();
-        int l0 = 1, ans = 0; // 1
-        while (l0 &lt;= n) {
-            int l = l0, p = 1; bool r = false;
-            while (p) {
-                for (int i = l0; i &lt; l + p; ++i)
-                    copy[i] = t[i]; // 保存当前的快照，以在 c &gt; k 时得以返回上一状态
-                mergeSort(l0, l, l + p - 1); // 2.1
-                const int c = captcha(l0, l + p - 1); // 2.2
-                if (c &lt;= k) { // 2.3
-                    l += p;
-                    if (l &gt; n) break; // 2.4
-                    if (!r)
-                        p &lt;&lt;= 1;
-                } else {
-                    p &gt;&gt;= 1;
-                    r = true;
-                    for (int i = l0; i &lt; l + p; ++i)
-                        t[i] = copy[i];
-                }
-            }
-            ++ans;
-            l0 = l;
-        }
-        printf(&quot;%lld\n&quot;, ans); // 3
-    }
-}
-</code></pre>
-<hr />
-<h2><a id="st%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>ST 表</h2>
-<p><tc><c>LG3865</c></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>\(f(l,k)\) 为 \([l, l + 2^k)\) 的 \(\max\)。</p>
-<ul>
-<li>\(\forall i, f(i,0) = a_i\)。</li>
-<li>\(f(l,k) = \max\{f(l,k-1),f(l+2^{k-1},k-1)\}\)</li>
-</ul>
-<p>求和：令 \(k=\log_2(r-l+1)\)。</p>
-<p>\(f(l,r) = \max\{f(l,k),f(r-2^k+1,k)\}\)（这两个区间能覆盖 \([l, r]\)）。</p>
-<p>最小值同理。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%9C%80%E5%A4%A7%E5%80%BC%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现（最大值）</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, q;
-int f[5000001][31];
-
-int query(int l, int r) {
-    const int k = log2(r - l + 1);
-    return std::max(f[l][k], f[r - (1 &lt;&lt; k) + 1][k]);
-}
-
-void cal() {
-    for (int i = 1; i &lt;= n; ++i)
-        f[i][0] = read();
-    for (int k = 1; k &lt;= 30; ++k)
-        for (int i = 1; i + (1 &lt;&lt; (k - 1)) &lt;= n; ++i)
-            f[i][k] = std::max(f[i][k - 1], f[i + (1 &lt;&lt; (k - 1))][k - 1]);
 }
 </code></pre>
 

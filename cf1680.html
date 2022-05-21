@@ -139,12 +139,13 @@
                 </div>
                   <article class="markdown-body single-content">
                     <p>[5/6] Alt (Rated), 3/6, 1071 \(\to\) 1278</p>
+<span id="more"></span><!-- more -->
 <h2><a id="1680c-binary-string" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680C Binary String</h2>
-<p><tc><m>Medium-</m><t>二分</t><t>前缀和</t></tc></p>
+<p><tc><m>Medium- *1600</m><t>二分</t><t>前缀和</t></tc></p>
 <p>场切了，想出二分没觉得特难，到时候看看 \(O(n)\) 做法是什么。</p>
 <hr />
 <h2><a id="1680d-dog-walking" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680D Dog Walking</h2>
-<p><tc><m>Medium+</m><t>数学</t><t>贪心</t><t>前缀和</t></tc></p>
+<p><tc><m>Medium+ *2400</m><t>数学</t><t>贪心</t><t>前缀和</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>题面太长不看。稍微简化一下题面：将数列中的 \(0\) 都替换成 \([-k,k]\) 中的一个数后，令前缀和数组为 \(s\)，最大化 \(\max\{s\}-\min\{s\}\) 且 \(s_n=0\)（很容易判断，当 \(\mid s_n\mid\) 大于 0 的个数乘以 \(k\) 的时候，必然无解）。</p>
 <p>由这个式子不难想到最大子段和的前缀和解法，可以差不多地理解一下，这个 \(\max\{s\}-\min\{s\}\) 代表的是原数列中的<strong>一段区间和（的绝对值）</strong>。然后注意到 \(1 \le n \le 3000\) 的良心范围，考虑直接枚举这个区间的左、右端点。最优化的方案必然是要么 0 全替换为 \(k\)，要么全替换为 \(-k\)。</p>
@@ -180,7 +181,7 @@ signed main() {
 </code></pre>
 <hr />
 <h2><a id="1680e-moving-chips" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1680E Moving Chips</h2>
-<p><tc><m>Medium+</m><t>DP</t></tc></p>
+<p><tc><m>Medium+ *2000</m><t>DP</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>这题里吃的路径其实是可逆的，比如说 A 吃了 B，C 再吃了 B 和 A 吃了 B 然后继续吃了 C 是一样的。所以我们的目标是找出代价最少的一条吃人路径，并且可以钦定任意一个星号作为最终状态。假如设最后留下来的是最右边的某个星号，那就是「从左吃到右」的过程，可以尝试用 DP 来最优化方案。</p>
 <p>设 \(f(i,0/1)\) 为把第 \(1\) 到第 \(i-1\) 列全部吃掉，且星号仅在 \((i,0/1)\) 时的最小步数。在对这一列进行 DP 的过程中，我们要考虑的问题是<strong>怎么把上一列的星号全部转移到这一列的目标位置中去</strong>。假如本列有两个星号，<strong>合并一定更优</strong>（否则同时移两个就是浪费），所以也要考虑合并。</p>
