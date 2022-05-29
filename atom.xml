@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-05-22T00:11:35+08:00</updated>
+  <updated>2022-05-29T18:16:14+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -112,6 +112,47 @@ signed main() {
         if (i % t == 0) printf(&quot;%lld &quot;, max + delta);
     }
 
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>双端队列</h2>
+<p><tc><c>BJOI 2011</c><c>0x1203</c><m>Medium+</m><t>数学</t><t>队列</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>以输入为出发点考虑问题：我不太行，因为他要求是整体有序，很难光通过原始的无序序列找到答案。</p>
+<p><strong>以输出为出发点考虑问题</strong>：最终要求排好序，那我就排好序，把排好序的数组分割，每一段对应一个双端队列。每一段中要求数的下标具有<strong>单谷性质</strong>。注意判断重复的数。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>接下来是单谷怎么找的问题，一开始是下降的状态，降不动的时候只能升，升不动的时候就成了一个双端队列（同一个数的下标要么全升要么全降，否则复杂化了）。开两个变量，一个是上升下降的标志，一个是上升 / 下降期的最小 / 最大下标。</p>
+<pre class="line-numbers"><code class="language-cpp">int n, a[200001];
+std::pair&lt;int, int&gt; p[200001];
+std::vector&lt;int&gt; v[200001];
+
+int main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i) {
+        p[i].first = read();
+        p[i].second = i;
+    }
+    std::sort(p + 1, p + n + 1);
+    int t = 1;
+    v[t].push_back(p[1].second);
+    for (int i = 2; i &lt;= n; ++i) {
+        if (p[i].first != p[i - 1].first)
+            v[++t].push_back(p[i].second);
+        else v[t].push_back(p[i].second);
+    }
+    int flag = 0, num = 0, ans = 0;
+    for (int i = 1; i &lt;= t; ++i) {
+        const int first = v[i][0], last = v[i][v[i].size() - 1];
+        if (flag) {
+            if (first &lt; num) { ++ans; flag = 0; num = first; }
+            else num = last;
+        } else {
+            if (last &gt; num) { flag = 1; num = last; }
+            else num = first;
+        }
+    }
+    printf(&quot;%d\n&quot;, ans);
     return 0;
 }
 </code></pre>
