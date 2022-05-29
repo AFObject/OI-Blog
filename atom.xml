@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-05-29T18:16:18+08:00</updated>
+  <updated>2022-05-29T18:18:38+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -151,6 +151,33 @@ int main() {
             if (last &gt; num) { flag = 1; num = last; }
             else num = first;
         }
+    }
+    printf(&quot;%d\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>最大子序和</h2>
+<p><tc><c>0x1204</c><e>Easy</e><t>前缀和</t><t>单调队列</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑没有限制的做法：一个是递推一下，一个是前缀和一下。有限制的话感觉前缀和更靠谱，那就试一试。求出前缀和 \(p\) 后，问题转化为找出 \(\max\limits_{i-j &lt; m}\{p_i-p_j\}\)。</p>
+<p>考虑用单调队列求解。用滑动窗口求出当前点之前的 \(m\) 个前缀和的最小值，用现在的前缀和去减，就做完了。</p>
+<p>复习一下滑动窗口的做法：进队尾把大数顶掉，维持单调递增，把超过窗口范围的也推掉。最小值在每次的队头。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n, m, p[300001];
+std::deque&lt;std::pair&lt;int, int&gt;&gt; q;
+
+int main() {
+    n = read(), m = read();
+    for (int i = 1; i &lt;= n; ++i)
+        p[i] = p[i - 1] + read();
+    int ans = -2e8;
+    q.push_back({0, 0});
+    for (int i = 1; i &lt;= n; ++i) {
+        while (q.size() &amp;&amp; q.back().second &gt; p[i]) q.pop_back();
+        q.push_back({i, p[i]});
+        if (i - q.front().first &gt; m) q.pop_front();
+        ans = std::max(ans, p[i] - q.front().second);
     }
     printf(&quot;%d\n&quot;, ans);
     return 0;
