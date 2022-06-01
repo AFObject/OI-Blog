@@ -4,13 +4,96 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-05-29T18:18:38+08:00</updated>
+  <updated>2022-05-29T19:45:52+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x13 链表与邻接表]]></title>
+    <link href="oi.afobject.ml/0x13-.html"/>
+    <updated>2022-06-01T20:12:11+08:00</updated>
+    <id>oi.afobject.ml/0x13-.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%B0%8F%E7%86%8A%E7%9A%84%E6%9E%9C%E7%AF%AE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>小熊的果篮</h2>
+<p><tc><c>CSP-J 2021</c><e>Easy+</e><t>模拟</t><t>链表</t></tc></p>
+<p>普及摆烂没 AK 的痛</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>将块作为链表的一个项目，每一轮进行合并，由于每个水果至多被删一次，所以时间复杂度就是 \(O(n)\) 的。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>有点难整。。。</p>
+<p>首先明确一个块内的编号并不是连续的，所以除了维护块之间的顺序外还要再开一个双向链表来维护编号间的前后关系（但这个实现起来用数组即可，比较简单）。考场上写错就是因为这个点。</p>
+<p>另外这里的写法中两边的 <code>head</code> 和 <code>tail</code> 是空的，要判一下。</p>
+<pre class="line-numbers"><code class="language-cpp">namespace List {
+    struct Node {
+        int val, type, start;
+        Node *prev, *next;
+    } v[200001], *head, *tail;
+    void init() {
+        head = new Node();
+        tail = new Node();
+        head-&gt;next = tail;
+        tail-&gt;prev = head;
+    }
+    void insert(int val, int type, int start, Node *p) {
+        auto r = new Node();
+        r-&gt;val = val; r-&gt;type = type; r-&gt;start = start;
+        r-&gt;prev = p; r-&gt;next = p-&gt;next;
+        p-&gt;next-&gt;prev = r; p-&gt;next = r;
+    }
+    void remove(Node *p) {
+        p-&gt;prev-&gt;next = p-&gt;next;
+        p-&gt;next-&gt;prev = p-&gt;prev;
+        delete p;
+    }
+};
+
+int prevN[200001], nextN[200001];
+
+int n;
+
+int main() {
+    n = read();
+    List::init();
+    int prev = 0, count = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        if (i != n) nextN[i] = i + 1; prevN[i] = i - 1;
+        int a = read();
+        if (a != prev) {
+            if (i != 1)
+                List::insert(count, prev, i - count, List::tail-&gt;prev);
+            prev = a;
+            count = 0;
+        }
+        ++count;
+    }
+    List::insert(count, prev, n + 1 - count, List::tail-&gt;prev);
+    while (List::head-&gt;next != List::tail) {
+        for (auto x = List::head-&gt;next; x-&gt;next != NULL; x = x-&gt;next)
+            printf(&quot;%d &quot;, x-&gt;start);
+        putchar('\n');
+        for (auto x = List::head-&gt;next; x-&gt;next != NULL; x = x-&gt;next) {
+            x-&gt;val--;
+
+            nextN[prevN[x-&gt;start]] = nextN[x-&gt;start];
+            prevN[nextN[x-&gt;start]] = prevN[x-&gt;start];
+            x-&gt;start = nextN[x-&gt;start];
+
+            if (x-&gt;val == 0)
+                List::remove(x);
+            else if (x-&gt;prev-&gt;type == x-&gt;type &amp;&amp; x-&gt;prev != List::head)
+                x-&gt;prev-&gt;val += x-&gt;val, List::remove(x);
+        }
+    }
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0x12 队列]]></title>
@@ -2314,203 +2397,6 @@ signed main() {
             }
         printf(&quot;%lld\n&quot;, m(ans - !valid));
     }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Codeforces Round #773 (Div.2)]]></title>
-    <link href="oi.afobject.ml/cf1642.html"/>
-    <updated>2022-02-28T22:52:43+08:00</updated>
-    <id>oi.afobject.ml/cf1642.html</id>
-    <content type="html"><![CDATA[
-<p>[5/6] Rated, 3/6, 1353 \(\to\) 1448</p>
-<span id="more"></span><!-- more -->
-<h2><a id="1641b-1642d-repetitions-decoding" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1641B (1642D) Repetitions Decoding</h2>
-<p><tc><m>Medium *2000</m><t>构造</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>场上思路：找到第一个 \(i\) 使得 \(a_i=a_1\)（例如 <code>ABCDADBC</code>）。在 \(i\) 后面插入 <code>ABCDDCBA</code> 这种形式的一串（<code>ABCDABCDDCBDBC</code>），然后发现前面可以消，只剩 <code>DCBDBC</code>。这个序列相较于原序列长度少 \(2\)，完全可行，操作次数也肉眼可见地不会太多。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>随便开个 STL 模拟。</p>
-<pre class="line-numbers"><code class="language-cpp">
-#define MP std::make_pair
-
-int T, n;
-std::vector&lt;int&gt; a;
-std::map&lt;int, int&gt; m;
-
-std::vector&lt;std::pair&lt;int, int&gt;&gt; op;
-std::vector&lt;int&gt; v;
-
-void solve(int d) {
-    if (a.size() &lt;= 1)
-        return;
-
-    int pos = 0, len = 0;
-    for (int i = 2; i &lt; a.size(); ++i)
-        if (a[i] == a[1]) {
-            pos = i;
-            len = pos - 1;
-            break;
-        }
-
-    for (int i = pos; i &lt; pos + len - 1; ++i)
-        op.push_back(MP(i + d, a[i - len + 1]));
-    v.push_back(len &lt;&lt; 1);
-
-    a.erase(a.begin() + pos);
-    a.erase(a.begin() + 1);
-    for (int i = 1, j = pos - 2; i &lt;= j; ++i, --j)
-        std::swap(a[i], a[j]);
-
-    solve(d + (len &lt;&lt; 1));
-}
-
-int main() {
-    T = read();
-    while (T--) {
-        n = read();
-        m = std::map&lt;int, int&gt;();
-        a = std::vector&lt;int&gt;();
-        op = std::vector&lt;std::pair&lt;int, int&gt;&gt;();
-        v = std::vector&lt;int&gt;();
-        a.resize(n + 1);
-
-        for (int i = 1; i &lt;= n; ++i)
-            a[i] = read(), ++m[a[i]];
-        bool flag = true;
-        for (auto [x, y] : m)
-            if (y &amp; 1)
-                flag = false;
-        if (!flag) {
-            puts(&quot;-1&quot;);
-            continue;
-        }
-        solve(0);
-        printf(&quot;%d\n&quot;, (int)op.size());
-        for (auto [x, y] : op)
-            printf(&quot;%d %d\n&quot;, x, y);
-        printf(&quot;%d\n&quot;, (int)v.size());
-        for (int len : v)
-            printf(&quot;%d &quot;, len);
-        putchar('\n');
-    }
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="1641c-1642e-anonymity-is-important" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1641C (1642E) Anonymity Is Important</h2>
-<p><tc><m>Medium+ *2200</m><t>DS</t><t>线段树</t><t>STL</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>「1」型区间为至少包含一个病人的区间，「0」型区间为不包含病人的区间。</p>
-<ul>
-<li>回答 <code>NO</code>：\(x\) 号病人包含在任意一个「0」区间中。</li>
-<li>回答 <code>YES</code>：\(x\) 号病人包含且仅包含在「1」区间中，且<strong>存在一个包含它的「1」区间，使得除了它以外的所有病人都在「0」区间</strong>。</li>
-<li>回答 <code>N/A</code>：不属于以上两种情况。</li>
-</ul>
-<p>接下来我们用 C 表示确定不是病人，U 表示不确定是否是病人的人。</p>
-<p>一开始的数列一定是 <code>UUUU...UUU</code>。当报告一个区间内没有病人时，数列会变成类似这样：<code>UUCC...CCUUUU</code>。</p>
-<p>接下来考虑 <code>YES</code> 情况的维护。通俗一点来讲，显然当一个 U 周围也是 U 的时候，就很难确定它；当一个 U 左右都是 C 时，确定它是否是病人就更容易一些。进一步思考，可以发现：</p>
-<pre class="line-numbers"><code class="language-plain_text">...UUUCCCCCCUCCCCCUUU....
-      o     ^    o
-</code></pre>
-<p>假设被 <code>^</code> 标记的 U 是我们的研究对象。当且仅当在<strong>它以及它左右 C 的连续段（两个 <code>o</code> 标记中间）中</strong>，存在一个包含这个 U 的「1」区间，U 才可以被确定为病人。</p>
-<p>如果将所有的 U 用 <code>std::set</code> 维护，那么这就很简单了，直接就找中间那个 U（设其下标为 \(x\)）的前驱后继（设它们的下标为 \(l,r\)）即可。接下来，需要判定上述的区间是否存在。可以发现区间的左端点一定是在 U 左边那个 C 的连续段，因此<strong>只要存在一个以 \((l,x]\) 为起点的「1」区间，其右端点在 \([x, r)\)，那么 \(x\) 就确定是病人</strong>。</p>
-<p>这部分可以使用一个单点修改、区间查询最小值的线段树 \(t\) 来维护。当输入一个「1」区间时，将 \(t_l\) 单点赋值为 \(\min\{t_l, r\}\) 即可。查询时判断 \(\operatorname{query}(l+1,x)\) 与 \(r\) 的大小关系就行了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#include &lt;cstdio&gt;
-#include &lt;algorithm&gt;
-#include &lt;set&gt;
-
-#define lt(x) ((x) &lt;&lt; 1)
-#define rt(x) (lt(x) + 1)
-
-int n, m;
-
-int read() {
-    int ans = 0, neg = 1; char ch = getchar();
-    while (ch &lt; '0' || ch &gt; '9') { if (ch == '-') neg = -1; ch = getchar(); }
-    while (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { ans *= 10; ans += (ch - '0'); ch = getchar(); }
-    return ans * neg;
-}
-
-namespace SegTree {
-    int t[1000001];
-
-    void build(int x = 1, int l = 1, int r = n) {
-        t[x] = n + 1;
-        if (l == r)
-            return;
-        const int mid = (l + r) &gt;&gt; 1;
-        build(lt(x), l, mid);
-        build(rt(x), mid + 1, r);
-    }
-
-    void modify(int p, int a, int x = 1, int _l = 1, int _r = n) {
-        if (_l == _r) {
-            t[x] = std::min(t[x], a);
-            return;
-        }
-        const int mid = (_l + _r) &gt;&gt; 1;
-        if (p &lt;= mid)
-            modify(p, a, lt(x), _l, mid);
-        else
-            modify(p, a, rt(x), mid + 1, _r);
-        t[x] = std::min(t[lt(x)], t[rt(x)]);
-    }
-
-    int query(int l, int r, int x = 1, int _l = 1, int _r = n) {
-        if (l &lt;= _l &amp;&amp; _r &lt;= r)
-            return t[x];
-        const int mid = (_l + _r) &gt;&gt; 1;
-        int ans = n + 1;
-        if (l &lt;= mid)
-            ans = std::min(ans, query(l, r, lt(x), _l, mid));
-        if (r &gt; mid)
-            ans = std::min(ans, query(l, r, rt(x), mid + 1, _r));
-        return ans;
-    }
-};
-
-std::set&lt;int&gt; s;
-
-int main() {
-    n = read(), m = read();
-    SegTree::build();
-    for (int i = 0; i &lt;= n + 1; ++i)
-        s.insert(i);
-    while (m--) {
-        int t = read();
-        if (!t) {
-            int l = read(), r = read(), op = read();
-            if (!op) {
-                while (!s.empty()) {
-                    int pos = *s.lower_bound(l);
-                    if (pos &lt;= r)
-                        s.erase(pos);
-                    else
-                        break;
-                }
-            } else {
-                SegTree::modify(l, r);
-            }
-        } else {
-            int x = read();
-            if (!s.count(x))
-                puts(&quot;NO&quot;);
-            else {
-                auto i = s.lower_bound(x), j = s.upper_bound(x);
-                --i;
-                if (SegTree::query((*i) + 1, x) &lt; *j)
-                    puts(&quot;YES&quot;);
-                else
-                    puts(&quot;N/A&quot;);
-            }
-        }
-    }
-    return 0;
 }
 </code></pre>
 

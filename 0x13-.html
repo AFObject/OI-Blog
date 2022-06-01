@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x12 队列 - OI Blog
+    0x13 链表与邻接表 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="media/16415680135532/diana2.jpg" type="image/png" />
@@ -91,7 +91,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x12 队列   
+                            0x13 链表与邻接表   
                       </h1>
                      
                     
@@ -108,10 +108,10 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/05/20</span>
+                                 <span class="date">2022/06/01</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
-                                      <span class="posted-in"><a href='0x12.html'>0x12 队列</a></span>
+                                      <span class="posted-in"><a href='0x13.html'>0x13 链表与邻接表</a></span>
                                          
                                   
 
@@ -120,11 +120,9 @@
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
                                   
-                                    <c><a href='tag_%E9%98%9F%E5%88%97.html'>#队列</a></c>
+                                    <c><a href='tag_%E9%93%BE%E8%A1%A8.html'>#链表</a></c>
                                   
-                                    <c><a href='tag_%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97.html'>#单调队列</a></c>
-                                  
-                                    <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
+                                    <c><a href='tag_%E6%A8%A1%E6%8B%9F.html'>#模拟</a></c>
                                      
 
                                 </p>
@@ -134,168 +132,76 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <h2><a id="team-queue" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Team Queue</h2>
-<p><tc><c>0x1201</c><e>Easy</e><t>模拟</t><t>队列</t></tc></p>
+                    <h2><a id="%E5%B0%8F%E7%86%8A%E7%9A%84%E6%9E%9C%E7%AF%AE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>小熊的果篮</h2>
+<p><tc><c>CSP-J 2021</c><e>Easy+</e><t>模拟</t><t>链表</t></tc></p>
+<p>普及摆烂没 AK 的痛</p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>开个队列记录下队伍之间的顺序；再对于每个队伍开个队列记录下内部的顺序。</p>
+<p>将块作为链表的一个项目，每一轮进行合并，由于每个水果至多被删一次，所以时间复杂度就是 \(O(n)\) 的。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n;
-std::map&lt;int, int&gt; m;
-std::queue&lt;int&gt; d, q[1001];
-
-int main() {
-    int T = 0;
-    while (std::cin &gt;&gt; n &amp;&amp; n) {
-        ++T;
-        std::cout &lt;&lt; &quot;Scenario #&quot; &lt;&lt; T &lt;&lt; '\n';
-
-        m.clear(); d = std::queue&lt;int&gt;();
-        for (int i = 1; i &lt;= n; ++i) {
-            q[i] = std::queue&lt;int&gt;();
-            int t; std::cin &gt;&gt; t;
-            while (t--) {
-                int g; std::cin &gt;&gt; g;
-                m[g] = i;
-            }
-        }
-
-        std::string s; int op;
-        while (std::cin &gt;&gt; s &amp;&amp; s != &quot;STOP&quot;) {
-            if (s == &quot;DEQUEUE&quot;) {
-                std::cout &lt;&lt; q[d.front()].front() &lt;&lt; '\n';
-                q[d.front()].pop();
-                if (q[d.front()].empty()) d.pop();
-            } else if (s == &quot;ENQUEUE&quot;) {
-                std::cin &gt;&gt; op;
-                if (q[m[op]].empty()) d.push(m[op]);
-                q[m[op]].push(op);
-            }
-        }
-        std::cout &lt;&lt; '\n';
+<p>有点难整。。。</p>
+<p>首先明确一个块内的编号并不是连续的，所以除了维护块之间的顺序外还要再开一个双向链表来维护编号间的前后关系（但这个实现起来用数组即可，比较简单）。考场上写错就是因为这个点。</p>
+<p>另外这里的写法中两边的 <code>head</code> 和 <code>tail</code> 是空的，要判一下。</p>
+<pre class="line-numbers"><code class="language-cpp">namespace List {
+    struct Node {
+        int val, type, start;
+        Node *prev, *next;
+    } v[200001], *head, *tail;
+    void init() {
+        head = new Node();
+        tail = new Node();
+        head-&gt;next = tail;
+        tail-&gt;prev = head;
     }
-}
-</code></pre>
-<hr />
-<h2><a id="%E8%9A%AF%E8%9A%93" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>蚯蚓</h2>
-<p><tc><c>NOIP2016 D2T2</c><c>0x1202</c><m>Medium+</m><t>数学</t><t>队列</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>时间复杂度的瓶颈像是 \(O(m)\) 的，这也就是要求我们 \(O(1)\) 实现查询最大值、分裂、增长长度这三个操作。</p>
-<p>最直接地，可以想到通过大根堆找出最大值，但是顺序不保证，而且太慢了，想要 \(O(1)\) 的话最好使序列有序。接下来就是试图找出单调性。</p>
-<p>一次操作，等效于把一个数 \(x\) 分为 \(\lfloor px \rfloor - q\) 和 \(x - \lfloor px \rfloor - q\) 这两个数（实际值是全部数加上 \(\Delta=q\cdot T\)，\(T\) 为当前操作次数）。任何操作都只会让数列中的数变小，所以数列的最大值单调递减，被砍的数单调递减。</p>
-<p>可不想让被砍出来的数再放回原队列破坏单调性，所以继续探究被砍出来的数是否存在单调性。注意我们集体减了 \(\Delta\)，计算的时候要还原 \(\Delta\)（\(\Delta\) 为本轮操作前的 \(\Delta\)）。一个数被分为了 \(x_1=\lfloor p(x+\Delta) \rfloor - q - \Delta\) 和 \(x_2=x - \lfloor p(x+\Delta) \rfloor - q\)。假设在这个数后面被分裂的那个数是 \(y\)（\(y \le x\)），那么分出来的就是 \(y_1=\lfloor p(y+\Delta+q) \rfloor - q - \Delta-q\) 和 \(y_2=y - \lfloor p(y+\Delta+q) \rfloor - q\)。</p>
-<p>作差：</p>
-\[\begin{aligned}
-x_1-y_1
-&amp;=\lfloor p(x+\Delta) \rfloor-\lfloor p(y+\Delta+q) \rfloor+q\\
-&amp;=\lfloor p(x+xq) \rfloor-\lfloor p(y+q) \rfloor&gt;0\\
-
-x_2-y_2
-&amp;=x - \lfloor p(x+\Delta) \rfloor - y + \lfloor p(y+\Delta+q) \rfloor\\
-&amp;=\lfloor x-p(x)\rfloor-\lfloor y-p(y+q) \rfloor&gt;0
-\end{aligned}
-\]
-<p>也就是说，<strong>砍出来的那两截蚯蚓的长度也随着时间的推移而单调递减</strong>。在所有操作之前先把整个序列排序存进一个队列中，当进行分裂操作时，把大的取出来放进一个队列，把小的取出来放进另一个队列。可以保证这三个队列都是队首大，队尾小，这样就完成了 \(O(1)\) 地求最大值。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-#define top(x) ((x.empty()) ? -1e16 : x.front())
-
-int n, m, q, u, v, t;
-int d[100001];
-std::queue&lt;int&gt; a, b, c;
-
-signed main() {
-    n = read(), m = read(), q = read(), u = read(), v = read(), t = read();
-    for (int i = 1; i &lt;= n; ++i) d[i] = read();
-    std::sort(d + 1, d + n + 1);
-    for (int i = n; i; --i) a.push(d[i]);
-
-    int delta = 0;
-    for (int i = 1; i &lt;= m; ++i, delta += q) {
-        int a0 = top(a), b0 = top(b), c0 = top(c), max = 0;
-        if (a0 &gt;= b0 &amp;&amp; a0 &gt;= c0) max = a0, a.pop();
-        else if (b0 &gt;= c0) max = b0, b.pop();
-        else max = c0, c.pop();
-        if (i % t == 0) printf(&quot;%lld &quot;, max + delta);
-        b.push(floor((double)u / v * (max + delta)) - q - delta);
-        c.push(max - floor((double)u / v * (max + delta)) - q);
+    void insert(int val, int type, int start, Node *p) {
+        auto r = new Node();
+        r-&gt;val = val; r-&gt;type = type; r-&gt;start = start;
+        r-&gt;prev = p; r-&gt;next = p-&gt;next;
+        p-&gt;next-&gt;prev = r; p-&gt;next = r;
     }
-    putchar('\n');
-    for (int i = 1; i &lt;= n + m; ++i) {
-        int a0 = top(a), b0 = top(b), c0 = top(c), max = 0;
-        if (a0 &gt;= b0 &amp;&amp; a0 &gt;= c0) max = a0, a.pop();
-        else if (b0 &gt;= c0) max = b0, b.pop();
-        else max = c0, c.pop();
-        if (i % t == 0) printf(&quot;%lld &quot;, max + delta);
+    void remove(Node *p) {
+        p-&gt;prev-&gt;next = p-&gt;next;
+        p-&gt;next-&gt;prev = p-&gt;prev;
+        delete p;
     }
+};
 
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>双端队列</h2>
-<p><tc><c>BJOI 2011</c><c>0x1203</c><m>Medium+</m><t>贪心</t><t>队列</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>以输入为出发点考虑问题：我不太行，因为他要求是整体有序，很难光通过原始的无序序列找到答案。</p>
-<p><strong>以输出为出发点考虑问题</strong>：最终要求排好序，那我就排好序，把排好序的数组分割，每一段对应一个双端队列。每一段中要求数的下标具有<strong>单谷性质</strong>。注意判断重复的数。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>接下来是单谷怎么找的问题，一开始是下降的状态，降不动的时候只能升，升不动的时候就成了一个双端队列（同一个数的下标要么全升要么全降，否则复杂化了）。开两个变量，一个是上升下降的标志，一个是上升 / 下降期的最小 / 最大下标。</p>
-<pre class="line-numbers"><code class="language-cpp">int n, a[200001];
-std::pair&lt;int, int&gt; p[200001];
-std::vector&lt;int&gt; v[200001];
+int prevN[200001], nextN[200001];
+
+int n;
 
 int main() {
     n = read();
+    List::init();
+    int prev = 0, count = 0;
     for (int i = 1; i &lt;= n; ++i) {
-        p[i].first = read();
-        p[i].second = i;
+        if (i != n) nextN[i] = i + 1; prevN[i] = i - 1;
+        int a = read();
+        if (a != prev) {
+            if (i != 1)
+                List::insert(count, prev, i - count, List::tail-&gt;prev);
+            prev = a;
+            count = 0;
+        }
+        ++count;
     }
-    std::sort(p + 1, p + n + 1);
-    int t = 1;
-    v[t].push_back(p[1].second);
-    for (int i = 2; i &lt;= n; ++i) {
-        if (p[i].first != p[i - 1].first)
-            v[++t].push_back(p[i].second);
-        else v[t].push_back(p[i].second);
-    }
-    int flag = 0, num = 0, ans = 0;
-    for (int i = 1; i &lt;= t; ++i) {
-        const int first = v[i][0], last = v[i][v[i].size() - 1];
-        if (flag) {
-            if (first &lt; num) { ++ans; flag = 0; num = first; }
-            else num = last;
-        } else {
-            if (last &gt; num) { flag = 1; num = last; }
-            else num = first;
+    List::insert(count, prev, n + 1 - count, List::tail-&gt;prev);
+    while (List::head-&gt;next != List::tail) {
+        for (auto x = List::head-&gt;next; x-&gt;next != NULL; x = x-&gt;next)
+            printf(&quot;%d &quot;, x-&gt;start);
+        putchar('\n');
+        for (auto x = List::head-&gt;next; x-&gt;next != NULL; x = x-&gt;next) {
+            x-&gt;val--;
+
+            nextN[prevN[x-&gt;start]] = nextN[x-&gt;start];
+            prevN[nextN[x-&gt;start]] = prevN[x-&gt;start];
+            x-&gt;start = nextN[x-&gt;start];
+
+            if (x-&gt;val == 0)
+                List::remove(x);
+            else if (x-&gt;prev-&gt;type == x-&gt;type &amp;&amp; x-&gt;prev != List::head)
+                x-&gt;prev-&gt;val += x-&gt;val, List::remove(x);
         }
     }
-    printf(&quot;%d\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>最大子序和</h2>
-<p><tc><c>0x1204</c><e>Easy</e><t>前缀和</t><t>单调队列</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>考虑没有限制的做法：一个是递推一下，一个是前缀和一下。有限制的话感觉前缀和更靠谱，那就试一试。求出前缀和 \(p\) 后，问题转化为找出 \(\max\limits_{i-j &lt; m}\{p_i-p_j\}\)。</p>
-<p>考虑用单调队列求解。用滑动窗口求出当前点之前的 \(m\) 个前缀和的最小值，用现在的前缀和去减，就做完了。</p>
-<p>复习一下滑动窗口的做法：进队尾把大数顶掉，维持单调递增，把超过窗口范围的也推掉。最小值在每次的队头。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, m, p[300001];
-std::deque&lt;std::pair&lt;int, int&gt;&gt; q;
-
-int main() {
-    n = read(), m = read();
-    for (int i = 1; i &lt;= n; ++i)
-        p[i] = p[i - 1] + read();
-    int ans = -2e8;
-    q.push_back({0, 0});
-    for (int i = 1; i &lt;= n; ++i) {
-        while (q.size() &amp;&amp; q.back().second &gt; p[i]) q.pop_back();
-        q.push_back({i, p[i]});
-        if (i - q.front().first &gt; m) q.pop_front();
-        ans = std::max(ans, p[i] - q.front().second);
-    }
-    printf(&quot;%d\n&quot;, ans);
     return 0;
 }
 </code></pre>
