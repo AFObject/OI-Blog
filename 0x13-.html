@@ -205,6 +205,69 @@ int main() {
     return 0;
 }
 </code></pre>
+<hr />
+<h2><a id="%E9%82%BB%E5%80%BC%E6%9F%A5%E6%89%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>邻值查找</h2>
+<p><tc><c>0x1301</c><m>Medium-</m><t>模拟</t><t>链表</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>显然有一步是要从小到大排序并且找出某个数的前驱 / 后继。</p>
+<p>一种方法是依次将数有序地插入一个 <code>std::set</code>，并输出这个数的前驱或后缀。</p>
+<p>另一种方法则是<strong>倒序</strong>处理，用完一个删一个，用链表维护数据。</p>
+<p>本节例题中「Running Median」（0x0503）也可以用这种倒序的思想处理数据（用完一个删一个）。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>还是注意判断队列首、尾预留的空项的问题，赋一个极大的初值即可。</p>
+<pre class="line-numbers"><code class="language-cpp">namespace List {
+    struct Node {
+        std::pair&lt;int, int&gt; val;
+        Node *prev, *next;
+    } v[200001], *head, *tail;
+    void init() {
+        head = new Node();
+        tail = new Node();
+        head-&gt;val.first = -2e9;
+        tail-&gt;val.first = 2e9;
+        head-&gt;next = tail;
+        tail-&gt;prev = head;
+    }
+    void insert(std::pair&lt;int, int&gt; val, Node *p) {
+        auto r = new Node();
+        r-&gt;val = val; r-&gt;prev = p; r-&gt;next = p-&gt;next;
+        p-&gt;next-&gt;prev = r; p-&gt;next = r;
+    }
+    void remove(Node *p) {
+        p-&gt;prev-&gt;next = p-&gt;next;
+        p-&gt;next-&gt;prev = p-&gt;prev;
+        delete p;
+    }
+};
+
+std::pair&lt;int, int&gt; a[200001];
+List::Node *b[200001];
+
+int n;
+int ansVal[200001], ansIdx[200001];
+
+int main() {
+    n = read();
+    List::init();
+    for (int i = 1; i &lt;= n; ++i) a[i] = {read(), i};
+    std::sort(a + 1, a + n + 1);
+    for (int i = 1; i &lt;= n; ++i) {
+        List::insert(a[i], List::tail-&gt;prev);
+        b[a[i].second] = List::tail-&gt;prev;
+    }
+    for (int i = n; i &gt; 1; --i) {
+        int lhs = b[i]-&gt;val.first - b[i]-&gt;prev-&gt;val.first,
+            rhs = b[i]-&gt;next-&gt;val.first - b[i]-&gt;val.first;
+        ansVal[i] = std::min(lhs, rhs);
+        if (lhs &lt;= rhs) ansIdx[i] = b[i]-&gt;prev-&gt;val.second;
+        else ansIdx[i] = b[i]-&gt;next-&gt;val.second;
+        List::remove(b[i]);
+    }
+    for (int i = 2; i &lt;= n; ++i)
+        printf(&quot;%d %d\n&quot;, ansVal[i], ansIdx[i]);
+    return 0;
+}
+</code></pre>
 
                   </article>
                   <div class="comments-wrap">
