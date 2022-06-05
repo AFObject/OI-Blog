@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-06-04T23:53:39+08:00</updated>
+  <updated>2022-06-05T16:08:40+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -93,12 +93,13 @@ int main() {
 </code></pre>
 <hr />
 <h2><a id="f-rectangle-gcd" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Rectangle GCD</h2>
-<p><tc><e>Medium *1764</e><t>数论</t><t>GCD</t><t>线段树</t><t>DS</t></tc></p>
+<p><tc><m>Medium- *1764</m><t>数论</t><t>GCD</t><t>线段树</t><t>DS</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>极其显然地，答案是</p>
 \[\gcd\{A_{h_1}+B_{w_1},\underset{i\in(h_1,h_2]}{\left|A_i-A_{i-1}\right|},\underset{i\in(w_1,w_2]}{\left|B_i-B_{i-1}\right|}\}
 \]
 <p>然后就是查询区间 \(\gcd\)，用线段树或者 ST 表。</p>
+<p>为什么感觉 E &lt; F &lt; D……</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
 <p>不带修的线段树真好写。注意四倍空间！</p>
 <pre class="line-numbers"><code class="language-cpp">#define lt(x) ((x) &lt;&lt; 1)
