@@ -125,6 +125,14 @@
                                     <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
                                   
                                     <c><a href='tag_%E7%AD%9B%E6%B3%95.html'>#筛法</a></c>
+                                  
+                                    <c><a href='tag_%E6%90%9C%E7%B4%A2.html'>#搜索</a></c>
+                                  
+                                    <c><a href='tag_GCD.html'>#GCD</a></c>
+                                  
+                                    <c><a href='tag_DS.html'>#DS</a></c>
+                                  
+                                    <c><a href='tag_%E7%BA%BF%E6%AE%B5%E6%A0%91.html'>#线段树</a></c>
                                      
 
                                 </p>
@@ -137,7 +145,7 @@
                     <p>VP</p>
 <span id="more"></span><!-- more -->
 <h2><a id="d-together-square" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D Together Square</h2>
-<p><tc><m>Medium- *?</m><t>数论</t><t>组合</t><t>筛法</t></tc></p>
+<p><tc><m>Medium *1191</m><t>数论</t><t>组合</t><t>筛法</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>两个数都是平方数的话其实是很简单的，但如果两个都不是平方数就有点难搞。一个非平方数所对应的可以让它们的积为完全平方数的另一个数是不唯一的，怎么快速找到它呢？</p>
 <p>考虑将所有的数 \(i\) 都除去它们最大的完全平方数因数（\(p_i\)），然后剩下的部分（设为 \(f_i\)）相等的，原数拼在一起就可以得到一个完全平方数。下面考虑的是如何快速的得到 \(f_i\)。由于数据范围不大，可以直接枚举它的因数找到 \(p_i\)。枚举因数用类似埃筛的方法，时间复杂度反正不大。</p>
@@ -163,6 +171,108 @@ signed main() {
     }
     for (int i = 1; i &lt;= n; ++i) ans += sum[i] * sum[i];
     printf(&quot;%lld\n&quot;, ans);
+}
+</code></pre>
+<hr />
+<h2><a id="e-small-d-and-k" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E Small d and k</h2>
+<p><tc><e>Easy+ *1202</e><t>搜索</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>答案是暴力。</p>
+<p>这种最短路问题理应用 BFS 解决，但实际上 DFS 乱搞搞也可以过。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int x, k;
+int dis[200001];
+std::vector&lt;int&gt; nodes;
+void dfs(int x, int t) {
+    if (t &gt;= dis[x]) return;
+    if (dis[x] &gt; k) nodes.push_back(x);
+    dis[x] = t;
+    if (t == k) return;
+    for (int v : e[x])
+        dfs(v, t + 1);
+}
+
+int main() {
+    n = read(), m = read();
+    for (int i = 1; i &lt;= n; ++i) dis[i] = 1e9;
+    while (m--) {
+        int u = read(), v = read();
+        e[u].push_back(v);
+        e[v].push_back(u);
+    }
+    q = read();
+    while (q--) {
+        x = read(), k = read();
+        nodes = std::vector&lt;int&gt;();
+        dfs(x, 0);
+        long long ans = 0;
+        for (int u : nodes) {
+            dis[u] = 1e9;
+            ans += u;
+        }
+        printf(&quot;%lld\n&quot;, ans);
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="f-rectangle-gcd" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Rectangle GCD</h2>
+<p><tc><e>Medium *1764</e><t>数论</t><t>GCD</t><t>线段树</t><t>DS</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>极其显然地，答案是</p>
+\[\gcd\{A_{h_1}+B_{w_1},\underset{i\in(h_1,h_2]}{\left|A_i-A_{i-1}\right|},\underset{i\in(w_1,w_2]}{\left|B_i-B_{i-1}\right|}\}
+\]
+<p>然后就是查询区间 \(\gcd\)，用线段树或者 ST 表。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>不带修的线段树真好写。注意四倍空间！</p>
+<pre class="line-numbers"><code class="language-cpp">#define lt(x) ((x) &lt;&lt; 1)
+#define rt(x) (((x) &lt;&lt; 1) + 1)
+#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+
+int n, q;
+int a[200001], b[200001];
+int ca[200001], cb[200001];
+
+int gcd(int a, int b) {
+    return b ? gcd(b, a % b) : a;
+}
+
+int segA[800001], segB[800001];
+void build(int *s1, int *s2, int x, int l, int r) {
+    if (l == r) {
+        s1[x] = s2[l];
+        return;
+    }
+    const int mid = (l + r) &gt;&gt; 1;
+    build(s1, s2, lt(x), l, mid);
+    build(s1, s2, rt(x), mid + 1, r);
+    s1[x] = gcd(s1[lt(x)], s1[rt(x)]);
+}
+
+int query(int *s, int x, int l, int r, int ql, int qr) {
+    if (l &gt; r) return 1;
+    if (ql &lt;= l &amp;&amp; r &lt;= qr) return s[x];
+    const int mid = (l + r) &gt;&gt; 1;
+    int res = 0;
+    if (ql &lt;= mid) res = gcd(res, query(s, lt(x), l, mid, ql, qr));
+    if (qr &gt; mid) res = gcd(res, query(s, rt(x), mid + 1, r, ql, qr));
+    return res;
+}
+
+int main() {
+    n = read(), q = read();
+    for (int i = 1; i &lt;= n; ++i) a[i] = read();
+    for (int i = 1; i &lt;= n; ++i) b[i] = read();
+    for (int i = 1; i &lt;= n; ++i)
+        ca[i] = abs(a[i] - a[i - 1]), cb[i] = abs(b[i] - b[i - 1]);
+    build(segA, ca, 1, 1, n);
+    build(segB, cb, 1, 1, n);
+    while (q--) {
+        int h1 = read(), h2 = read(), w1 = read(), w2 = read();
+        printf(&quot;%d\n&quot;, gcd( gcd(query(segA, 1, 1, n, h1 + 1, h2),
+                                query(segB, 1, 1, n, w1 + 1, w2)),
+                            a[h1] + b[w1]));
+    }
 }
 </code></pre>
 
