@@ -4,13 +4,85 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-06-05T16:08:40+08:00</updated>
+  <updated>2022-06-05T16:12:59+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x14 Hash]]></title>
+    <link href="oi.afobject.ml/0x14-.html"/>
+    <updated>2022-06-10T22:13:57+08:00</updated>
+    <id>oi.afobject.ml/0x14-.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="snowflake-snow-snowflakes" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Snowflake Snow Snowflakes</h2>
+<p><tc><c>0x1401</c><e>Easy+</e><t>Hash</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>我们目标的 Hash 函数要满足：</p>
+<ul>
+<li>对于每个数是平等的；</li>
+<li>能尽量区分出不同的雪花。</li>
+</ul>
+<p>因此可以构造出 Hash 函数 \(H(a_{i,1},a_{i,2},\ldots,a_{i,6})=(\sum_{j=1}^6a_{i,j}+\prod_{j=1}^6a_{i,j}) \bmod P\)。</p>
+<p>对于每一个 Hash 值，期望的项目数是 \(\dfrac N P\)。每个块内比一比，最终的时间复杂度是 \(\sum \left(\dfrac N P\right)^2\)（？没搞懂为啥是 \(\dfrac{N^2}P\)）。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>Hash 的实现注意：</p>
+<ul>
+<li>当 Hash 值计算过程中可能超过 <code>int</code> 范围（如乘积等）时，先转一下 <code>long long</code>；</li>
+<li>能不开新空间就不开新空间，少用指针（适用所有题目）。</li>
+</ul>
+<pre class="line-numbers"><code class="language-cpp">#define P 99991
+
+int n;
+
+struct Snowflake {
+    int a[6];
+    int hashValue() {
+        int sum = 0, prod = 1;
+        for (int i = 0; i &lt; 6; ++i) 
+            sum = (sum + a[i]) % P, prod = ((long long)prod * a[i]) % P;
+        return (sum + prod) % P;
+    }
+    bool operator == (const Snowflake&amp; other) const {
+        for (int s = 0; s &lt; 6; ++s) {
+            bool flag = true;
+            for (int i = 0; i &lt; 6; ++i)
+                if (a[(s + i) % 6] != other.a[i])
+                    flag = false;
+            if (flag) return true;
+            flag = true;
+            for (int i = 0; i &lt; 6; ++i)
+                if (a[(s + i) % 6] != other.a[5 - i])
+                    flag = false;
+            if (flag) return true;
+        }
+        return false;
+    }
+};
+
+std::vector&lt;Snowflake&gt; v[100001];
+
+int main() {
+    n = read();
+    while (n--) {
+        Snowflake t;
+        for (int i = 0; i &lt; 6; ++i)
+            t.a[i] = read() % P;
+        const int val = t.hashValue();
+        for (auto x : v[val])
+            if (x == t)
+                return puts(&quot;Twin snowflakes found.&quot;), 0;
+        v[val].push_back(t);
+    }
+    return puts(&quot;No two snowflakes are alike.&quot;), 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ABC254]]></title>
@@ -1587,7 +1659,7 @@ void tryReplace(std::string s) {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[0x0809 ~ 0x0812]]></title>
+    <title type="html"><![CDATA[0x0809 ~ 0x080C]]></title>
     <link href="oi.afobject.ml/0x08-3.html"/>
     <updated>2022-04-06T07:39:26+08:00</updated>
     <id>oi.afobject.ml/0x08-3.html</id>
@@ -1656,7 +1728,7 @@ int main() {
 </code></pre>
 <hr />
 <h2><a id="cow-acrobats" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cow Acrobats</h2>
-<p><tc><c>0x0810</c><m>Medium-</m><t>贪心</t><t>数学</t></tc></p>
+<p><tc><c>0x080A</c><m>Medium-</m><t>贪心</t><t>数学</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>0x0704 改编版。</p>
 <p>第 \(x\) 头奶牛的风险值为 \(a=\sum\limits_{i=1}^{x-1} w_i - s_x\)。第 \(x+1\) 头牛风险值为 \(b=\sum\limits_{i=1}^{x} w_i - s_{x+1}\)。</p>
@@ -1696,7 +1768,7 @@ int main() {
 </code></pre>
 <hr />
 <h2><a id="to-the-max" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>To The Max</h2>
-<p><tc><c>0x0811</c><e>Easy</e><t>贪心</t><t>前缀和</t></tc></p>
+<p><tc><c>0x080B</c><e>Easy</e><t>贪心</t><t>前缀和</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>考虑从一维的最大子段和转移。不就多了一个维度吗。</p>
 <p>枚举矩形的上底和下底就行了。</p>
@@ -1727,7 +1799,7 @@ int main() {
 </code></pre>
 <hr />
 <h2><a id="task" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task</h2>
-<p><tc><c>0x0812</c><m>Medium-</m><t>贪心</t></tc></p>
+<p><tc><c>0x080C</c><m>Medium-</m><t>贪心</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>Ref: 0x0701</p>
 <p>考虑对于每个任务以 \(x\) 为第一关键字、\(y\) 为第二关键字从大到小排序，优先保证上面的任务。</p>
@@ -2285,243 +2357,6 @@ int main() {
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <h4><a id="30%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>30 分</h4>
 <p><code>std::bitset</code> 暴力，\(O(Tn^3)\)。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x07 贪心]]></title>
-    <link href="oi.afobject.ml/0x07-.html"/>
-    <updated>2022-03-18T15:15:46+08:00</updated>
-    <id>oi.afobject.ml/0x07-.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="sunscreen" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sunscreen</h2>
-<p><tc><c>0x0701</c><c>USACO</c><e>Easy+</e><t>贪心</t><t>排序</t></tc></p>
-<p>有 \(n\) 头牛，每头牛能忍受一个区间范围的阳光，然后有 \(m\) 瓶防晒霜，每瓶防晒霜能让一头牛身上的阳光变成一个定值，现在最大化能忍受阳光的奶牛数。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>我们的贪心策略一定是对于每一头牛：</p>
-<ul>
-<li>尽量能匹配到它的防晒霜</li>
-<li>在有多个匹配时选择最不影响其他牛的匹配</li>
-<li>如果非得因为这头牛然后让其他牛寄，也没问题，因为每头牛的权值都是 1。</li>
-</ul>
-<p>对于第二条，考虑给高高在上的牛上牛就匹配值高的防晒霜，把值小的防晒霜留给下面的牛用（没被上面的牛用的一定能满足下面的牛的最小值，如果超过了它的最大值只能怪它自己，我已经把尽量小的留给你了）。</p>
-<p>这种策略事正确的。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>将牛按区间起始值排序，防晒霜按值排序，均从大到小。每一头你从防晒霜中找第一个能被它用的，然后下一个。</p>
-<pre class="line-numbers"><code class="language-cpp">int n, m;
-std::pair&lt;int, int&gt; cow[100001], sun[100001];
-
-int main() {
-    n = read(), m = read();
-    for (int i = 1; i &lt;= n; ++i)
-        cow[i].first = read(), cow[i].second = read();
-    for (int i = 1; i &lt;= m; ++i)
-        sun[i].first = read(), sun[i].second = read();
-    std::sort(cow + 1, cow + n + 1, std::greater&lt;std::pair&lt;int, int&gt;&gt;());
-    std::sort(sun + 1, sun + m + 1, std::greater&lt;std::pair&lt;int, int&gt;&gt;());
-    int ans = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        for (int j = 1; j &lt;= m; ++j)
-            if (sun[j].second &amp;&amp; cow[i].first &lt;= sun[j].first &amp;&amp; sun[j].first &lt;= cow[i].second) {
-                ++ans;
-                --sun[j].second;
-                break;
-            }
-    printf(&quot;%d\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="stall-reservations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stall Reservations</h2>
-<p><tc><c>0x0702</c><c>USACO</c><e>Easy</e><t>贪心</t><t>排序</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>萌萌题黄够了吧，和 廊桥分配 一个套路。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>区间有重复用 <code>std::multiset</code>。</p>
-<pre class="line-numbers"><code class="language-cpp">int n;
-struct Cow {
-    int id, start, end;
-    bool operator &lt; (const Cow &amp;rhs) const {
-        if (start == rhs.start) {
-            if (end == rhs.end)
-                return id &lt; rhs.id;
-            return end &lt; rhs.end;
-        }
-        return start &lt; rhs.start;
-    }
-};
-std::multiset&lt;Cow&gt; s;
-int ans[500001];
-
-int main() {
-    n = read();
-    for (int i = 1; i &lt;= n; ++i) {
-        int a = read(), b = read();
-        s.insert({i, a, b});
-    }
-    int idx = 0;
-    while (s.size()) {
-        auto f = *s.begin();
-        s.erase(s.begin());
-        ans[f.id] = ++idx;
-        int end = f.end;
-        auto it = s.lower_bound({0, end + 1, 0});
-        while (it != s.end()) {
-            ans[it-&gt;id] = idx;
-            end = it-&gt;end;
-            s.erase(it);
-            it = s.lower_bound({0, end + 1, 0});
-        }
-    }
-    printf(&quot;%d\n&quot;, idx);
-    for (int i = 1; i &lt;= n; ++i)
-        printf(&quot;%d\n&quot;, ans[i]);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="radar-installation" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Radar Installation</h2>
-<p><tc><c>0x0703</c><m>Medium-</m><t>贪心</t><t>计算几何</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>从左到右考虑每一个点。对于每一个点，找到一个最右侧的能包含它圆。如果下一个点在先前所列的某个圆的范围内，包含进去。否则，/remake。</p>
-<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h0fmiygnkxj218p0r5goc.jpg" alt="" /><br />
-但这种方案还要再细化。如上图，「包含」关系时，就应该更新圆心往里缩一点，「继承」关系维持不变即可，「脱离」关系自然答案就应该加一。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-#define AVA 100000
-
-int n, d;
-
-struct Pos {
-    int x, y, l, r;
-    bool operator &lt; (const Pos &amp;rhs) const {
-        if (l == rhs.l)
-            return r &lt; rhs.r;
-        return l &lt; rhs.l;
-    }
-} p[100001];
-
-int dist(Pos a, Pos b) {
-    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
-}
-
-signed main() {
-    n = read(), d = read() * AVA;
-    for (int i = 1; i &lt;= n; ++i) {
-        p[i].x = read() * AVA, p[i].y = read() * AVA;
-        const int k = (int)sqrt(d * d - p[i].y * p[i].y);
-        p[i].l = p[i].x - k, p[i].r = p[i].x + k;
-    }
-    std::sort(p + 1, p + n + 1);
-    int ans = 0, pos = -100000000000;
-    for (int i = 1; i &lt;= n; ++i) {
-        if (p[i].y &gt; d) {
-            puts(&quot;-1&quot;);
-            return 0;
-        }
-        if (p[i].l &gt; pos) ++ans, pos = p[i].r;
-        else pos = std::min(pos, p[i].r);
-    }
-    printf(&quot;%lld\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E5%9B%BD%E7%8E%8B%E6%B8%B8%E6%88%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>国王游戏</h2>
-<p><tc><c>0x0704</c><c>NOIP 2012</c><m>Medium+</m><t>贪心</t><t>数学</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>考虑猜个结论，左右手两数乘积大的排后面。现在试图证明。</p>
-<p>对于相邻的两个大臣，获得的奖励就是 \(c_1=\lfloor \dfrac{\prod_{i=0}^{x-1} a_i}{b_x} \rfloor\) 和 \(c_2=\lfloor \dfrac{\prod_{i=0}^{x} a_i}{b_{x+1}} \rfloor\)。</p>
-<p>假如对于 \(x\) 与 \(x+1\) 位进行一个交换，获得的奖励就是 \(d_1=\lfloor \dfrac{(\prod_{i=0}^{x-1} a_i) \times a_{x+1}}{b_x} \rfloor\) 和 \(d_2=\lfloor \dfrac{\prod_{i=0}^{x-1} a_i}{b_{x+1}} \rfloor\)。</p>
-<p>（先忽略向下取整）现在我们要比较 \(\max\{c_1, c_2\}\) 和 \(\max\{d_1, d_2\}\) 的大小关系。</p>
-<p>提取公因式 \(\prod_{i=0}^{x-1}a_i\)，我们要比较的就是 \(\max\left\{\dfrac{1}{b_x}, \dfrac{a_x}{b_{x+1}}\right\}\) 和 \(\max\left\{\dfrac{a_{x+1}}{b_x}, \dfrac{1}{b_{x+1}}\right\}\) 的关系。</p>
-<p>统乘以 \(b_x \cdot b_{x+1}\)，比较 \(\max\{b_{x+1}, a_x \cdot b_x\}\) 与 \(\max\{b_x, a_{x+1} \cdot b_{x+1}\}\) 的大小关系。</p>
-<p>显然 \(a_x \cdot b_x  \ge b_x\)，\(a_{x+1} \cdot b_{x+1} \ge b_{x+1}\)，所以就是比较 \(a_x \cdot b_x\) 与 \(a_{x+1} \cdot b_{x+1}\)，\(a_x \cdot b_x\) 大则交换前大，反之交换后大。得证。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>贺题解。</p>
-<pre class="line-numbers"><code class="language-py">n = int(input())
-a, b = map(int, input().split())
-w = []
-for i in range(n):
-    c, d = map(int, input().split())
-    w.append([c, d])
-w.sort(key=lambda x: (x[0] * x[1]))
-ans = 0
-for i in range(n):
-    ans = max(ans, a // w[i][1])
-    a *= w[i][0]
-print(ans)
-</code></pre>
-<hr />
-<h2><a id="color-a-tree" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Color a Tree</h2>
-<p><tc><c>0x0705</c><h>Hard</h><t>贪心</t><t>树</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>注意到对于树中权值最大的点，它一定是在它父亲被染色之后立即被染色的。于是就可以把它和它父亲连成一个点。</p>
-<p>连了以后权值变为它们的平均数，非常神奇。</p>
-<p>举例，三个点 \(x,y,z\)，其中 \(x,y\) 同时染色。</p>
-<table>
-<thead>
-<tr>
-<th>步骤</th>
-<th>代价</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>先 \(z\) 再 \(x,y\)</td>
-<td>\(a=z+2x+3y\)</td>
-</tr>
-<tr>
-<td>先 \(x,y\) 再 \(z\)</td>
-<td>\(b=x+2y+3z\)</td>
-</tr>
-</tbody>
-</table>
-<p>我们的目的是比较 \(a,b\) 的大小。作差，得 \(x+y-2z\)。因此，当 \(z \le \dfrac{x+y}2\) 的时候，先染 \(z\) 更优。所以 \(x,y\) 两个点其实等价于它们的平均值。</p>
-<p>可以推广，\(n\) 个点构成的共同体的权值等价于它们的平均值。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>写不来 \(n \log n\) 就写 \(n^2\)。</p>
-<p><code>fa</code> 数组人工维护一个简化版并查集状物；<code>next</code> 数组维护一个保存染色顺序的单向链表。</p>
-<p><code>sum</code> 和 <code>num</code> 分别表示每个块的权值和以及节点个数；<code>last</code> 表示某个块当前最后一个被染色的节点（用于把后面的链表挂在它上面）；<code>used</code> 代表该点是否已被合并。</p>
-<pre class="line-numbers"><code class="language-cpp">int n, r;
-int fa[100001], c[100001], next[100001];
-int sum[100001], num[100001], last[100001];
-bool used[100001];
-
-int main() {
-    while (true) {
-        n = read(), r = read();
-        if (!n) return 0;
-        for (int i = 1; i &lt;= n; ++i)
-            c[i] = sum[i] = read(), num[i] = 1, last[i] = i, next[i] = i, used[i] = false;
-        for (int i = 1; i &lt; n; ++i) {
-            int x = read(), y = read();
-            fa[y] = x;
-        }
-        for (int i = 1; i &lt; n; ++i) {
-            int x = -1; double max = -1;
-            for (int j = 1; j &lt;= n; ++j)
-                if (j != r &amp;&amp; !used[j] &amp;&amp; (double)sum[j] / num[j] &gt; max)
-                    x = j, max = (double)sum[j] / num[j];
-            int f = fa[x];
-            while (used[f]) f = fa[x] = fa[f];
-            used[x] = true;
-            next[last[f]] = x;
-            last[f] = last[x];
-            sum[f] += sum[x];
-            num[f] += num[x];
-        }
-        int ans = 0;
-        for (int i = 1; i &lt;= n; ++i) {
-            ans += i * c[r];
-            r = next[r];
-        }
-        printf(&quot;%d\n&quot;, ans);
-    }
-    return 0;
-}
-</code></pre>
 
 ]]></content>
   </entry>

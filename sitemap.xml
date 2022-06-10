@@ -2,7 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
   <loc>oi.afobject.ml/</loc>
-  <lastmod>2022-06-05T16:12:58+08:00</lastmod>
+  <lastmod>2022-06-10T23:29:19+08:00</lastmod>
+</url>
+
+<url>
+  <loc>oi.afobject.ml/0x14-.html</loc>
+  <lastmod>2022-06-10T22:13:57+08:00</lastmod>
 </url>
 
 <url>
@@ -252,6 +257,10 @@
 
 <url>
   <loc>oi.afobject.ml/0x13.html</loc>
+</url>
+
+<url>
+  <loc>oi.afobject.ml/0x14.html</loc>
 </url>
 
 <url>
