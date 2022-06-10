@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-06-05T16:12:59+08:00</updated>
+  <updated>2022-06-10T23:29:20+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -27,7 +27,7 @@
 <li>能尽量区分出不同的雪花。</li>
 </ul>
 <p>因此可以构造出 Hash 函数 \(H(a_{i,1},a_{i,2},\ldots,a_{i,6})=(\sum_{j=1}^6a_{i,j}+\prod_{j=1}^6a_{i,j}) \bmod P\)。</p>
-<p>对于每一个 Hash 值，期望的项目数是 \(\dfrac N P\)。每个块内比一比，最终的时间复杂度是 \(\sum \left(\dfrac N P\right)^2\)（？没搞懂为啥是 \(\dfrac{N^2}P\)）。</p>
+<p>对于每一个 Hash 值，期望的项目数是 \(\dfrac N P\)。每个块内比一比，最终的时间复杂度是 \(P \cdot \left(\dfrac N P\right)^2= \dfrac{N^2}P\)）。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
 <p>Hash 的实现注意：</p>
 <ul>
