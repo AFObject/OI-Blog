@@ -4,13 +4,334 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-06-10T23:29:20+08:00</updated>
+  <updated>2022-06-12T01:28:10+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[RingtoneHY V2 项目详解]]></title>
+    <link href="oi.afobject.ml/16549586469772.html"/>
+    <updated>2022-06-11T22:44:06+08:00</updated>
+    <id>oi.afobject.ml/16549586469772.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="1%E5%89%8D%E8%A8%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1 前言</h2>
+<p>RingtoneHY V2 项目开源在 GitHub 仓库： <a href="https://github.com/AFObject/RingtoneHY">AFObject/RingtoneHY</a>，前身是 2020 年疫情期间的初版，在 2022 年网课期间进行了完全重构，是一款 macOS 原生 App，用于在网课期间提供模拟校园铃声的功能。</p>
+<p>前有 C+++ 对抗 ClickIDE，后有 RingtoneHY 对抗 HYRing，好啊！!1</p>
+<p>本项目的开发经历了一个完整的流程，在本文中进行详细的阐述。</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h34osrcyi4j21by0qqq79.jpg" alt="" /><br />
+（图 1.1 社团课演示文稿截图）</p>
+<p>因为是小程序，整个的开发路子基本都是按照我之前总结的这个来，没有大的改动。</p>
+<hr />
+<h2><a id="2%E7%AB%8B%E9%A1%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>2 立项</h2>
+<p>究其原因是：</p>
+<ol>
+<li>班主任及多名任课教师在晨会 / 课上提到相关内容；</li>
+<li>懒得在 iPad 上设闹钟；</li>
+<li>秀 / 锻炼一下自己的码力。</li>
+</ol>
+<p>有了 20 年 V1 版本的经验，在开发之前将本次开发的主要内容确定为：</p>
+<ul>
+<li>增强 UI 界面的美观性、易用性；</li>
+<li>动态编辑铃声的功能；</li>
+<li>在实现功能的同时试试看简化、优化代码，至少让我自己满意。</li>
+</ul>
+<hr />
+<h2><a id="3%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>3 模型搭建</h2>
+<blockquote>
+<p>Code: <a href="https://github.com/AFObject/RingtoneHY/blob/main/RingtoneHY/TaskStorage.swift">RingtoneHY/TaskStorage.swift</a></p>
+<p>Reference:</p>
+<ol>
+<li><a href="https://stackoverflow.com/questions/24217586/structure-vs-class-in-swift-language">StackOverflow 24217586</a></li>
+</ol>
+</blockquote>
+<h3><a id="3-1%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%B4%E6%8A%A4" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 模型的基本维护</h3>
+<p>因为早就想好了，上来就直接写数据结构。</p>
+<p>我们在这个 App 里需要维护的是什么？（一个<strong>星期</strong>中）【（每一<strong>天</strong>的）【（每一节<strong>课 / 任务</strong>的）【（开始、结束<strong>时间</strong>的）【时、分、秒和铃声】】】】。</p>
+<p>上面这一句话的排版有点乱，但已经很明确了——对于每个加粗的部分，都写一个结构体来保存数据。</p>
+<pre class="line-numbers"><code class="language-swift">struct Time { // 一个响铃时间点
+    var hour: Int
+    var minute: Int
+    var music: Int
+}
+struct Task { // 一天
+    var start: Time
+    var end: Time
+    var name: String
+}
+struct TaskList { // 一天的任务列表
+    var tasks: [Task]
+}
+struct TaskStorage { // 一周七天，七个任务列表的集合
+    var lists: [TaskList]
+}
+</code></pre>
+<p>这是整个 <code>TaskStorage.swift</code> 150 行的精髓。接下来就要考虑的是细枝末节的东西：如何将数据变成系统可读的格式保存在本地？如何快速地新建一个结构体？如何配置默认日程表？……</p>
+<ul>
+<li>Q1：如何将数据变成系统可读的格式保存在本地？</li>
+<li>A1：对于每个结构体，使其遵守 <code>Codable</code> 协议。使用 <code>JSONEncoder</code> / <code>JSONDecoder</code> 来解 / 编码数据。最后写几个方便操作的结构体内函数。</li>
+</ul>
+<pre class="line-numbers"><code class="language-swift">var data: Data {
+    return try! JSONEncoder().encode(self)
+}
+    
+static func from(data: Data?) -&gt; TaskStorage {
+    if let data = data {
+        do {
+            return try JSONDecoder().decode(TaskStorage.self, from: data)
+        } catch {
+            print(error)
+        }
+    }
+    return .default
+}
+</code></pre>
+<ul>
+<li>Q2：如何快速地新建一个结构体？</li>
+<li>A2：在每个结构体内写好方便的构造函数。例如下面这段，输入一个五位数字串，自动转换成一个时间点的结构体。</li>
+</ul>
+<pre class="line-numbers"><code class="language-swift">init(_ string: String) {
+    hour = Int(string.prefix(2)) ?? 0
+    minute = Int((string as NSString).substring(with: NSMakeRange(2, 2))) ?? 0
+    music = Int(string.suffix(1)) ?? 0
+}
+</code></pre>
+<ul>
+<li>Q3：如何配置默认日程表？</li>
+<li>A3：在 <code>TaskStorage</code> 内写一个常量即可。例如：</li>
+</ul>
+<pre class="line-numbers"><code class="language-swift">static var `default`: TaskStorage {
+    let ver1 = TaskList(tasks: [
+        Task(&quot;07401&quot;, &quot;07450&quot;, &quot; 点名 &quot;),
+        Task(&quot;08001&quot;, &quot;08402&quot;, &quot; 第 1 节课 &quot;), // trimmed
+        Task(&quot;16051&quot;, &quot;16452&quot;, &quot; 第 9 节课 &quot;)
+    ])
+    let ver2 = TaskList(tasks: [
+        Task(&quot;07401&quot;, &quot;07450&quot;, &quot; 点名 &quot;),
+        Task(&quot;08001&quot;, &quot;08402&quot;, &quot; 第 1 节课 &quot;), // trimmed
+        Task(&quot;15451&quot;, &quot;16252&quot;, &quot; 第 9 节课 &quot;)
+    ])
+    return TaskStorage(lists: [.empty, .empty, ver1, ver1, ver1, ver1, ver2, .empty])
+}
+</code></pre>
+<h3><a id="3-2%E9%87%8D%E4%B8%AD%E4%B9%8B%E9%87%8D%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%9F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 重中之重：为什么不用面向对象？</h3>
+<p>注意我在上文中自始至终贯穿了「结构体」一词。为什么我不把 <code>struct</code> 换成 <code>class</code>？</p>
+<p>温习一遍：<code>struct</code> 是值，而 <code>class</code> 是引用。</p>
+<blockquote>
+<p>When you make a copy of a value type, it copies all the data from the thing you are copying into the new variable. They are 2 separate things and changing one does not affect the other. [1]</p>
+</blockquote>
+<p>我要维护的东西，再简单不过，就是几个时间点罢了。请问这些时间点何德何能逼着我去用引用类型来维护它？想象一下，我要把周二的课程表拷贝到周一的课程表上面去，我所希望的，仅是它们两个是值相同的不同的两个结构体，而不是什么别的。</p>
+<p>用一个形象的比喻：Class 是活物，它可以灵活变通，有生有死也有变化；Struct 是死物，它只能长那样，我虽然可以改变它的值，但它永远只包含这些值，没有生命。可不希望这些课程表亦或是时间点的结构体变成活的，然后在运行的时候跳出来干些预料之外的事情！</p>
+<hr />
+<h2><a id="4%E4%B8%BB%E7%95%8C%E9%9D%A2%E4%B8%8E%E9%93%83%E5%A3%B0%E6%8A%A5%E6%97%B6" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>4 主界面与铃声报时</h2>
+<blockquote>
+<p>Code: <a href="https://github.com/AFObject/RingtoneHY/blob/main/RingtoneHY/ViewController.swift">RingtoneHY/ViewController.swift</a></p>
+</blockquote>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h34r8cr0bbj20g20buaam.jpg" alt="" /></p>
+<p>这是整个 App 的核心功能，也是最简单最易实现的，因为有去年的基础。</p>
+<p>当然得有 ViewController（这回用了系统的 Visual Effect 模糊背景），还得有 Storyboard。</p>
+<p>算法：每天开始运行时，或是更改设置时，从保存的日程表中拉取数据，把所有的时间节点排好序放进一个队列里，每 2 秒（<code>Timer</code>）获取一次系统时间（可以自己写一些东西方便实现），到时间了就响铃（<code>AVFoundation</code> 库），并把队首弹出。</p>
+<pre class="line-numbers"><code class="language-swift">let timer = Timer(timeInterval: 2.0, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
+RunLoop.current.add(timer, forMode: .default)
+</code></pre>
+<pre class="line-numbers"><code class="language-swift">private var queue: [(Time, String, Bool)] = []
+private func initializeQueue() {
+    storedWeekday = DateManager.weekday
+    let list = TaskStorage.shared.lists[DateManager.weekday]
+    queue = []
+    for i in list.tasks {
+        if i.start.music &gt; 0 &amp;&amp; i.start &gt; .now {
+            queue.append((i.start, i.name, true))
+        }
+        if i.end.music &gt; 0 &amp;&amp; i.end &gt; .now {
+            queue.append((i.end, i.name, false))
+        }
+    }
+    queue.sort(by: { lhs, rhs in
+        lhs.0 &lt; rhs.0
+    })
+}
+</code></pre>
+<pre class="line-numbers"><code class="language-swift">@objc func updateTime() {
+    dateLabel.stringValue = &quot;\(DateManager.month) 月 \(DateManager.day) 日 / 周 \(String.weekdayName(of: DateManager.weekday))&quot;
+    timeLabel.stringValue = Time.now.timeString
+    
+    if DateManager.weekday != storedWeekday {
+        initializeQueue()
+    }
+    
+    while queue.count &gt; 0 &amp;&amp; queue.first!.0 &lt; .now {
+        queue.removeFirst()
+    }
+    if let current = queue.first {
+        if Time.timeEqual(current.0, .now) {
+            AVAudioPlayer.ring(type: current.0.music)
+            queue.removeFirst()
+        }
+    }
+    if let current = queue.first {
+        taskLabel.stringValue = &quot;下一项：\(current.0.timeString) \(current.1)\(current.2 ? &quot;开始&quot; : &quot;结束&quot;)&quot;
+    } else {
+        taskLabel.stringValue = &quot;今日无其他日程&quot;
+    }
+}
+</code></pre>
+<hr />
+<h2><a id="5%E8%AE%BE%E7%BD%AE%E7%95%8C%E9%9D%A2%EF%BC%9A-swiftui%E7%9A%84%E6%AD%A3%E7%89%87%E5%BC%80%E5%A7%8B%EF%BC%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>5 设置界面：SwiftUI 的正片开始！</h2>
+<p>设置界面，狗都不用 <code>AppKit</code> 中的控件！从现在开始，使用 SwiftUI。</p>
+<blockquote>
+<p>Code:</p>
+<ul>
+<li><a href="https://github.com/AFObject/RingtoneHY/blob/main/RingtoneHY/ViewController.swift">RingtoneHY/ViewController.swift</a></li>
+<li><a href="https://github.com/AFObject/RingtoneHY/blob/main/RingtoneHY/TaskListView.swift">RingtoneHY/TaskListView.swift</a></li>
+<li><a href="https://github.com/AFObject/RingtoneHY/blob/main/RingtoneHY/SettingsView.swifts">RingtoneHY/SettingsView.swift</a></li>
+</ul>
+</blockquote>
+<h3><a id="5-1-appkit%E4%B8%8E-swiftui%E7%9A%84%E8%A1%94%E6%8E%A5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.1 AppKit 与 SwiftUI 的衔接</h3>
+<p>老样子，用 <code>NSHostingController</code>。保存设置后让设置界面消失是当时的一个难点，这种问题直接在更高一层的 <code>ViewController</code> 中宏观控制就行了（否则为啥叫它 <code>Controller</code>）。</p>
+<pre class="line-numbers"><code class="language-swift">@IBAction func showSettings(_ sender: Any?) {
+    settingsController = NSHostingController(rootView: SettingsView(onCompletion: {
+        self.settingsController?.dismiss(nil)
+        self.initializeQueue()
+    }))
+    self.presentAsSheet(settingsController!)
+}  
+</code></pre>
+<h3><a id="5-2-swiftui%E7%95%8C%E9%9D%A2%E7%BB%93%E6%9E%84%E7%9A%84%E6%90%AD%E5%BB%BA" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.2 SwiftUI 界面结构的搭建</h3>
+<p>老样子，你之前数据结构部分怎么套娃，现在也怎么套。接下来贴出的代码都是核心省略版。</p>
+<pre class="line-numbers"><code class="language-swift">import SwiftUI
+
+struct SettingsView: View {
+    var onCompletion: () -&gt; () = {} // 配合 5.1 中的衔接部分
+    @State private var taskStorage: TaskStorage = .default
+    
+    var body: some View {
+        VStack {
+            ScrollView {
+                Form {
+                    ForEach(1...7, id: \.self) { i in
+                        Section {
+                            Text(verbatim: &quot;周&quot; + .weekdayName(of: i))
+                                .font(.title)
+                            TaskListView(taskList: $taskStorage.lists[i]) // 套娃！
+                        }
+                        Divider()
+                    }
+                }.padding()
+            }.frame(width: 540, height: 360)
+                .onAppear {
+                    taskStorage = .shared
+                }
+                .onChange(of: taskStorage) { newValue in
+                    UserDefaults.standard.set(taskStorage.data, forKey: .storageKey)
+                } // 重要！保存数据至本地。
+        }
+    }
+}
+</code></pre>
+<pre class="line-numbers"><code class="language-swift">import SwiftUI
+
+struct TaskView: View {
+    @Binding var task: Task
+    var body: some View {
+        VStack(alignment: .leading) { // ... trimmed
+        }.sheet(isPresented: $editing) { // 套娃！
+                TaskEditView(task: $task)
+            }
+    }
+}
+
+struct TimeEditView: View { // 底层套娃
+    var label: String
+    @Binding var time: Time
+    var body: some View {
+        HStack {
+            DatePicker(label, selection:
+                Binding(get: {
+                    Calendar.current.date(from: DateComponents(hour: time.hour, minute: time.minute))!
+                }, set: { date in
+                    let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+                    time.hour = components.hour!
+                    time.minute = components.minute!
+                }), displayedComponents: .hourAndMinute
+            ) // DatePicker 编辑时间
+            Picker(&quot;铃声&quot;, selection: $time.music) {
+                ForEach(0...3, id: \.self) { i in
+                    Text(verbatim: .audioName(of: i)).tag(i)
+                }
+            } // 普通 Picker 编辑铃声
+        }
+    }
+}
+
+struct TaskEditView: View {
+    @Binding var task: Task
+    @Environment(\.presentationMode) var presentationMode
+    var body: some View {
+        VStack {
+            TextField(&quot;任务名称&quot;, text: $task.name)
+            TimeEditView(label: &quot;起始时间&quot;, time: $task.start) // 套娃！
+            TimeEditView(label: &quot;结束时间&quot;, time: $task.end) // 套娃！
+            Spacer()
+            HStack {
+                Spacer()
+                Button(&quot;完成&quot;) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }.frame(width: 300, height: 120).padding()
+    }
+}
+
+struct TaskListView: View, TaskViewManager {
+    @Binding var taskList: TaskList
+    @State private var newTask: Task = Task(&quot;08001&quot;, &quot;08402&quot;, &quot;新任务&quot;)
+    @State private var editing = false
+    
+    let rows = Array(repeating: GridItem(), count: 3)
+    var body: some View {
+        LazyVGrid(columns: rows) {
+            ForEach($taskList.tasks) { i in
+                TaskView(task: i, manager: self) // 套娃！
+            }
+            Button(action: addItem) // ... trimmed
+        }.frame(width: 500, alignment: .leading)
+            .sheet(isPresented: $editing, onDismiss: {
+                taskList.tasks.append(newTask)
+                newTask = Task(&quot;08001&quot;, &quot;08402&quot;, &quot; 新任务 &quot;)
+            }) {
+                TaskEditView(task: $newTask) // 新建任务时的套娃！
+            }
+    }
+    
+    func addItem() {
+        editing = true
+    }
+}
+</code></pre>
+<p>以上的代码即可完成编辑界面的 UI 基本功能。可以看出，SwiftUI 的一大特点就是通过套娃来节省代码量（别的地方也挺常见的），你只需要良好地完成单一界面的一个功能，并设置一个接口（例如支持同步修改的 <code>@Binding var ...</code>）就可以在别的任意地方调用它。</p>
+<p>被省略的代码中还有一部分实现了任务的删除操作。与添加操作不同的是，任务的删除操作是针对单个任务的，它的按钮也放在单个任务的显示控件内。所以我另外写了一个协议（<code>TaskManager</code>），让它可以通知它的 Superview（不知表述是否准确）来控制它。一样的思路，还是想方设法把控制权交给上一级试图。</p>
+<p>此外，SwiftUI 中的 <code>onChange(of:perform:)</code> 也是相当重要的一个功能。因为前文中我们使用了结构体，所以就可以放心大胆的使用它了，只要值有修改，立刻就会触发它！</p>
+<hr />
+<h2><a id="6%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%8F%91%E5%B8%83" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>6 测试与发布</h2>
+<p>本项目的功能主体开发用时 3 天左右，测试与发布前准备用时也是 3 天左右，也可见其重要性。</p>
+<p>首先就是自己个人的使用了。用了一天，主要是两个问题：一个是不断需要鼠标去点才能看到时间，所以我补了自动置顶的功能；还有一个是长的音频不能自动停止，所以我补了点击窗口停止铃声的功能。</p>
+<p>在完成全部功能并在本机（macOS 12 Monterey）上测试完运行良好后，我修改了部分代码使其支持 macOS 11 Big Sur（这时还跳了坑，有些 SwiftUI 的东西在两个平台上实现得完全不一样），并在家里的旧电脑上测试成功。这个时候才能不动代码，开始发布前期的准备工作。</p>
+<p>发布前的准备工作主要有两项：一是 App Icon 的设计；二是用户手册的编写与打包。</p>
+<p>前者，在 Apple Developer 官网上就可以得到设计资源与设计建议。去年的图标我是网上嫖的，这次我照着去年的样子，自己用 PS 重新画了一遍，添加了阴影等细节，算是半个原创吧（笑）。至于用户手册的编写，用尽量书面化的语言、尽量完备地讲全软件的使用方式和 FAQ 即可，我选择了用 LaTeX 编辑。</p>
+<p>耗时一共一个礼拜不到，显然算是极小的项目；但积累的经验应该是不少的。最终发布也没有引起什么波澜，方便了自己和一小部分人。</p>
+<hr />
+<h2><a id="7%E6%80%BB%E7%BB%93" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>7 总结</h2>
+<p>本文写于 6 月 11 日至 12 日凌晨，感谢 macOS 13 的台前调度能让我专注地赶在 nth 之前写完这个东西（不是）。</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h34r26jx6ij21c00u0ahl.jpg" alt="" /></p>
+<p>用上我之前复活纪念的那篇文章的话，这可能是我第一个从头到尾自己做的、良好运行的 App，即使简单但很有意义。不过这大概也是初中能写的最后一个小项目了，之后也没什么时间，希望能记住这次开发带来的宝贵经验吧。</p>
+<p>如果全文含有表述不准确或者明显错误的内容，请务必指出！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0x14 Hash]]></title>
@@ -78,6 +399,35 @@ int main() {
         v[val].push_back(t);
     }
     return puts(&quot;No two snowflakes are alike.&quot;), 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E5%85%94%E5%AD%90%E4%B8%8E%E5%85%94%E5%AD%90" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>兔子与兔子</h2>
+<p><tc><c>0x1402</c><e>Easy</e><t>Hash</t><t>字符串</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>书上讲的非常详细。例如串 <code>abcxyz</code>，在 27 进制下将它表示为 <code>1 2 3 24 25 26</code>。想要取出 <code>bcx</code> 的哈希值，则用 <code>abcx</code> 的哈希值减去 <code>a000</code> 的哈希值。其中 <code>a000</code> 代表 <code>a</code> 的哈希值在 27 进制下左移 3 位。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">char s[1000001];
+unsigned long long x[1000001], p[1000001];
+
+#define B 131
+
+int main() {
+    scanf(&quot;%s&quot;, s + 1);
+    const int len = strlen(s + 1);
+    p[0] = 1;
+    for (int i = 1; i &lt;= len; ++i) {
+        x[i] = x[i - 1] * B + s[i];
+        p[i] = p[i - 1] * B;
+    }
+    int q = read();
+    while (q--) {
+        int l1 = read(), r1 = read(), l2 = read(), r2 = read();
+        const auto h1 = x[r1] - x[l1 - 1] * p[r1 - l1 + 1];
+        const auto h2 = x[r2] - x[l2 - 1] * p[r2 - l2 + 1];
+        puts(h1 == h2 ? &quot;Yes&quot; : &quot;No&quot;);
+    }
+    return 0;
 }
 </code></pre>
 
@@ -2257,106 +2607,6 @@ signed main() {
     }
 }
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[NOI Online 2022 Senior]]></title>
-    <link href="oi.afobject.ml/noiol-senior-2022.html"/>
-    <updated>2022-03-26T16:46:05+08:00</updated>
-    <id>oi.afobject.ml/noiol-senior-2022.html</id>
-    <content type="html"><![CDATA[
-<p>场外，口胡了 T1。</p>
-<span id="more"></span><!-- more -->
-<h2><a id="%E4%B8%B9%E9%92%93%E5%8D%A0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>丹钓占</h2>
-<p><tc><m>Medium+</m><t>DS</t><t>树状数组</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>初步思考：对于第 \(i\) 个二元组，求出最左能使它优秀的端点 \(x_i\)，在这个端点及其右侧的任意一个位置，都能使它「优秀」。即开头模拟一遍预处理，每个二元组的 \(x\) 即为把该弹的都弹掉后栈顶的下标。</p>
-<p>之后对于每一组询问，输出 \(\sum_{i=l}^r[l \ge x_i]\) 就行了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>考虑将询问离线，按左端点从小到大排序。</p>
-<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h0npr5t0lyj211h0u00v5.jpg" alt="" /></p>
-<p>实现过程是这样的：</p>
-<ol>
-<li>模拟，记录 \(x\)；</li>
-<li>将所有的询问按左端点从小到大排序，将 \(x\) 按从大到小的顺序依次压入一个栈（代码实现的时候随便什么东西维护一下就行，我懒，用了 <code>std::priority_queue</code>，还是因为我懒，所以用取相反数来达到小根堆的效果）中，栈顶为最小的 \(x\)；</li>
-<li>对于每一个下标 \(i\)，维护一个叫做 \(d_i\) 的布尔值，代表当前 \(l\) 是否 \(\ge x_i\)；</li>
-<li>遍历排序好的询问，对于每一次询问 \([l,r]\)：
-<ol>
-<li>将所有 \(\le l\) 的 \(x\) 从栈顶弹出，并将相应的 \(d\) 赋为 \(1\)；</li>
-<li>通过树状数组求出 \(\sum_{i=l}^r d_i\)。</li>
-</ol>
-</li>
-<li>按原顺序输出答案。</li>
-</ol>
-<pre class="line-numbers"><code class="language-cpp">struct Node {
-    int l, r, id;
-    bool operator &lt; (const Node &amp;rhs) const {
-        if (l == rhs.l)
-            return r &lt; rhs.r;
-        return l &lt; rhs.l;
-    }
-};
-
-int n, q;
-int a[1000001], b[1000001];
-int c[1000001];
-Node e[1000001];
-int ans[1000001];
-
-void update(int idx) {
-    while (idx &lt;= n)
-        ++c[idx], idx += idx &amp; (-idx);
-}
-int query(int idx) {
-    int ans = 0;
-    while (idx)
-        ans += c[idx], idx -= idx &amp; (-idx);
-    return ans;
-}
-
-int main() {
-    n = read(), q = read();
-    for (int i = 1; i &lt;= n; ++i)
-        a[i] = read();
-    for (int i = 1; i &lt;= n; ++i)
-        b[i] = read();
-
-    std::stack&lt;Node&gt; s;
-    std::priority_queue&lt;std::pair&lt;int, int&gt;&gt; p;
-    for (int i = 1; i &lt;= n; ++i) {
-        while (!s.empty() &amp;&amp; (s.top().l == a[i] || s.top().r &lt;= b[i]))
-            s.pop();
-        if (s.empty()) p.push({-1, i});
-        else p.push({-s.top().id - 1, i});
-        s.push({a[i], b[i], i});
-    }
-
-    for (int i = 1; i &lt;= q; ++i) {
-        const int l = read(), r = read();
-        e[i] = {l, r, i};
-    }
-    std::sort(e + 1, e + q + 1);
-    for (int i = 1; i &lt;= q; ++i) {
-        while (!p.empty() &amp;&amp; -p.top().first &lt;= e[i].l) {
-            update(p.top().second);
-            p.pop();
-        }
-        ans[e[i].id] = query(e[i].r) - query(e[i].l - 1);
-    }
-
-    for (int i = 1; i &lt;= q; ++i)
-        printf(&quot;%d\n&quot;, ans[i]);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E8%AE%A8%E8%AE%BA" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>讨论</h2>
-<p><tc><m>Medium+</m><t>？</t><t>？</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<h4><a id="30%E5%88%86" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>30 分</h4>
-<p><code>std::bitset</code> 暴力，\(O(Tn^3)\)。</p>
 
 ]]></content>
   </entry>
