@@ -4,13 +4,86 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-06-12T23:36:20+08:00</updated>
+  <updated>2022-06-12T23:36:23+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x15 字符串]]></title>
+    <link href="oi.afobject.ml/0x15-.html"/>
+    <updated>2022-07-03T23:13:38+08:00</updated>
+    <id>oi.afobject.ml/0x15-.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="0x151-kmp%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>0x151 KMP 模式匹配</h2>
+<p>目的：匹配字符串 A 在字符串 B 中各次出现的位置。</p>
+<h3><a id="%E4%B8%80%E4%BA%9B%E5%AE%9A%E4%B9%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>一些定义</h3>
+<p>\(S_{l\dots r}\)：S 字符串中 \([l,r]\) 范围内的子串。</p>
+<p>\(next(i)\)：<strong>满足 \(A_{1 \ldots j}=A_{i-j+1\ldots i}\) 的最大的 \(j\)（\(0\le j&lt;i\)）</strong>。</p>
+<pre class="line-numbers"><code class="language-text">   1  j       i
+   |  |       |
+A: ABCD....ABCD....
+</code></pre>
+<p>为了方便表述，称 \(A_{1 \ldots j}\) 为 \(next(i)\) 的「前字符串」，\(A_{i-j+1\ldots i}\) 为「后字符串」。</p>
+<p>\(f(i)\)：<strong>满足 \(A_{1 \ldots j}=B_{i-j+1\ldots i}\) 的最大的 \(j\)（\(0 \le j\le i\)）</strong>。</p>
+<pre class="line-numbers"><code class="language-text">   1  j      i
+   |  |      |
+A: ABCD...........
+B: .......ABCD....
+</code></pre>
+<p>为了方便表述，称 \(A_{1 \ldots j}\) 为 \(f(i)\) 「前字符串」，\(B_{i-j+1\ldots i}\) 为「后字符串」。</p>
+<h3><a id="%E8%AE%A1%E7%AE%97next%E6%95%B0%E7%BB%84" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>计算 next 数组</h3>
+<p>首选考虑找一找有没有递推的方式，效率高一些。初始值是 \(next(1)=0\)。</p>
+<p>在计算 \(next(i)\) 时，假定 \(next(1 \ldots i-1)\) 都已经计算完毕。</p>
+<p>\(next(i)\) 可能是哪些值？从最极端最大的来看，就是 \(i\)，但是显然定义不允许。那就只能缩一点了，很容易想到 \(next(i-1)+1\) 必然是一个可能的结果。有没有更大的呢？如果有更大的，那么 \(next(i)\) 的前、后字符串各砍最后一个字符就变成 \(next(i-1)\) 的前、后字符串了，导致 \(next(i-1)\) 不是最大，矛盾。因此 \(next(i)\) 的最大可能值即为 \(next(i-1)+1\)。（I）</p>
+<p>但是如果它不太行——即最后一个字符无法对应——那就要找一找有没有替代方案了。与上面类似，继续缩小范围，考虑到前、后字符串完全相同，相同长度的前后缀也相同，那么进一步缩小到 \(next(next(i-1))+1\) 就行了。同样可以反证这是除了 \(next(i-1)+1\) 以外最大的。（II）</p>
+<p>进一步整理，得出如下的算法框架：</p>
+<ol>
+<li>\(next(1) \gets 0, j\gets 0\)</li>
+<li>对于每个 \(i\)，检查 \(A_{j+1}\) 是否等于 \(A_i\)：
+<ol>
+<li>如果是，\(j \gets j + 1\)，且 \(next(i) \gets j\)（对应上文步骤 I）；</li>
+<li>如果不是，\(j \gets next(j)\)，重复直到 \(j=0\)，则 \(next(i) \gets 0\)（对应上文步骤 II）。</li>
+</ol>
+</li>
+</ol>
+<p>上面酸的非常重要的点就是一轮循环完以后，\(j\) 的值等于 \(next(i-1)\)，这有助于下一轮循环的计算。</p>
+<h3><a id="%E8%AE%A1%E7%AE%97f%E6%95%B0%E7%BB%84" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>计算 f 数组</h3>
+<p>完全一样，计算 \(f(i)\) 时最大的可能就是 \(f(i-1)+1\)，否则就缩到 \(next(f(i-1))+1\)。</p>
+<p>注意，\(f\) 数组允许 \(f(i)=i\) 的情况发生，因此 \(f(1)\gets 1\) 即可。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p><tc><c>LG3375</c></tc></p>
+<pre class="line-numbers"><code class="language-cpp">char a[1000001], b[1000001];
+int next[1000001];
+
+int main() {
+    scanf(&quot;%s\n%s&quot;, b + 1, a + 1);
+    const int A = strlen(a + 1), B = strlen(b + 1);
+
+    next[1] = 0;
+    for (int i = 2, j = 0; i &lt;= A; ++i) {
+        while (a[j + 1] != a[i] &amp;&amp; j &gt; 0)
+            j = next[j];
+        if (a[j + 1] == a[i]) ++j;
+        next[i] = j;
+    }
+    for (int i = 2, j = 1; i &lt;= B; ++i) {
+        while (a[j + 1] != b[i] &amp;&amp; j &gt; 0)
+            j = next[j];
+        if (a[j + 1] == b[i]) ++j;
+        if (j == A)
+            printf(&quot;%d\n&quot;, i - A + 1);
+    }
+    for (int i = 1; i &lt;= A; printf(&quot;%d&quot;, next[i]), putchar(&quot; \n&quot;[i == A]), ++i);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RingtoneHY V2 项目详解]]></title>
@@ -2701,49 +2774,6 @@ int main() {
 <h2><a id="raid" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raid</h2>
 <p><tc><c>0x0804</c></tc></p>
 <p>疑似只能用玄学算法卡过，最坏情况 \(n^2\)。。。先跳过了。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[NOI Online 2022 Junior]]></title>
-    <link href="oi.afobject.ml/noiol-junior-2022.html"/>
-    <updated>2022-03-27T16:14:49+08:00</updated>
-    <id>oi.afobject.ml/noiol-junior-2022.html</id>
-    <content type="html"><![CDATA[
-<p>场外，不会做 T2。</p>
-<span id="more"></span><!-- more -->
-<h2><a id="%E6%95%B0%E5%AD%A6%E6%B8%B8%E6%88%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>数学游戏</h2>
-<p><tc><m>Medium+</m><t>数学</t><t>GCD</t></tc></p>
-<p>对于每一组 \((x,z)\)，求最小的 \(y\)，使得 \(x \times y \times \gcd(x,y) = z\)。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>设 \(x = \gcd(x,y) \cdot a\)，\(y = \gcd(x,y)\cdot b\)。</p>
-<p>则 \(\dfrac zx = \gcd(x,y) \cdot y = \gcd(x,y)^2 \cdot b\)。注意到 \(x^2=\gcd(x,y)^2 \cdot a^2\)，考虑消去没用的 \(a\)。</p>
-<p>因为 \(a \perp b\)，所以 \(\gcd\left(\dfrac zx, x^2\right)=\gcd(x,y)^2\)。所以 \(\gcd(x,y) = \sqrt{\gcd\left(\dfrac zx, x^2\right)}\)。</p>
-<p>所以 \(y = \dfrac z {x \cdot \sqrt{\gcd\left(\dfrac zx, x^2\right)}}\)。</p>
-<p>没法用以上方法复原 \(y\) 的，均为无解。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int t, x, z;
-
-int gcd(int a, int b) {
-    return b ? gcd(b, a % b) : a;
-}
-
-signed main() {
-    t = read();
-    while (t--) {
-        x = read(), z = read();
-        if (z % x) { puts(&quot;-1&quot;); continue; }
-        const int k = z / x;
-        const int g = gcd(x * x, k);
-        const int rt = sqrt(g);
-        if (rt * rt != g) { puts(&quot;-1&quot;); continue; }
-        printf(&quot;%lld\n&quot;, z / (x * rt));
-    }
-}
-</code></pre>
 
 ]]></content>
   </entry>
