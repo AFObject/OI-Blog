@@ -195,6 +195,64 @@ int main() {
     return 0;
 }
 </code></pre>
+<hr />
+<h2><a id="period" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Period</h2>
+<p><tc><c>0x1501</c><m>Medium</m><t>KMP</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>问题 1：对于一个长度为 \(len\) 的字符串 \(a\)，什么样的 \(d\) 可以成为它的某个循环元长度？</p>
+<p>需要满足如下要求：</p>
+<ul>
+<li>\(d \mid len\)（显然）；</li>
+<li>\(a_{1 \ldots len - d} = a_{d + 1 \ldots i}\)。</li>
+</ul>
+<pre class="line-numbers"><code class="language-plain_text">     DBJDBJDBJ
+s_1: ^^^^^^
+     DBJDBJDBJ
+s_2:    ^^^^^^
+
+len = 9, d = 3
+</code></pre>
+<p>下面证明第二条的充分性。令 \(s_1=a_{1 \ldots len - d},s_2= a_{d + 1 \ldots i}\)。</p>
+<p>显然，当 \(s_1=s_2\) 时，\(s_1\) 的前 \(d\) 位和 \(s_2\) 的前 \(d\) 位是相同的。由于 \(s_1,s_2\) 是从同一字符串中截取出来的，这也就代表着 \(s_1\) 的第二个 \(d\) 位（\(d+1 \ldots 2d\)）与 \(s_2\) 的前 \(d\) 位相同。又因为 \(s_1=s_2\)，所以 \(s_1\) 的第二个 \(d\) 位和 \(s_2\) 的第二个 \(d\) 位相同……以此类推，\(s_1\)、\(s_2\) 每 \(d\) 位都相同，结束。</p>
+<pre class="line-numbers"><code class="language-plain_text">     DBJDBJDBJ
+s_1: ---±±±
+     DBJDBJDBJ
+s_2:    ---+++
+</code></pre>
+<p>这代表着可以只用管首、尾，再加上一个整除就行。联想到 KMP 算法中 \(next\) 数组也是只用管首尾的。<strong>\(s_1, s_2\) 可以分别对应原本的字符串的 \(next\) 值的一个候选项的「前、后字符串」</strong>。</p>
+<p>如果 \(g\) 是原字符串 \(next\) 值的某个候选项，并且 \(len-g \mid len\)，那么 \(g\) 就是原字符串的一个循环元的长度。最大的 \(g\) 就是最大循环元的长度。</p>
+<p>事实上，要么没有这样的 \(g\)，要么 \(g=next(len)\)。我不会严格证明，但举个例子：</p>
+<pre class="line-numbers"><code class="language-plain_text">ABCDEABCDEABCDE
+^^^^^^^^^^
+-----------
+ABCDEABCDEABCDE
+     ^^^^^^^^^^
+</code></pre>
+<p>对于上面这个 \(len=15, g_{\max}=10\) 的例子，我们假设 \(g_{\max} \neq next(len)\)，那么一定找得出大于 \(10\) 的 \(next\) 候选项存在。显然你是找不到的，因为下面的 \(s_2\) 的开头的那个 <code>A</code> 就是第二个 <code>A</code>。假设循环节中出现了 <code>A</code> 也没用，如果真的能做到前后字符串相等的话那么它早就是最大的 \(g\) 了。（感性理解）</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int T, n;
+char s[1000001];
+int next[1000001];
+
+int main() {
+    scanf(&quot;%d&quot;, &amp;T);
+    for (int i = 1; i &lt;= T; ++i) {
+        printf(&quot;Test case #%d\n&quot;, i);
+        scanf(&quot;%d\n%s&quot;, &amp;n, s + 1);
+        next[1] = 0;
+        for (int i = 2, j = 0; i &lt;= n; ++i) {
+            while (j &amp;&amp; s[j + 1] != s[i]) j = next[j];
+            if (s[i] == s[j + 1]) ++j;
+            next[i] = j;
+        }
+        for (int i = 2; i &lt;= n; ++i)
+            if (i % (i - next[i]) == 0 &amp;&amp; i / (i - next[i]) &gt; 1)
+                printf(&quot;%d %d\n&quot;, i, i / (i - next[i]));
+        putchar('\n');
+    }
+    return 0;
+}
+</code></pre>
 
                   </article>
                   <div class="comments-wrap">
