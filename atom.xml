@@ -4,13 +4,90 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-07-04T00:31:19+08:00</updated>
+  <updated>2022-07-05T00:36:08+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[ABC259]]></title>
+    <link href="oi.afobject.ml/abc259.html"/>
+    <updated>2022-07-09T22:15:54+08:00</updated>
+    <id>oi.afobject.ml/abc259.html</id>
+    <content type="html"><![CDATA[
+<p>Rated, 4/8, 987 \(\to\) 1031</p>
+<p>A 和 B 春春闹潭。</p>
+<h2><a id="f-select-edges" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Select Edges</h2>
+<p><tc><m>Medium *1961</m><t>DP</t><t>树</t><t>搜索</t><t>贪心</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>一眼就是类似树形 dp 的东西。</p>
+<p>计算以 \(u\) 为子树时的答案的时候，需要考虑：</p>
+<ol>
+<li>\(u\) 的父亲和 \(u\) 是否已经相连，占掉 \(u\) 的一个连接名额？所以加一个状态。</li>
+<li>对于每一个儿子结点 \(v\)，是否连接 \(u\) 和 \(v\)？如果连接，则 \(v\) 的连接名额就要减少一个（I 型）；如果不连接，直接跳过这条边，在以 \(v\) 为根的一棵全新的子树上继续计算（II 型）。</li>
+</ol>
+<p>对于以上第二点继续讨论：这样的话能算出如果选了结点 \(v\)，以这个结点 \(v\) 为根的子树能带来的对答案的贡献。但是会有 \(d\) 的限制，这个限制对 I 型无效，所以一定要贪心地选择前 \(d\) 个收益最高的 II 型。</p>
+<p>「收益最高」指的是什么？绝对值最高吗？不是吧。指的是 II 型相对于 I 型带来的更多的收益，也就是它们的差值。</p>
+<p>比如有两个 I 型分别为 \(1\) 和 \(114514\)，它们对应的 II 型分别为 \(1919810\) 和 \(1919811\)，\(d=1\)，现在要选择一个 II 型。显然本来的 I 型就有 \(114515\) 了，把第一个还是第二个替换成 II 型？显然是前者，因为差值更大。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>直接用一个 <code>std::vector</code> 存一下所有 II - I 的差值，然后 <code>std::sort</code> 排序即可。</p>
+<p>我用的是记忆化搜索的写法来写的，赛时改来改去有点混乱。当然也可以用接近普通 dp 的写法来写（\(f(x,t)\) 代表是否连接 \(f_x\to x\) 的状态为 \(t\) 时，以 \(x\) 为根的子树带来的最大答案）。</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+struct Edge {
+    int v, w;
+};
+
+int n, d[300005];
+std::vector&lt;Edge&gt; e[300005];
+
+int dp[300005][2];
+
+int f(int x, int lim, int fa) {
+    if (lim &lt; 0) return -1e9;
+    if (e[x].size() == 0) return 0;
+    if (dp[x][lim != d[x]] != -1) return dp[x][lim != d[x]];
+    
+    std::vector&lt;int&gt; v;
+    int ans = 0;
+    for (Edge g : e[x]) {
+        if (g.v == fa) continue;
+        int l1 = f(g.v, d[g.v] - 1, x) + g.w;
+        int l2 = f(g.v, d[g.v], x);
+        ans += l2;
+        v.push_back(l1 - l2);
+    }
+    std::sort(v.begin(), v.end(), std::greater&lt;int&gt;());
+    for (int i = 0; i &lt; v.size(); ++i)
+        if (v[i] &gt; 0 &amp;&amp; i &lt; lim) ans += v[i];
+
+    dp[x][lim != d[x]] = ans;
+    std::vector&lt;int&gt;().swap(v); // 动态清零😆！
+    return ans;
+}
+
+int deg[3000001];
+signed main() {
+    memset(dp, -1, sizeof dp);
+    n = read();
+    for (int i = 1; i &lt;= n; ++i) d[i] = read();
+    for (int i = 1; i &lt; n; ++i) {
+        int u = read(), v = read(), w = read();
+        ++deg[u]; ++deg[v];
+        e[u].push_back({v, w});
+        e[v].push_back({u, w});
+    }
+    int rt = 0;
+    for (int i = n; i &gt;= 1; --i) if (deg[i] == 1) rt = i;
+    printf(&quot;%lld\n&quot;, f(1, d[1], 0));
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0x15 字符串]]></title>
@@ -2674,164 +2751,6 @@ int main() {
     return 0;
 }
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x0801 ~ 0x0804]]></title>
-    <link href="oi.afobject.ml/0x08-1.html"/>
-    <updated>2022-04-03T23:51:45+08:00</updated>
-    <id>oi.afobject.ml/0x08-1.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="the-pilots-brothers-refrigerator" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Pilots Brothers' Refrigerator</h2>
-<p><tc><c>0x0801</c><e>Easy</e><t>状压</t><t>枚举</t><t>模拟</t></tc></p>
-<p>给定一个 \(4\times4\) 的 0-1 矩阵，每次选择一个 \((i,j)\)，使得第 \(i\) 行、第 \(j\) 列上所有的数反转。</p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>枚举每一个位置是否反转，并模拟。时间复杂度 O(能过)。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">bool m[5][5], c[5][5];
-
-int main() {
-    for (int i = 1; i &lt;= 4; ++i)
-        for (int j = 1; j &lt;= 4; ++j) {
-            char q; std::cin &gt;&gt; q;
-            m[i][j] = (q == '-');
-        }
-    int min = 17, minS = 0;
-    for (int s = 0; s &lt; 1 &lt;&lt; 16; ++s) {
-        memcpy(c, m, sizeof c);
-        int cnt = 0;
-        for (int i = 0; i &lt; 16; ++i)
-            if (s &amp; (1 &lt;&lt; i)) {
-                ++cnt;
-                const int row = i / 4 + 1, col = i % 4 + 1;
-                for (int j = 1; j &lt;= 4; ++j)
-                    c[row][j] ^= 1;
-                for (int j = 1; j &lt;= 4; ++j)
-                    c[j][col] ^= 1;
-                c[row][col] ^= 1;
-            }
-        bool sum = 1;
-        for (int i = 1; i &lt;= 4; ++i)
-            for (int j = 1; j &lt;= 4; ++j)
-                sum &amp;= c[i][j];
-        if (sum &amp;&amp; cnt &lt; min)
-            min = cnt, minS = s;
-    }
-    printf(&quot;%d\n&quot;, min);
-    for (int i = 0; i &lt; 16; ++i)
-        if (minS &amp; (1 &lt;&lt; i))
-            printf(&quot;%d %d\n&quot;, i / 4 + 1, i % 4 + 1);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E5%8D%A0%E5%8D%9Cdiy" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>占卜 DIY</h2>
-<p><tc><c>0x0802</c><e>Easy</e><t>模拟</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>？？？？？？？</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">struct Node {
-    int num;
-    bool state;
-};
-std::deque&lt;Node&gt; q[14];
-
-int trans(char c) {
-    if (c &gt;= '2' &amp;&amp; c &lt;= '9')
-        return c - '0';
-    switch (c) {
-        case '0': return 10;
-        case 'J': return 11;
-        case 'Q': return 12;
-        case 'K': return 13;
-        case 'A': return 1;
-    }
-    return 0;
-}
-
-int buc[14];
-
-int main() {
-    for (int i = 1; i &lt;= 13; ++i) {
-        char c;
-        for (int j = 1; j &lt;= 4; ++j) {
-            std::cin &gt;&gt; c;
-            // front 上，back 下。
-            q[i].push_back({trans(c), false});
-        }
-    }
-    while (q[13].size()) {
-        auto current = q[13].front();
-        q[13].pop_front();
-        while (true) {
-            const int t = current.num;
-            if (t == 13)
-                break;
-            q[t].push_front({t, true});
-            current = q[t].back();
-            q[t].pop_back();
-        }
-    }
-    for (int i = 1; i &lt;= 13; ++i)
-        while (q[i].size())
-            buc[q[i].front().num] += q[i].front().state,
-            q[i].pop_front();
-    int ans = 0;
-    for (int i = 1; i &lt; 13; ++i)
-        if (buc[i] == 4)
-            ++ans;
-    std::cout &lt;&lt; ans &lt;&lt; std::endl;
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="fractal" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fractal</h2>
-<p><tc><c>0x0803</c><e>Easy</e><t>模拟</t><t>分形</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>？？？？？？？</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n;
-int pow3[1001];
-char res[1001][1001];
-
-void fractal(int x, int y, int level) {
-    if (level == 1) {
-        res[x][y] = 'X';
-        return;
-    }
-    const int t = pow3[level - 2];
-    fractal(x, y, level - 1);
-    fractal(x + (t &lt;&lt; 1), y, level - 1);
-    fractal(x, y + (t &lt;&lt; 1), level - 1);
-    fractal(x + (t &lt;&lt; 1), y + (t &lt;&lt; 1), level - 1);
-    fractal(x + t, y + t, level - 1);
-}
-
-int main() {
-    pow3[0] = 1;
-    for (int i = 1; i &lt;= 7; ++i)
-        pow3[i] = pow3[i - 1] * 3;
-    while (scanf(&quot;%d&quot;, &amp;n)) {
-        if (n == -1)
-            break;
-        memset(res, ' ', sizeof res);
-        fractal(1, 1, n);
-        for (int i = 1; i &lt;= pow3[n - 1]; ++i) {
-            for (int j = 1; j &lt;= pow3[n - 1]; ++j)
-                printf(&quot;%c&quot;, res[i][j]);
-            putchar('\n');
-        }
-        puts(&quot;-&quot;);
-    }
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="raid" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raid</h2>
-<p><tc><c>0x0804</c></tc></p>
-<p>疑似只能用玄学算法卡过，最坏情况 \(n^2\)。。。先跳过了。</p>
 
 ]]></content>
   </entry>
