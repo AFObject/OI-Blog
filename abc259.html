@@ -129,6 +129,8 @@
                                     <c><a href='tag_%E6%90%9C%E7%B4%A2.html'>#搜索</a></c>
                                   
                                     <c><a href='tag_%E8%B4%AA%E5%BF%83.html'>#贪心</a></c>
+                                  
+                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
                                      
 
                                 </p>
@@ -138,7 +140,7 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <p>Rated, 4/8, 987 \(\to\) 1031</p>
+                    <p>[6/8] Rated, 4/8, 987 \(\to\) 1031</p>
 <p>A 和 B 春春闹潭。</p>
 <h2><a id="f-select-edges" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Select Edges</h2>
 <p><tc><m>Medium *1961</m><t>DP</t><t>树</t><t>搜索</t><t>贪心</t></tc></p>
@@ -203,6 +205,37 @@ signed main() {
     int rt = 0;
     for (int i = n; i &gt;= 1; --i) if (deg[i] == 1) rt = i;
     printf(&quot;%lld\n&quot;, f(1, d[1], 0));
+}
+</code></pre>
+<hr />
+<h2><a id="e-lcm-on-whiteboard" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E LCM on Whiteboard</h2>
+<p><tc><m>Medium *1370</m><t>数论</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>当一个都不删的时候，答案应当是 \(\displaystyle\prod p^{\max\{e(p)\}}\)。</p>
+<p>当一个数 \(a\) 的某一个质因数 \(p\) 的指数在所有 \(n\) 个数中最大（且没有并列）时，我们称「\(a\) 占有 \(p\)」。</p>
+<p>当删除一个数 \(a\) 的时候，对于每个出现过的质数 \(p\)，\(\max\{e(p)\}\) 可能会有变化。我们很容易可以得到去掉某一个数时，整体的变化情况：有且仅有 \(a\) 占有的质数，在 LCM 表达式中其右上角的指数会变少。现在的问题是在于如何快速找到<strong>有几种不同的变化情况</strong>。显然，看看一共有多少个数「占有」至少一个质因数就行了，别忘了，当存在一个不占有任何质因子的数时，答案要加上一（即原 LCM）。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n;
+std::map&lt;int, int&gt; max, pos;
+std::set&lt;int&gt; s;
+
+signed main() {
+    n = read();
+    for (int i = 1, j = 1, m, e, p; i &lt;= n; i++) {
+        m = read();
+        while (m--) {
+            p = read(), e = read();
+            if (e &gt; max[p]) max[p] = e, pos[p] = i;
+            else if (e == max[p] &amp;&amp; pos.find(p) != pos.end()) pos.erase(pos.find(p)); // 注意！当出现相等的时候，双方都不占有这个质因数，要从 map 中去掉。
+        }
+    }
+
+    for (auto [x, y] : pos)
+        s.insert(y);
+    printf(&quot;%lu\n&quot;, s.size() + (s.size() != n));
+    return 0;
 }
 </code></pre>
 
