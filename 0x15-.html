@@ -197,7 +197,7 @@ int main() {
 </code></pre>
 <hr />
 <h2><a id="period" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Period</h2>
-<p><tc><c>0x1501</c><m>Medium</m><t>KMP</t></tc></p>
+<p><tc><c>0x1501</c><h>Hard</h><t>KMP</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>问题 1：对于一个长度为 \(len\) 的字符串 \(a\)，什么样的 \(d\) 可以成为它的某个循环元长度？</p>
 <p>需要满足如下要求：</p>
@@ -251,6 +251,44 @@ int main() {
         putchar('\n');
     }
     return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E6%9C%80%E5%B0%8F%E8%A1%A8%E7%A4%BA%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>最小表示法</h2>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<pre class="line-numbers"><code class="language-plain">S = bacacabc, i = 2, j = 4, k = 3
+  i     i+k 
+  = = = &gt;
+b[a c a c a b c b a]c a c a b c
+      j     j+k
+      = = = &lt;
+b a c[a c a b c b a c a]c a b c
+</code></pre>
+<p>首先复制一遍，然后开始比较 \(1\ldots n\) 与 \(2 \ldots n+1\)。如果其中的一个比另一个大，就代表这个<br />
+显然不是最小表示法，同时感性理解，还有一长串会被否定（如上图中 \(i\) 到 \(i+k\) 开头的字符串都不可能是最小表示法）。然后就可以 \(i\) 和 \(j\) 两个指针来回跳来跳去。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p><tc><c>LG1368</c></tc></p>
+<pre class="line-numbers"><code class="language-cpp">int main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i) s[i] = read();
+    for (int i = n + 1; i &lt;= n &lt;&lt; 1; i++)
+        s[i] = s[i - n];
+    int i = 1, j = 2, k;
+    while (i &lt;= n &amp;&amp; j &lt;= n) {
+        k = 0;
+        while (s[i + k] == s[j + k] &amp;&amp; k &lt; n) ++k;
+        if (k == n) break;
+        if (s[i + k] &gt; s[j + k]) {
+            i = i + k + 1;
+            if (i == j) ++i;
+        } else {
+            j = j + k + 1;
+            if (i == j) ++j;
+        }
+    }
+    for (int d = std::min(i, j); d &lt; std::min(i, j) + n; ++d)
+        printf(&quot;%d &quot;, s[d]);
+    putchar('\n');
 }
 </code></pre>
 
