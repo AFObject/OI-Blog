@@ -4,13 +4,65 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-07-16T23:00:00+08:00</updated>
+  <updated>2022-07-19T23:02:44+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x16 Trie]]></title>
+    <link href="oi.afobject.ml/0x16-.html"/>
+    <updated>2022-07-19T23:03:21+08:00</updated>
+    <id>oi.afobject.ml/0x16-.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%89%8D%E7%BC%80%E7%BB%9F%E8%AE%A1" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>前缀统计</h2>
+<p><tc><c>0x1601</c><e>Easy</e><t>Trie</t></tc></p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>都什么年代，还在用传统指针写法？</p>
+<pre class="line-numbers"><code class="language-cpp">int n, m;
+char s[5000001];
+
+struct Node {
+    int num;
+    Node *sons[26];
+} f;
+void add(Node &amp;x, char *s, int t, int len) {
+    if (t &gt;= len) {
+        ++x.num;
+        return;
+    }
+    const int T = s[t] - 'a';
+    if (x.sons[T] == NULL)
+        x.sons[T] = new Node();
+    add(*x.sons[T], s, t + 1, len);
+}
+int find(Node &amp;x, char *s, int t, int len) {
+    if (t &gt;= len) return x.num;
+    const int T = s[t] - 'a';
+    if (x.sons[T] == NULL)
+        return x.num;
+    return x.num + find(*x.sons[T], s, t + 1, len);
+}
+int main() {
+    scanf(&quot;%d%d&quot;, &amp;n, &amp;m);
+    while (n--) {
+        scanf(&quot;%s&quot;, s);
+        const int len = strlen(s);
+        add(f, s, 0, len);
+    }
+    while (m--) {
+        scanf(&quot;%s&quot;, s);
+        const int len = strlen(s);
+        printf(&quot;%d\n&quot;, find(f, s, 0, len));
+    }
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ABC259]]></title>
@@ -2596,227 +2648,6 @@ int main() {
         }
         std::cout &lt;&lt; cnt &lt;&lt; ' ' &lt;&lt; ans &lt;&lt; std::endl;
     }
-    return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x0805 ~ 0x0808]]></title>
-    <link href="oi.afobject.ml/0x08-2.html"/>
-    <updated>2022-04-04T22:22:36+08:00</updated>
-    <id>oi.afobject.ml/0x08-2.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E9%98%B2%E7%BA%BF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>防线</h2>
-<p><tc><c>0x0805</c><e>Easy</e><t>二分</t><t>前缀和</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>《人工 h1》<strong>最多只有一个事奇数的位置！</strong>《/人工 h1》</p>
-<p>所以直接二分出第一个出现前缀和为奇数的位置就好了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>样例搞偷袭不讲武德！!1</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int T, n;
-int s[200001], e[200001], d[200001];
-
-int upper(int x, int y) {
-    if (x % y) return x / y + 1;
-    else return x / y;
-}
-
-int sum(int x) {
-    if (x &lt; 0) return 0;
-    int ans = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        if (s[i] &lt;= x)
-            ans += upper(std::min(e[i], x) - s[i] + 1, d[i]);
-    return ans;
-}
-
-signed main() {
-    T = read();
-    while (T--) {
-        n = read();
-        for (int i = 1; i &lt;= n; ++i)
-            s[i] = read(), e[i] = read(), d[i] = read();
-        int l = 0, r = 1ll &lt;&lt; 31;
-        while (l &lt; r) {
-            const int mid = (l + r) &gt;&gt; 1;
-            if (sum(mid) &amp; 1) r = mid;
-            else l = mid + 1;
-        }
-        if (l == 1ll &lt;&lt; 31) puts(&quot;There's no weakness.&quot;);
-        else printf(&quot;%lld %lld\n&quot;, l, sum(l) - sum(l - 1));
-    }
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="corral-the-cows" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Corral the Cows</h2>
-<p><tc><c>0x0806</c><c>USACO</c><e>Easy+</e><t>二分</t><t>前缀和</t><t>离散化</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>由于 \(n\) 极小，考虑离散化。</p>
-<p>离散化完了以后照样二分就完了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>注意：</p>
-<ol>
-<li>处理重合的点；</li>
-<li>边界情况。</li>
-</ol>
-<pre class="line-numbers"><code class="language-cpp">int n, c;
-int x[501], y[501];
-int a[501], b[501];
-int sizeA, sizeB;
-int x1[501], y1[501];
-int g[501][501];
-
-int xid(int x) {
-    return std::lower_bound(a + 1, a + sizeA, x) - a;
-}
-int yid(int y) {
-    return std::lower_bound(b + 1, b + sizeB, y) - b;
-}
-
-bool check(int d) {
-    for (int a2 = 1; a2 &lt; sizeA; ++a2)
-        for (int b2 = 1; b2 &lt; sizeB; ++b2) {
-            const int a1 = xid(x1[a2] - d + 1),
-                      b1 = yid(y1[b2] - d + 1);
-            const int sum = g[a2][b2] - g[a1 - 1][b2] - g[a2][b1 - 1] + g[a1 - 1][b1 - 1];
-            if (sum &gt;= c)
-                return true;
-        }
-    return false;
-}
-
-int main() {
-    c = read(), n = read();
-    for (int i = 1; i &lt;= n; ++i) {
-        x[i] = a[i] = read();
-        y[i] = b[i] = read();
-    }
-
-    std::sort(a + 1, a + n + 1);
-    std::sort(b + 1, b + n + 1);
-    sizeA = std::unique(a + 1, a + n + 1) - a;
-    sizeB = std::unique(b + 1, b + n + 1) - b;
-    for (int i = 1; i &lt;= n; ++i) {
-        const int p = xid(x[i]), q = yid(y[i]);
-        x1[p] = x[i], y1[q] = y[i];
-        ++g[p][q];
-    }
-    for (int i = 1; i &lt;= n; ++i)
-        for (int j = 1; j &lt;= n; ++j)
-            g[i][j] += g[i - 1][j] + g[i][j - 1] - g[i - 1][j - 1];
-
-    int l = 1, r = 1e5;
-    while (l &lt; r) {
-        const int mid = (l + r) &gt;&gt; 1;
-        if (check(mid)) r = mid;
-        else l = mid + 1;
-    }
-    printf(&quot;%d\n&quot;, l);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E7%B3%96%E6%9E%9C%E4%BC%A0%E9%80%92" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>糖果传递</h2>
-<p><tc><c>0x0807</c><c>HAOI 2008</c><e>Easy+</e><t>前缀和</t><t>数学</t><t>环上问题</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>0x0503 简化版，这里重新推导一遍，思路可能不同。</p>
-<p>先破环成链。假如在 \(a_1\) 与 \(a_n\) 之间断开。</p>
-<p>要让 \(a_1\) 达到 \(\overline{a}\)，则需要 \(a_2\) 提供它 \(\overline{a}-a_1\)（不管正负），贡献增加 \(\mid\overline{a}-a_1\mid\)。</p>
-<p>此时 \(a_2 \gets a_1 + a_2 - \overline{a}\)。想让 \(a_2\) 达到 \(\overline{a}\)，那么就要 \(a_3\) 给它 \(\overline{a}-(a_1+a_2-\overline{a})=2\cdot\overline{a}-(a_1+a_2)\)，贡献增加 \(\mid2\cdot\overline{a}-(a_1+a_2)\mid\)。</p>
-<p>可以发现，总答案为</p>
-\[\sum_{i=1}^n\left|i \cdot \overline{a}-\sum_{j=1}^ia_j\right|
-\]
-<p>假如双倍一下，进一步推广，破环破在 \(a_{k+1}\) 与 \(a_k\) 之间的，总答案为</p>
-\[\sum_{i=1}^{n}\left|i \cdot \overline{a}-\sum_{j=k+1}^{i+k}a_j\right|
-\]
-<p>设前缀和数组为 \(s\)，即 \(s_i = \sum\limits_{j=1}^ia_j\)。</p>
-<p>答案变形为</p>
-\[\sum_{i=1}^{n}\left|i \cdot \overline{a}-s_{i+k}+s_{k}\right|
-\]
-<p>前面那个东西实在是不顺眼，所以我们让 \(a_i \gets a_i-\overline{a}\) 再计算前缀和 \(s\)，答案变形为：</p>
-\[\sum_{i=1}^{n}\left|s_{k}-s_{i+k}\right|
-\]
-<p>\(s_k\) 定，考虑到 \(s_n=0\)，而因为珈贝了，我们这里的前缀和 \(s\) 的值域是 \(2n\)，\(s_{n+j}=s_{j}\)，所以式子里的 \(s_{i+k}\) 可以取到 \(s_1 \sim s_n\) 的任何值，所以答案也就是</p>
-\[\sum_{i=1}^{n}\left|s_{k}-s_i\right|
-\]
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-#define abs(x) ((x) &gt; 0 ? (x) : -(x))
-
-int n;
-int a[1000001], s[1000001];
-
-signed main() {
-    n = read();
-    int sum = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        a[i] = read(), sum += a[i];
-    const int aver = sum / n;
-    for (int i = 1; i &lt;= n; ++i)
-        s[i] = s[i - 1] + a[i] - aver;
-    std::sort(s + 1, s + n + 1);
-    int ans = 0;
-    for (int i = 1; i &lt;= n; ++i)
-        ans += abs(s[(n + 1) &gt;&gt; 1] - s[i]);
-    printf(&quot;%lld\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="soldiers" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Soldiers</h2>
-<p><tc><c>0x0808</c><m>Medium-</m><t>数学</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>纵坐标移到中位数容易证明，接下来考虑横坐标。</p>
-<p>首先证明一个事：按 \(x\) 坐标排序后，每个点的顺序与最终结果相同。</p>
-<blockquote>
-<h4><a id="%E8%AF%81%E6%98%8E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>证明</h4>
-<p>若交换一组 \((i,j)\)（\(x_i&gt;x_j\) 且 \(a_i&gt;a_j\)）那么答案将减少 \(\Delta=\mid x_i - a_i \mid + \mid  x_j - a_j \mid - \mid x_i - a_j \mid - \mid x_j - a_i \mid\)</p>
-<ul>
-<li>
-<p>若 \(x_j &gt; a_i\) 或 \(x_i &lt; a_j\)：\(\Delta=0\)</p>
-</li>
-<li>
-<p>若 \(a_j&lt;x_j&lt;a_i&lt;x_i\)：\(\Delta=x_i-a_i+x_j-a_j-x_i+a_j+x_j-a_i=2\cdot x_j-2\cdot a_i&lt;0\)</p>
-</li>
-<li>
-<p>若 \(a_j&lt;x_j&lt;x_i&lt;a_i\)：\(\Delta=a_i-x_i+x_j-a_j-x_i+a_j+x_j-a_i=2\cdot x_j-2\cdot x_i&lt;0\)</p>
-</li>
-<li>
-<p>若 \(x_j&lt;a_j&lt;x_i&lt;a_i\)：\(\Delta=a_i-x_i+a_j-x_j-x_i+a_j+x_j-a_i=2\cdot a_j-2\cdot x_i&lt;0\)</p>
-</li>
-<li>
-<p>若 \(x_j&lt;a_j&lt;a_i&lt;x_i\)：\(\Delta=x_i-a_i+a_j-x_j-x_i+a_j+x_j-a_i=2\cdot a_j-2\cdot a_i&lt;0\)</p>
-</li>
-</ul>
-<p>所以是正确的。</p>
-</blockquote>
-<p>然后就容易了，因为本来 \(x\) 坐标很小或者很大的，到时候相对于其他点就一定可以少移动一点。所以先把这个东西消掉，因此这个时候就处理好，向最右边的看齐，从右到左第 \(i\) 个点的横坐标加上 \(i\)（也可以当成，向最左边的对齐，从左到右第 \(i\) 个点的横坐标减去 \(i\)）。</p>
-<p>更理性一点，设最终移到 \( a+1, a+2, \ldots, a+n\)。那么第 \(i\) 个点的贡献是 \(\mid x_i-(a+i) \mid=\mid (x_i-i)-a \mid\)。所以 \(x_i \gets x_i-i\) 即可。</p>
-<p>这个时候，就可以照常取中位数然后算答案了。管他上一步是加还是减，相对坐标差不变，答案不变就完了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define abs(x) ((x) &gt; 0 ? (x) : -(x))
-
-int n, x[10001], y[10001];
-
-int main() {
-    n = read();
-    for (int i = 1; i &lt;= n; ++i)
-        x[i] = read(), y[i] = read();
-    std::sort(x + 1, x + n + 1);
-    for (int i = 1; i &lt;= n; ++i)
-        x[i] -= i;
-    std::sort(y + 1, y + n + 1);
-    std::sort(x + 1, x + n + 1);
-    int ans = 0, x0 = x[(n + 1) &gt;&gt; 1], y0 = y[(n + 1) &gt;&gt; 1];
-    for (int i = 1; i &lt;= n; ++i)
-        ans += abs(x[i] - x0) + abs(y[i] - y0);
-    printf(&quot;%d\n&quot;, ans);
     return 0;
 }
 </code></pre>
