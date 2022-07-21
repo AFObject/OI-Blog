@@ -123,6 +123,8 @@
                                     <c><a href='tag_Trie.html'>#Trie</a></c>
                                   
                                     <c><a href='tag_%E5%AD%97%E7%AC%A6%E4%B8%B2.html'>#字符串</a></c>
+                                  
+                                    <c><a href='tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html'>#位运算</a></c>
                                      
 
                                 </p>
@@ -172,6 +174,85 @@ int main() {
         const int len = strlen(s);
         printf(&quot;%d\n&quot;, find(f, s, 0, len));
     }
+}
+</code></pre>
+<hr />
+<h2><a id="the-xor-largest-pair" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>The XOR Largest Pair</h2>
+<p><tc><c>0x1602</c><e>Easy+</e><t>Trie</t><t>位运算</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>首先全部插一个 0-1 Trie 里面（从高位到低位），然后反着来查找就好了。可以边插入边查询。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>正常写法。</p>
+<p><code>t</code> 里面记的全是编号，相当于指针，<code>tot</code> 就是一个发配编号的东西。这个题里面不需要额外维护什么东西，只用检查这个节点存不存在，不像上一个题还得计数。</p>
+<pre class="line-numbers"><code class="language-cpp">int n;
+
+int t[10000001][2], tot = 1;
+
+void insert(int x) {
+    for (int i = 30, p = 1; i &gt;= 0; --i) {
+        const int g = (x &gt;&gt; i) &amp; 1;
+        if (!t[p][g]) t[p][g] = ++tot;
+        p = t[p][g];
+    }
+}
+
+int search(int x) {
+    int ans = 0;
+    for (int i = 30, p = 1; i &gt;= 0; --i) {
+        const int g = (x &gt;&gt; i) &amp; 1;
+        if (t[p][!g]) p = t[p][!g], ans += 1 &lt;&lt; i;
+        else p = t[p][g];
+    }
+    return ans;
+}
+
+int main() {
+    n = read();
+    int max = 0;
+    while (n--) {
+        int a = read();
+        insert(a);
+        max = std::max(max, search(a));
+    }
+    printf(&quot;%d\n&quot;, max);
+}
+</code></pre>
+<hr />
+<h2><a id="the-xor-longest-path" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>The XOR Longest Path</h2>
+<p><tc><c>0x1603</c><e>Easy+</e><t>Trie</t><t>位运算</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>以下用「叉」代表 XOR。</p>
+<p>一个数叉自己等于零，一个数叉零等于自己，所以两点之间的距离就等于（根到一端的叉和）叉（根到另一端的叉和）。</p>
+<p>把所有的根到一端的叉和塞到上一题里面就好了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int n;
+
+// 上题代码
+
+int d[100001];
+std::vector&lt;std::pair&lt;int, int&gt; &gt; e[100001];
+void dfs(int x, int fa) {
+    for (auto t : e[x]) {
+        if (t.first == fa) continue;
+        d[t.first] = d[x] ^ t.second;
+        dfs(t.first, x);
+    }
+}
+
+int main() {
+    n = read();
+    for (int i = 1; i &lt; n; ++i) {
+        int u = read(), v = read(), w = read();
+        e[u].push_back({v, w});
+        e[v].push_back({u, w});
+    }
+    dfs(0, -1);
+    int max = 0;
+    for (int i = 0; i &lt; n; ++i) {
+        insert(d[i]);
+        max = std::max(max, search(d[i]));
+    }
+    printf(&quot;%d\n&quot;, max);
 }
 </code></pre>
 
