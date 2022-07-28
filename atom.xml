@@ -4,13 +4,139 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-07-19T23:35:14+08:00</updated>
+  <updated>2022-07-29T00:13:44+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[ABC261]]></title>
+    <link href="oi.afobject.ml/abc261.html"/>
+    <updated>2022-07-23T22:27:19+08:00</updated>
+    <id>oi.afobject.ml/abc261.html</id>
+    <content type="html"><![CDATA[
+<p>Rated, 3/8, 1031 \(\to\) 1007，这下这下了</p>
+<h2><a id="e-many-operations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E Many Operations</h2>
+<p><tc><m>Medium *1261</m><t>位运算</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>看一下朴素算法劣在哪里，主要就是明明知道通过的是哪几个运算符，而且之前也算过一遍，但因为一开始的数不一样，还得重算一遍。</p>
+<p>解决这个问题，可以从「一开始的数」入手，如果把一开始的数抽象化一点，二进制一位一位看，这样就能更好地利用之前算好的结果。</p>
+<p>提前预处理一下每一位上 0 或 1 通过前若干个运算符后的结果，然后算答案的时候先拆位，分别计算再合并。</p>
+<p>拆那</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>也可以写成在线做法捏。</p>
+<pre class="line-numbers"><code class="language-cpp">int x, n;
+int d[200001][31][2];
+
+int main() {
+    n = read(), x = read();
+    for (int i = 0; i &lt;= 30; ++i)
+        d[0][i][1] = 1, d[0][i][0] = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        int t = read(), p = read();
+        for (int j = 0; j &lt;= 30; ++j) {
+            d[i][j][0] = d[i - 1][j][0]; 
+            d[i][j][1] = d[i - 1][j][1];
+            if (t == 1)
+                d[i][j][0] &amp;= ((p &gt;&gt; j) &amp; 1),
+                d[i][j][1] &amp;= ((p &gt;&gt; j) &amp; 1);
+            else if (t == 2)
+                d[i][j][0] |= ((p &gt;&gt; j) &amp; 1),
+                d[i][j][1] |= ((p &gt;&gt; j) &amp; 1);
+            else if (t == 3)
+                d[i][j][0] ^= ((p &gt;&gt; j) &amp; 1),
+                d[i][j][1] ^= ((p &gt;&gt; j) &amp; 1);
+        }
+    }
+    for (int i = 1; i &lt;= n; ++i) {
+        int ans = 0;
+        for (int j = 0; j &lt;= 30; ++j)
+            ans += d[i][j][((x &gt;&gt; j) &amp; 1)] &lt;&lt; j;
+        printf(&quot;%d\n&quot;, ans);
+        x = ans;
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="d-flipping-and-bonus" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D Flipping and Bonus</h2>
+<p><tc><m>Medium *801</m><t>DP</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>设 \(f(i,j)\) 为第 \(i\) 轮游戏后计数器为 \(j\) 的最大收益。</p>
+<p>怎么转移捏？\(f(i-1,j-1)\) 肯定是可以过来的，过程中加上 \(x_i\) 和对应的 Bonus。另外当 \(j=0\) 时从 \(f(i-1,t)\) 都可以过来，其中 \(0 \le t &lt;i\)，收益为 \(0\)。</p>
+<p>然后捏麻麻地压掉一维，就这</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>呃呃，压维的过程比想象的要复杂，有很多要考虑，建议直接偷懒</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n, m;
+int x[5001], y[5001];
+int dp[2][5001];
+
+signed main() {
+    n = read(), m = read();
+    for (int i = 1; i &lt;= n; i++) x[i] = read();
+    for (int i = 1, t; i &lt;= m; i++) t = read(), y[t] = read();
+
+    for (int i = 1; i &lt;= n; i++) {
+        for (int k = 0; k &lt; i; k++)
+            dp[i &amp; 1][0] = std::max(dp[i &amp; 1][0], dp[(i ^ 1) &amp; 1][k]);
+        for (int k = i; k; k--)
+            dp[i &amp; 1][k] = dp[(i ^ 1) &amp; 1][k - 1] + x[i] + y[k];
+    }
+
+    int ans = 0;
+    for (int i = 0; i &lt;= n; ++i) {
+        ans = std::max(ans, dp[n &amp; 1][i]);
+    }
+    printf(&quot;%lld\n&quot;, ans);
+}
+</code></pre>
+<hr />
+<h2><a id="f-sorting-color-balls" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Sorting Color Balls</h2>
+<p><tc><m>Medium *1587</m><t>逆序对</t></tc></p>
+<p>给定两个数列 \(X\) 和 \(C\)，可以同时交换相邻的两个，若 \(C\) 不同则代价为 \(1\)，求使得 \(X\) 升序最小的代价。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>差一点点就是逆序对问题了，看看怎么解决 \(C\) 相同时的问题。</p>
+<p>你求出来的所有逆序对，其中多余了 \(C\) 相同的逆序对，那直接把 \(C\) 相同的逆序对拎出来减掉不就好了？</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>还真不开 ll 见祖宗是吧</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n;
+std::vector&lt;int&gt; _, x, c[1000001];
+
+int cal(std::vector&lt;int&gt; &amp;v, int l, int r) {
+    if (l &gt;= r) return 0;
+    const int mid = (l + r) &gt;&gt; 1;
+    int ans = cal(v, l, mid) + cal(v, mid + 1, r);
+    int ql = l, qr = mid + 1;
+    for (int i = l; i &lt;= r; ++i) {
+        if ((v[ql] &lt;= v[qr] &amp;&amp; ql &lt;= mid) || qr == r + 1) _[i] = v[ql++];
+        else _[i] = v[qr++], ans += mid - ql + 1;
+    }
+    for (int i = l; i &lt;= r; ++i) v[i] = _[i];
+    return ans;
+}
+
+signed main() {
+    n = read();
+    _.resize(n);
+    for (int i = 0; i &lt; n; ++i) _[i] = read();
+    for (int i = 0; i &lt; n; ++i) x.push_back(read());
+    for (int i = 0; i &lt; n; ++i) c[_[i]].push_back(x[i]);
+    int ans = cal(x, 0, n - 1);
+    for (int i = 1; i &lt;= n; ++i) ans -= cal(c[i], 0, c[i].size() - 1);
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0x16 Trie]]></title>
@@ -1060,7 +1186,7 @@ int main() {
 </code></pre>
 <hr />
 <h2><a id="f-rectangle-gcd" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Rectangle GCD</h2>
-<p><tc><m>Medium- *1764</m><t>数论</t><t>GCD</t><t>线段树</t><t>DS</t></tc></p>
+<p><tc><m>Medium *1764</m><t>数论</t><t>GCD</t><t>线段树</t><t>DS</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>极其显然地，答案是</p>
 \[\gcd\{A_{h_1}+B_{w_1},\underset{i\in(h_1,h_2]}{\left|A_i-A_{i-1}\right|},\underset{i\in(w_1,w_2]}{\left|B_i-B_{i-1}\right|}\}
@@ -2547,187 +2673,6 @@ void tryReplace(std::string s) {
         state[s] = false;
     } else
         std::cout &lt;&lt; s;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x0809 ~ 0x080C]]></title>
-    <link href="oi.afobject.ml/0x08-3.html"/>
-    <updated>2022-04-06T07:39:26+08:00</updated>
-    <id>oi.afobject.ml/0x08-3.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="number-base-conversion" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Number Base Conversion</h2>
-<p><tc><c>0x0809</c><e>Easy+</e><t>高精</t><t>模拟</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>什么模拟题乱入，，，</p>
-<p>考虑随便找个数模拟一下，\(964\) 转化 7 进制：</p>
-\[\begin{aligned}
-964 \div 7 &amp;= 137 &amp;\ldots 5 \\
-137 \div 7 &amp;= 19 &amp;\ldots 4 \\
-19 \div 7 &amp;= 2 &amp;\ldots 5 \\
-2 \div 7 &amp;= 2 &amp;\ldots2 \\
-(964)_{10}&amp;=(2545)_7
-\end{aligned}
-\]
-<p>其实就是高精除低精，高精取模低精。</p>
-<p>后面那个很容易，再看一下前者是怎么做的。</p>
-\[\begin{aligned}
-\underline 9 \div 7 &amp;= 1 &amp;\ldots 2 \\
-\underline{26} \div 7 &amp;= 3 &amp;\ldots5 \\
-\underline{54} \div 7&amp;=7 &amp;\ldots5
-\end{aligned}
-\]
-<p>可以发现过程中有一个很重要的中间变量 \(k\)，也就是下划线的部分。它是计算过程中原数前若干位的十进制表示形式，只不过都及时按位模了 \(7\)。</p>
-<p>……还说啥呢，可以开始写了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int T, a, b;
-char s[1000001], ans[1000001];
-
-int to10(char x) {
-    if (x &gt;= '0' &amp;&amp; x &lt;= '9') return x - '0';
-    if (x &gt;= 'A' &amp;&amp; x &lt;= 'Z') return x - 'A' + 10;
-    return x - 'a' + 36;
-}
-char from10(int x) {
-    if (x &lt;= 9) return x + '0';
-    if (x &lt;= 35) return x - 10 + 'A';
-    return x - 36 + 'a';
-}
-
-int main() {
-    scanf(&quot;%d&quot;, &amp;T);
-    while (T--) {
-        scanf(&quot;%d%d&quot;, &amp;a, &amp;b);
-        scanf(&quot;%s&quot;, s);
-        printf(&quot;%d %s\n%d &quot;, a, s, b);
-        int len = strlen(s), t = 0, ansSize = 0;
-        while (t &lt; len) {
-            int k = 0;
-            for (int i = t; i &lt; len; ++i) {
-                k = k * a + to10(s[i]);
-                s[i] = from10(k / b);
-                k %= b;
-            }
-            ans[++ansSize] = from10(k);
-            while (t &lt; len &amp;&amp; s[t] == '0') ++t;
-        }
-        for (int i = ansSize; i; --i)
-            printf(&quot;%c&quot;, ans[i]);
-        printf(&quot;\n\n&quot;);
-    }
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="cow-acrobats" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cow Acrobats</h2>
-<p><tc><c>0x080A</c><m>Medium-</m><t>贪心</t><t>数学</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>0x0704 改编版。</p>
-<p>第 \(x\) 头奶牛的风险值为 \(a=\sum\limits_{i=1}^{x-1} w_i - s_x\)。第 \(x+1\) 头牛风险值为 \(b=\sum\limits_{i=1}^{x} w_i - s_{x+1}\)。</p>
-<p>最后奶牛一定是按照某个顺序排列的，一旦打破这个顺序（交换），答案一定会增加。假设第 \(x\) 头牛与第 \(x+1\) 头牛交换。</p>
-<p>此时，第 \(x\) 头牛的风险值为 \(c=\sum\limits_{i=1}^{x-1} w_i+w_{x+1}-s_x\)，第 \(x+1\) 头牛的风险值为 \(d=\sum\limits_{i=1}^{x-1} w_i-s_{x+1}\)。</p>
-\[\begin{aligned}
-\Delta=&amp;\max\{c,d\}-\max\{a,b\}\\
-=&amp;\max\{w_{x+1}-s_x, -s_{x+1}\}-\max\{-s_x, w_x - s_{x+1}\}\text{   (统加 }\sum_{i=1}^{x-1}w_i\text{ )}\\
-=&amp;\max\{w_{x+1}+s_{x+1}, s_x\}-\max\{s_{x+1}, w_x + s_x\}\text{   (统加 }s_x+s_{x+1}\text{ )}
-\end{aligned}
-\]
-<p>好好好，当 \(w_x+s_x&gt;w_{x+1}+s_{x+1}\) 时，左边 \(s_x\) 再大也铁定大不了 \(w_x+s_x\)，\(\Delta&lt;0\)，交换更优。</p>
-<p>当 \(w_x+s_x &lt; w_{x+1}+s_{x+1}\) 时，同理，\(\Delta&gt;0\)，不交换更优。</p>
-<p>因此，按 \(w_i+s_i\) 从小到大排序最优。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n;
-struct Cow {
-    int w, s;
-    bool operator &lt; (const Cow &amp;rhs) const {
-        return w + s &lt; rhs.w + rhs.s;
-    }
-} c[1000001];
-
-int main() {
-    n = read();
-    for (int i = 1; i &lt;= n; ++i)
-        c[i].w = read(), c[i].s = read();
-    std::sort(c + 1, c + n + 1);
-    int ans = -1e9, p = 0;
-    for (int i = 1; i &lt;= n; ++i) {
-        ans = std::max(ans, p - c[i].s);
-        p += c[i].w;
-    }
-    printf(&quot;%d\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="to-the-max" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>To The Max</h2>
-<p><tc><c>0x080B</c><e>Easy</e><t>贪心</t><t>前缀和</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>考虑从一维的最大子段和转移。不就多了一个维度吗。</p>
-<p>枚举矩形的上底和下底就行了。</p>
-<p>时间复杂度 \(O(n^3)\)。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n;
-int s[101][101];
-
-int main() {
-    n = read();
-    for (int i = 1; i &lt;= n; ++i)
-        for (int j = 1; j &lt;= n; ++j)
-            s[i][j] = read() + s[i][j - 1];
-    int ans = -1e9;
-    for (int i = 1; i &lt;= n; ++i)
-        for (int j = i; j &lt;= n; ++j) {
-            int max = -1e9, cur = 0;
-            for (int k = 1; k &lt;= n; ++k) {
-                cur += s[k][j] - s[k][i - 1];
-                max = std::max(max, cur);
-                cur = std::max(cur, 0);
-            }
-            ans = std::max(ans, max);
-        }
-    printf(&quot;%d\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="task" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task</h2>
-<p><tc><c>0x080C</c><m>Medium-</m><t>贪心</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>Ref: 0x0701</p>
-<p>考虑对于每个任务以 \(x\) 为第一关键字、\(y\) 为第二关键字从大到小排序，优先保证上面的任务。</p>
-<p>对于每个任务，选用 \(x,y\) 均满足要求且 \(y\) 最小的机器。这样确保对于接下来处理的任务，\(x\) 的要求都能满足，且 \(y\) 的要求也尽量能满足。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>考虑使用 <code>std::multiset</code> 维护信息。每次将 \(x\) 满足要求的取出并放入 <code>std::multiset</code> 里，用 <code>lower_bound</code> 查询符合要求且最小的 \(y\)。</p>
-<pre class="line-numbers"><code class="language-cpp">int n, m;
-std::pair&lt;int, int&gt; a[100001], b[100001];
-std::multiset&lt;int&gt; s;
-
-int main() {
-    while (std::cin &gt;&gt; n &gt;&gt; m) {
-        s.clear();
-        for (int i = 1; i &lt;= n; ++i)
-            std::cin &gt;&gt; a[i].first &gt;&gt; a[i].second;
-        for (int i = 1; i &lt;= m; ++i)
-            std::cin &gt;&gt; b[i].first &gt;&gt; b[i].second;
-        std::sort(a + 1, a + n + 1);
-        std::sort(b + 1, b + m + 1);
-        int j = n, cnt = 0; long long ans = 0;
-        for (int i = m; i; --i) {
-            while (j &amp;&amp; a[j].first &gt;= b[i].first)
-                s.insert(a[j--].second);
-            auto it = s.lower_bound(b[i].second);
-            if (it != s.end()) {
-                ++cnt;
-                ans += b[i].first * 500ll + b[i].second * 2;
-                s.erase(it);
-            }
-        }
-        std::cout &lt;&lt; cnt &lt;&lt; ' ' &lt;&lt; ans &lt;&lt; std::endl;
-    }
-    return 0;
 }
 </code></pre>
 

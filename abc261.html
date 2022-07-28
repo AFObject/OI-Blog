@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    ABC254 - OI Blog
+    ABC261 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="media/16415680135532/diana2.jpg" type="image/png" />
@@ -91,7 +91,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            ABC254   
+                            ABC261   
                       </h1>
                      
                     
@@ -108,7 +108,7 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/06/04</span>
+                                 <span class="date">2022/07/23</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
                                       <span class="posted-in"><a href='contests.html'>比赛记录</a></span>
@@ -120,19 +120,13 @@
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
                                   
+                                    <c><a href='tag_%E4%BD%8D%E8%BF%90%E7%AE%97.html'>#位运算</a></c>
+                                  
                                     <c><a href='tag_AtCoder.html'>#AtCoder</a></c>
                                   
-                                    <c><a href='tag_%E6%95%B0%E5%AD%A6.html'>#数学</a></c>
+                                    <c><a href='tag_DP.html'>#DP</a></c>
                                   
-                                    <c><a href='tag_%E7%AD%9B%E6%B3%95.html'>#筛法</a></c>
-                                  
-                                    <c><a href='tag_%E6%90%9C%E7%B4%A2.html'>#搜索</a></c>
-                                  
-                                    <c><a href='tag_GCD.html'>#GCD</a></c>
-                                  
-                                    <c><a href='tag_DS.html'>#DS</a></c>
-                                  
-                                    <c><a href='tag_%E7%BA%BF%E6%AE%B5%E6%A0%91.html'>#线段树</a></c>
+                                    <c><a href='tag_%E9%80%86%E5%BA%8F%E5%AF%B9.html'>#逆序对</a></c>
                                      
 
                                 </p>
@@ -142,138 +136,120 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <p>[6/8] VP</p>
-<span id="more"></span><!-- more -->
-<h2><a id="d-together-square" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D Together Square</h2>
-<p><tc><m>Medium *1191</m><t>数论</t><t>组合</t><t>筛法</t></tc></p>
+                    <p>Rated, 3/8, 1031 \(\to\) 1007，这下这下了</p>
+<h2><a id="e-many-operations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E Many Operations</h2>
+<p><tc><m>Medium *1261</m><t>位运算</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>两个数都是平方数的话其实是很简单的，但如果两个都不是平方数就有点难搞。一个非平方数所对应的可以让它们的积为完全平方数的另一个数是不唯一的，怎么快速找到它呢？</p>
-<p>考虑将所有的数 \(i\) 都除去它们最大的完全平方数因数（\(p_i\)），然后剩下的部分（设为 \(f_i\)）相等的，原数拼在一起就可以得到一个完全平方数。下面考虑的是如何快速的得到 \(f_i\)。由于数据范围不大，可以直接枚举它的因数找到 \(p_i\)。枚举因数用类似埃筛的方法，时间复杂度反正不大。</p>
+<p>看一下朴素算法劣在哪里，主要就是明明知道通过的是哪几个运算符，而且之前也算过一遍，但因为一开始的数不一样，还得重算一遍。</p>
+<p>解决这个问题，可以从「一开始的数」入手，如果把一开始的数抽象化一点，二进制一位一位看，这样就能更好地利用之前算好的结果。</p>
+<p>提前预处理一下每一位上 0 或 1 通过前若干个运算符后的结果，然后算答案的时候先拆位，分别计算再合并。</p>
+<p>拆那</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int n, sum[200001];
-bool g[200001];
-std::vector&lt;int&gt; v[200001];
-
-signed main() {
-    scanf(&quot;%lld&quot;, &amp;n);
-    int ans = 0;
-    for (int i = 1; i * i &lt;= n; ++i) g[i * i] = true;
-    for (int i = 1; i &lt;= n; ++i)
-        for (int j = i; j &lt;= n; j += i)
-            v[j].push_back(i);
-    for (int i = 1; i &lt;= n; ++i) {
-        int f = 1;
-        for (int p : v[i])
-            if (i % p == 0 &amp;&amp; g[p]) f = std::max(f, p);
-        sum[i / f]++;
-    }
-    for (int i = 1; i &lt;= n; ++i) ans += sum[i] * sum[i];
-    printf(&quot;%lld\n&quot;, ans);
-}
-</code></pre>
-<hr />
-<h2><a id="e-small-d-and-k" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E Small d and k</h2>
-<p><tc><e>Easy+ *1202</e><t>搜索</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>答案是暴力。</p>
-<p>这种最短路问题理应用 BFS 解决，但实际上 DFS 乱搞搞也可以过。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int x, k;
-int dis[200001];
-std::vector&lt;int&gt; nodes;
-void dfs(int x, int t) {
-    if (t &gt;= dis[x]) return;
-    if (dis[x] &gt; k) nodes.push_back(x);
-    dis[x] = t;
-    if (t == k) return;
-    for (int v : e[x])
-        dfs(v, t + 1);
-}
+<p>也可以写成在线做法捏。</p>
+<pre class="line-numbers"><code class="language-cpp">int x, n;
+int d[200001][31][2];
 
 int main() {
-    n = read(), m = read();
-    for (int i = 1; i &lt;= n; ++i) dis[i] = 1e9;
-    while (m--) {
-        int u = read(), v = read();
-        e[u].push_back(v);
-        e[v].push_back(u);
-    }
-    q = read();
-    while (q--) {
-        x = read(), k = read();
-        nodes = std::vector&lt;int&gt;();
-        dfs(x, 0);
-        long long ans = 0;
-        for (int u : nodes) {
-            dis[u] = 1e9;
-            ans += u;
+    n = read(), x = read();
+    for (int i = 0; i &lt;= 30; ++i)
+        d[0][i][1] = 1, d[0][i][0] = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        int t = read(), p = read();
+        for (int j = 0; j &lt;= 30; ++j) {
+            d[i][j][0] = d[i - 1][j][0]; 
+            d[i][j][1] = d[i - 1][j][1];
+            if (t == 1)
+                d[i][j][0] &amp;= ((p &gt;&gt; j) &amp; 1),
+                d[i][j][1] &amp;= ((p &gt;&gt; j) &amp; 1);
+            else if (t == 2)
+                d[i][j][0] |= ((p &gt;&gt; j) &amp; 1),
+                d[i][j][1] |= ((p &gt;&gt; j) &amp; 1);
+            else if (t == 3)
+                d[i][j][0] ^= ((p &gt;&gt; j) &amp; 1),
+                d[i][j][1] ^= ((p &gt;&gt; j) &amp; 1);
         }
-        printf(&quot;%lld\n&quot;, ans);
+    }
+    for (int i = 1; i &lt;= n; ++i) {
+        int ans = 0;
+        for (int j = 0; j &lt;= 30; ++j)
+            ans += d[i][j][((x &gt;&gt; j) &amp; 1)] &lt;&lt; j;
+        printf(&quot;%d\n&quot;, ans);
+        x = ans;
     }
     return 0;
 }
 </code></pre>
 <hr />
-<h2><a id="f-rectangle-gcd" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Rectangle GCD</h2>
-<p><tc><m>Medium *1764</m><t>数论</t><t>GCD</t><t>线段树</t><t>DS</t></tc></p>
+<h2><a id="d-flipping-and-bonus" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D Flipping and Bonus</h2>
+<p><tc><m>Medium *801</m><t>DP</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>极其显然地，答案是</p>
-\[\gcd\{A_{h_1}+B_{w_1},\underset{i\in(h_1,h_2]}{\left|A_i-A_{i-1}\right|},\underset{i\in(w_1,w_2]}{\left|B_i-B_{i-1}\right|}\}
-\]
-<p>然后就是查询区间 \(\gcd\)，用线段树或者 ST 表。</p>
-<p>为什么感觉 E &lt; F &lt; D……</p>
+<p>设 \(f(i,j)\) 为第 \(i\) 轮游戏后计数器为 \(j\) 的最大收益。</p>
+<p>怎么转移捏？\(f(i-1,j-1)\) 肯定是可以过来的，过程中加上 \(x_i\) 和对应的 Bonus。另外当 \(j=0\) 时从 \(f(i-1,t)\) 都可以过来，其中 \(0 \le t &lt;i\)，收益为 \(0\)。</p>
+<p>然后捏麻麻地压掉一维，就这</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>不带修的线段树真好写。注意四倍空间！</p>
-<pre class="line-numbers"><code class="language-cpp">#define lt(x) ((x) &lt;&lt; 1)
-#define rt(x) (((x) &lt;&lt; 1) + 1)
-#define abs(x) ((x) &gt; 0 ? (x) : -(x))
+<p>呃呃，压维的过程比想象的要复杂，有很多要考虑，建议直接偷懒</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
 
-int n, q;
-int a[200001], b[200001];
-int ca[200001], cb[200001];
+int n, m;
+int x[5001], y[5001];
+int dp[2][5001];
 
-int gcd(int a, int b) {
-    return b ? gcd(b, a % b) : a;
-}
+signed main() {
+    n = read(), m = read();
+    for (int i = 1; i &lt;= n; i++) x[i] = read();
+    for (int i = 1, t; i &lt;= m; i++) t = read(), y[t] = read();
 
-int segA[800001], segB[800001];
-void build(int *s1, int *s2, int x, int l, int r) {
-    if (l == r) {
-        s1[x] = s2[l];
-        return;
+    for (int i = 1; i &lt;= n; i++) {
+        for (int k = 0; k &lt; i; k++)
+            dp[i &amp; 1][0] = std::max(dp[i &amp; 1][0], dp[(i ^ 1) &amp; 1][k]);
+        for (int k = i; k; k--)
+            dp[i &amp; 1][k] = dp[(i ^ 1) &amp; 1][k - 1] + x[i] + y[k];
     }
-    const int mid = (l + r) &gt;&gt; 1;
-    build(s1, s2, lt(x), l, mid);
-    build(s1, s2, rt(x), mid + 1, r);
-    s1[x] = gcd(s1[lt(x)], s1[rt(x)]);
-}
 
-int query(int *s, int x, int l, int r, int ql, int qr) {
-    if (l &gt; r) return 1;
-    if (ql &lt;= l &amp;&amp; r &lt;= qr) return s[x];
-    const int mid = (l + r) &gt;&gt; 1;
-    int res = 0;
-    if (ql &lt;= mid) res = gcd(res, query(s, lt(x), l, mid, ql, qr));
-    if (qr &gt; mid) res = gcd(res, query(s, rt(x), mid + 1, r, ql, qr));
-    return res;
-}
-
-int main() {
-    n = read(), q = read();
-    for (int i = 1; i &lt;= n; ++i) a[i] = read();
-    for (int i = 1; i &lt;= n; ++i) b[i] = read();
-    for (int i = 1; i &lt;= n; ++i)
-        ca[i] = abs(a[i] - a[i - 1]), cb[i] = abs(b[i] - b[i - 1]);
-    build(segA, ca, 1, 1, n);
-    build(segB, cb, 1, 1, n);
-    while (q--) {
-        int h1 = read(), h2 = read(), w1 = read(), w2 = read();
-        printf(&quot;%d\n&quot;, gcd( gcd(query(segA, 1, 1, n, h1 + 1, h2),
-                                query(segB, 1, 1, n, w1 + 1, w2)),
-                            a[h1] + b[w1]));
+    int ans = 0;
+    for (int i = 0; i &lt;= n; ++i) {
+        ans = std::max(ans, dp[n &amp; 1][i]);
     }
+    printf(&quot;%lld\n&quot;, ans);
+}
+</code></pre>
+<hr />
+<h2><a id="f-sorting-color-balls" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Sorting Color Balls</h2>
+<p><tc><m>Medium *1587</m><t>逆序对</t></tc></p>
+<p>给定两个数列 \(X\) 和 \(C\)，可以同时交换相邻的两个，若 \(C\) 不同则代价为 \(1\)，求使得 \(X\) 升序最小的代价。</p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>差一点点就是逆序对问题了，看看怎么解决 \(C\) 相同时的问题。</p>
+<p>你求出来的所有逆序对，其中多余了 \(C\) 相同的逆序对，那直接把 \(C\) 相同的逆序对拎出来减掉不就好了？</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>还真不开 ll 见祖宗是吧</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n;
+std::vector&lt;int&gt; _, x, c[1000001];
+
+int cal(std::vector&lt;int&gt; &amp;v, int l, int r) {
+    if (l &gt;= r) return 0;
+    const int mid = (l + r) &gt;&gt; 1;
+    int ans = cal(v, l, mid) + cal(v, mid + 1, r);
+    int ql = l, qr = mid + 1;
+    for (int i = l; i &lt;= r; ++i) {
+        if ((v[ql] &lt;= v[qr] &amp;&amp; ql &lt;= mid) || qr == r + 1) _[i] = v[ql++];
+        else _[i] = v[qr++], ans += mid - ql + 1;
+    }
+    for (int i = l; i &lt;= r; ++i) v[i] = _[i];
+    return ans;
+}
+
+signed main() {
+    n = read();
+    _.resize(n);
+    for (int i = 0; i &lt; n; ++i) _[i] = read();
+    for (int i = 0; i &lt; n; ++i) x.push_back(read());
+    for (int i = 0; i &lt; n; ++i) c[_[i]].push_back(x[i]);
+    int ans = cal(x, 0, n - 1);
+    for (int i = 1; i &lt;= n; ++i) ans -= cal(c[i], 0, c[i].size() - 1);
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
 }
 </code></pre>
 
