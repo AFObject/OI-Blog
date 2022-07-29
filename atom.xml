@@ -4,13 +4,52 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-07-29T00:13:44+08:00</updated>
+  <updated>2022-07-29T00:13:48+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x171 堆与贪心]]></title>
+    <link href="oi.afobject.ml/0x171.html"/>
+    <updated>2022-07-29T22:00:10+08:00</updated>
+    <id>oi.afobject.ml/0x171.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="supermarket" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supermarket</h2>
+<p><tc><c>0x1701</c><m>Medium</m><t>贪心</t><t>反悔贪心</t><t>堆</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>对于第 \(t\) 天，我们尽量要去选前 \(t\) 大的卖掉，但是不能有过期的。</p>
+<p>首先先满足要求，不能有过期的，那就按时间顺序从小到大排个序，从头开始取，不会有问题。但是显然是不优的，那就要在贪心过程中调整策略，当碰到一个恰好要在那一个时刻过期且未被选中的商品，显然是要比原方案优的，把它顶上去。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>欢迎来到不开 ll 见祖宗系列</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+#define pii std::pair&lt;int, int&gt;
+
+std::priority_queue&lt;pii, std::vector&lt;pii&gt;, std::greater&lt;pii&gt;&gt; q;
+
+signed main() {
+    n = read();
+    for (int i = 1; i &lt;= n; i++)
+        a[i].first = read(), a[i].second = read();
+    std::sort(a + 1, a + n + 1);
+    for (int i = 1; i &lt;= n; i++) {
+        if (q.size() &lt; a[i].first) q.push({a[i].second, a[i].first});
+        else if (q.size() == a[i].first) {
+            if (a[i].second &gt; q.top().first)
+                q.pop(), q.push({a[i].second, a[i].first});
+        }
+    }
+    int ans = 0;
+    while (q.size()) ans += q.top().first, q.pop();
+    printf(&quot;%lld\n&quot;, ans);
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ABC261]]></title>
@@ -2589,90 +2628,6 @@ signed main() {
         printf(&quot;%lld &quot;, f[n][i][1]);
     putchar('\n');
     return 0;
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[2022 联合省选]]></title>
-    <link href="oi.afobject.ml/shoi-2022.html"/>
-    <updated>2022-04-10T20:58:03+08:00</updated>
-    <id>oi.afobject.ml/shoi-2022.html</id>
-    <content type="html"><![CDATA[
-<p>我为什么敢来做省选？</p>
-<span id="more"></span><!-- more -->
-<h2><a id="d1t1-preprocessor" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D1T1 Preprocessor</h2>
-<p><tc><e>Easy+</e><t>模拟</t></tc></p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>纯纯的模拟，每一行分别处理。</p>
-<p>处理「递归」是标准的 dfs。</p>
-<pre class="line-numbers"><code class="language-cpp">#include &lt;map&gt;
-#include &lt;string&gt;
-#include &lt;vector&gt;
-#include &lt;iostream&gt;
-
-#define isId(x) (x &gt;= '0' &amp;&amp; x &lt;= '9' || x &gt;= 'a' &amp;&amp; x &lt;= 'z' || x &gt;= 'A' &amp;&amp; x &lt;= 'Z' || x == '_')
-
-int n;
-std::map&lt;std::string, std::string&gt; dict;
-std::map&lt;std::string, bool&gt; state;
-
-void tryReplace(std::string s);
-void processText(std::string s) {
-    std::string current;
-    for (char x : s)
-        if (isId(x))
-            current += x;
-        else {
-            tryReplace(current);
-            std::cout &lt;&lt; x;
-            current = &quot;&quot;;
-        }
-    if (current.size())
-        tryReplace(current);
-}
-
-void processPreprocessor(std::string s) {
-    int pos1 = s.find(&quot; &quot;);
-    auto command = s.substr(1, pos1 - 1);
-    if (command == &quot;define&quot;) {
-        int pos2 = s.find(&quot; &quot;, pos1 + 1);
-        auto id = s.substr(pos1 + 1, pos2 - pos1 - 1),
-             replacement = s.substr(pos2 + 1);
-        dict[id] = replacement;
-    } else {
-        auto id = s.substr(pos1 + 1);
-        dict.erase(dict.find(id));
-    }
-} 
-
-int main() {
-    std::cin &gt;&gt; n;
-    std::string t;
-    getline(std::cin, t);
-    while (n--) {
-        std::string line;
-        getline(std::cin, line);
-        if (line[0] == '#')
-            processPreprocessor(line);
-        else
-            processText(line);
-        std::cout &lt;&lt; std::endl;
-    }
-    return 0;
-}
-
-void tryReplace(std::string s) {
-    if (dict.find(s) != dict.end()) {
-        if (!state[s])
-            state[s] = true, processText(dict[s]);
-        else
-            std::cout &lt;&lt; s;
-        state[s] = false;
-    } else
-        std::cout &lt;&lt; s;
 }
 </code></pre>
 
