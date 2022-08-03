@@ -4,13 +4,116 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-07-29T00:13:48+08:00</updated>
+  <updated>2022-07-29T23:11:40+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[ABC262]]></title>
+    <link href="oi.afobject.ml/abc262.html"/>
+    <updated>2022-08-03T22:26:17+08:00</updated>
+    <id>oi.afobject.ml/abc262.html</id>
+    <content type="html"><![CDATA[
+<p>Rated, 4/8, 1007 \(\to\) 1044</p>
+<h2><a id="d-i-hate-non-integer-number" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D I Hate Non-integer Number</h2>
+<p><tc><m>Medium *1213</m><t>DP</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>显然事需要枚举选出的数的个数 \(i\) 的。将所有数模 \(i\)，要求选出来的数和为 0。</p>
+<p>开始 dp。</p>
+<p>设 \(f(k,s,d)\) 为，在前 \(k\) 个数中选取 \(d\) 个数，且总和为 \(s\)。转移非常显然，\(f(k,s,d)=f(k-1,s-a_k\bmod i,d-1)+f(k-1,s,d)\)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n, a[101], b[101];
+int dp[101][101][101];
+
+signed main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i) a[i] = read();
+    int ans = n;
+    for (int i = 2; i &lt;= n; ++i) {
+        int sum = 0;
+        for (int j = 1; j &lt;= n; ++j)
+            b[j] = a[j] % i, sum = (sum + b[j] + i) % i;
+        for (int s = 0; s &lt; i; ++s)
+            for (int k = 1; k &lt;= n; ++k)
+                for (int d = 1; d &lt;= n; ++d)
+                    dp[k][s][d] = 0;
+        for (int j = 1; j &lt;= n; ++j)
+            for (int k = j; k &lt;= n; ++k)
+                ++dp[k][b[j]][1];
+
+        for (int k = 1; k &lt;= n; ++k)
+            for (int d = 2; d &lt;= std::min(k, i); ++d)
+                for (int s = 0; s &lt; i; ++s)
+                    dp[k][s][d] = (dp[k - 1][(s - b[k] + i) % i][d - 1] + dp[k - 1][s][d]) % 998244353;
+        ans = (ans + dp[n][0][i]) % 998244353;
+    }
+    printf(&quot;%lld\n&quot;, ans);
+}
+</code></pre>
+<hr />
+<h2><a id="e-red-and-blue-graph" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E Red and Blue Graph</h2>
+<p><tc><m>Medium *1719</m><t>图论</t><t>组合</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>设 \(X\) 为连接红点和红点的边的条数，\(Y\) 为连接红点和蓝点的边的条数。所有红点的度数总和为 \(R=2X+Y\)，因此 \(R\) 与 \(Y\) 同奇偶。想要 \(Y\) 为偶数，让 \(R\) 为偶数即可。</p>
+<p>让 \(R\) 为偶数，就是只能有偶数个奇点被选入红点。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>复习：</p>
+<ol>
+<li>组合数：\(\displaystyle \binom{n}{m}=\dfrac{n!}{(n-m)!\cdot m!}\)</li>
+<li>有理数取模：\(\dfrac ab \bmod p=a\cdot b^{p-2}\)</li>
+</ol>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+#define MOD 998244353
+
+int n, m, k;
+int deg[200001];
+
+int fact[200001];
+int qpow(int a, int b) {
+    int ans = 1;
+    while (b) {
+        if (b &amp; 1) ans = (ans * a) % MOD;
+        a = (a * a) % MOD;
+        b &gt;&gt;= 1;
+    }
+    return ans;
+}
+
+int binom(int a, int b) {
+    return (fact[a] * qpow((fact[a - b] * fact[b]) % MOD, MOD - 2)) % MOD;
+}
+
+
+signed main() {
+    n = read(), m = read(), k = read();
+
+    fact[0] = 1;
+    for (int i = 1; i &lt;= n; ++i)
+        fact[i] = (fact[i - 1] * i) % MOD;
+
+    while (m--) {
+        int u = read(), v = read();
+        ++deg[u]; ++deg[v];
+    }
+    int odd = 0;
+    for (int i = 1; i &lt;= n; ++i) if (deg[i] &amp; 1) ++odd;
+    int ans = 0;
+    for (int d = 0; d &lt;= std::min(odd, k); d += 2) {
+        if (k - d &lt;= n - odd)
+            ans = (ans + binom(odd, d) * binom(n - odd, k - d)) % MOD;
+    }
+    printf(&quot;%lld\n&quot;, ans);
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0x171 堆与贪心]]></title>
@@ -57,7 +160,7 @@ signed main() {
     <updated>2022-07-23T22:27:19+08:00</updated>
     <id>oi.afobject.ml/abc261.html</id>
     <content type="html"><![CDATA[
-<p>Rated, 3/8, 1031 \(\to\) 1007，这下这下了</p>
+<p>[6/8] Rated, 3/8, 1031 \(\to\) 1007，这下这下了</p>
 <h2><a id="e-many-operations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E Many Operations</h2>
 <p><tc><m>Medium *1261</m><t>位运算</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
@@ -2526,110 +2629,6 @@ int main() {
 </tbody>
 </table>
 <h2><a id="0x02" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>0x02</h2>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ABC248]]></title>
-    <link href="oi.afobject.ml/abc248.html"/>
-    <updated>2022-04-16T23:32:16+08:00</updated>
-    <id>oi.afobject.ml/abc248.html</id>
-    <content type="html"><![CDATA[
-<p>[6/8] VP</p>
-<span id="more"></span><!-- more -->
-<h2><a id="e-k-colinear-line" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E K-colinear Line</h2>
-<p><tc><m>Medium- *1292</m><t>计算几何</t><t>STL</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>主要问题在于如何精确、省力地表示一条直线。</p>
-<p>对于过点 \((x_1,y_1),(x_2,y_2)\) 的直线，设其为 \(y=kx+b\)，则有 \(k=\dfrac{y_2-y_1}{x_2-x_1}\)，\(b=\dfrac{y_1x_2-y_2x_1}{x_2-x_1}\)。下面那个分母实在是太烦了，消掉，于是就变成了 \((x_2-x_1)y=(y_2-y_1)x+y_1x_2-y_2x_1\)。</p>
-<p>于是可以用 \(x_2-x_1\)，\(y_2-y_1\)，\(y_1x_2-y_2x_1\) 这三个东西（全部除去 \(\gcd\)，且使 \(x_2-x_1\) 非负）来鉴定一条直线。可以使用 <code>std::tuple</code>。</p>
-<p>这也正好解决了平行于 \(x\) 轴的直线的问题。</p>
-<p>可以使用 <code>std::multiset</code> 维护信息。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int n, k;
-int x[301], y[301];
-
-std::multiset&lt;std::tuple&lt;int, int, int&gt;&gt; m;
-int t[90001];
-
-auto line(int i, int j) {
-    int a = x[i] - x[j];
-    int b = y[i] - y[j];
-    int c = x[j] * y[i] - x[i] * y[j];
-    if (a &lt; 0) a = -a, b = -b, c = -c;
-    const int g = gcd(a, gcd(b, c));
-    a /= g, b /= g, c /= g;
-    return std::make_tuple(a, b, c);
-}
-
-signed main() {
-    n = read(), k = read();
-    if (k == 1) return puts(&quot;Infinity&quot;), 0;
-    for (int i = 1; i &lt;= n; ++i)
-        x[i] = read(), y[i] = read();
-    for (int i = 1; i &lt; n; ++i)
-        for (int j = i + 1; j &lt;= n; ++j)
-            m.insert(line(i, j));
-    for (int i = 1; i &lt;= n; ++i)
-        t[i * (i - 1) / 2] = i;
-    int ans = 0;
-    for (auto i = m.begin(); i != m.end(); i = m.upper_bound(*i))
-        ans += (t[m.count(*i)] &gt;= k);
-    printf(&quot;%lld\n&quot;, (int)ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="f-keep-connect" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Keep Connect</h2>
-<p><tc><m>Medium+ *1828</m><t>DP</t><t>图论</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p><strong>考虑一个子图 \(G_k\)</strong>，它包含点 \((1,1),(1,2)\) 至 \((k,1),(k,2)\)。在 DP 进行过程中，它的 \((k-1,1) \to (k,1)\)，\((k,1) \to (k,2)\) 和 \((k-1,2) \to (k,2)\) 这三条边（分别叫做 \(a,b,c\) 边）未确定是否存在。</p>
-<p><strong>考虑它在什么情况下才能让最终的图连通。</strong> 第一种是它本身连通；第二种是它有两个连通块，分别包含 \((k,1)\) 和 \((k,2)\)（注意一个点也算一个连通块！）。</p>
-<p>接下来设计状态。\(f(k,j,s)\) 为 DP 进行到 \(G_k\) 时，已删了 \(j\) 条边，且连通状态为 \(s\)（\(s \in \{1,2\}\)）时的答案。</p>
-<p>接下来考虑转移：</p>
-<ol>
-<li>从 1 转移到 1。这个时候可能的状态有：\((a,b),(b,c),(a,c),(a,b,c)\)，共 4 种。</li>
-<li>从 2 转移到 2。可选择的只有 \((a,c)\)。</li>
-<li>从 1 转移到 2。可以选择 \(a,c\)，2 种。</li>
-<li>从 2 转移到 1。只能选择 \((a,b,c)\)。</li>
-</ol>
-<p>因此有：</p>
-\[\begin{aligned}
-f(k,j,1) &amp;= 3 \cdot f(k-1,j-1,1)+f(k-1,j,1)+f(k-1,j,2) \\
-f(k,j,2) &amp;= f(k-1,j-1,2)+2 \cdot f(k-1,j-2,1)
-\end{aligned}
-\]
-<p>最后考虑初始值。\(f(1,0,1)=f(1,1,2)=1\)。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int n, p;
-int f[3001][3001][3];
-
-void add(int &amp;x, int d) {
-    x = (x + d) % p;
-}
-
-signed main() {
-    n = read(), p = read();
-    f[1][0][1] = f[1][1][2] = 1;
-    for (int i = 2; i &lt;= n; ++i) {
-        for (int j = 0; j &lt; n; ++j) {
-            if (j &gt;= 1) add(f[i][j][1], 3 * f[i - 1][j - 1][1]);
-            add(f[i][j][1], f[i - 1][j][1] + f[i - 1][j][2]);
-            if (j &gt;= 1) add(f[i][j][2], f[i - 1][j - 1][2]);
-            if (j &gt;= 2) add(f[i][j][2], 2 * f[i - 1][j - 2][1]);
-        }
-    }
-    for (int i = 1; i &lt; n; ++i)
-        printf(&quot;%lld &quot;, f[n][i][1]);
-    putchar('\n');
-    return 0;
-}
-</code></pre>
 
 ]]></content>
   </entry>
