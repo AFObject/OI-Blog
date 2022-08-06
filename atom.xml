@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-07-29T23:11:40+08:00</updated>
+  <updated>2022-08-06T23:50:38+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -148,6 +148,76 @@ signed main() {
     int ans = 0;
     while (q.size()) ans += q.top().first, q.pop();
     printf(&quot;%lld\n&quot;, ans);
+}
+</code></pre>
+<hr />
+<h2><a id="sequence" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sequence</h2>
+<p><tc><c>0x1702</c><m>Medium+</m><t>贪心</t><t>排序</t><t>堆</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>考虑 \(M=2\)。两个序列分别排序，第一小是 \(a_1+b_1\)。第二大是 \(a_1+b_2\) 或 \(a_2+b_1\) 中的一个。假设是前一个，那么第三大就是 \(a_2+b_1, a_1+b_3, a_2+b_2\) 中的一个。以此类推，后面我不想写了。</p>
+<p>考虑重复的问题：把路径画出来分配一下。</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h4xgd4f8jwj20u00ydacv.jpg" alt="" /></p>
+<p>反正就是</p>
+\[\begin{aligned}
+(i,j,true) &amp;\to (i,j+1,true) \\
+(i,j,false) &amp;\to \begin{cases}
+(i+1,j+1, false)\\
+(i,j+1,true)\end{cases}
+\end{aligned}
+\]
+<p>当扩展到 \(M&gt;2\) 时，先求前两个，再结合第三个，……，懒得写了，结束。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int m, n;
+std::vector&lt;int&gt; d[2001];
+
+struct Node {
+    int val, i, j;
+    bool k;
+    bool operator &lt; (const Node &amp;rhs) const {
+        return val &gt; rhs.val;
+    }
+};
+
+std::vector&lt;int&gt; cal(std::vector&lt;int&gt; &amp;a, std::vector&lt;int&gt; &amp;b) {
+    std::priority_queue&lt;Node&gt; q;
+    q.push((Node){a[1] + b[1], 1, 1, false});
+    std::vector&lt;int&gt; ans;
+    ans.push_back(0);
+    while (!q.empty()) {
+        Node x = q.top(); q.pop();
+        ans.push_back(x.val);
+        if (ans.size() == n + 1) break;
+        if (!x.k &amp;&amp; x.i + 1 &lt;= n) q.push((Node){a[x.i + 1] + b[x.j], x.i + 1, x.j, false});
+        if (x.j + 1 &lt;= n) q.push((Node){a[x.i] + b[x.j + 1], x.i, x.j + 1, true});
+    }
+    return ans;
+}
+
+int T;
+int main() {
+    T = read();
+    while (T--) {
+        m = read(), n = read();
+        for (int i = 1; i &lt;= m; ++i) {
+            d[i].clear();
+            d[i].push_back(0);
+            for (int j = 1; j &lt;= n; ++j)
+                d[i].push_back(read());
+            std::sort(d[i].begin() + 1, d[i].end());
+        }
+        if (m == 1) {
+            for (int i = 1; i &lt;= n; ++i)
+                printf(&quot;%d &quot;, d[1][i]);
+            putchar('\n');
+            continue;
+        }
+        auto ans = cal(d[1], d[2]);
+        for (int i = 3; i &lt;= m; ++i)
+            ans = cal(ans, d[i]);
+        for (int i = 1; i &lt;= n; ++i)
+            printf(&quot;%d &quot;, ans[i]);
+        putchar('\n');
+    }
 }
 </code></pre>
 
