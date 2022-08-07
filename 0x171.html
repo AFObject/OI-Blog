@@ -235,6 +235,65 @@ int main() {
     }
 }
 </code></pre>
+<hr />
+<h2><a id="%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据备份</h2>
+<p><tc><c>0x1703</c><m>Medium</m><t>贪心</t><t>反悔贪心</t><t>堆</t><t>链表</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>哦哦牛批，转化一下题意，设 \(D_{1 \ldots N-1}\) 为相邻两个办公楼之间的距离。在 \(D\) 中选最小的 \(K\) 个数，且这 \(K\) 个数不相邻。</p>
+<p>为什么我想到的是 dp 啊，先收回这个想法。</p>
+<p>将 \(D\) 从小到大排序。假设选了 \(i\)，就不能选 \(i-1\) 和 \(i+1\)，但万一我突然想选这俩了怎么办。别急，分析一下能不能只选 \(i-1\) 和 \(i+1\) 中的一个。不能的啦，还不如直接选 \(i\)。所以，要么选 \(i\)，要么选 \(i-1\) 和 \(i+1\)。</p>
+<p>所以就是：把原来 \(i-1,i,i+1\) 三个，替换成一个 \(D_{i-1}+D_{i+1}-D_{i}\)。</p>
+<p>以上 \(i-1\) 视作链表中 \(i\) 的前驱，\(i+1\) 视作后继。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>链表乱搞。</p>
+<p>另外，他妈的第 \(0\) 个和第 \(n\) 个的位置要放一个极大的数上去，否则碰到边界的时候不行。</p>
+<pre class="line-numbers"><code class="language-cpp">#define int long long
+
+int n, k;
+
+int pre[500001], nxt[500001];
+int val[200001];
+bool f[200001];
+
+struct Comp {
+    bool operator()(const int &amp;a, const int &amp;b) const {
+        return val[a] &gt; val[b];
+    }
+};
+
+std::priority_queue&lt;int, std::vector&lt;int&gt;, Comp&gt; q;
+
+void del(int x) {
+    f[x] = true;
+    if (pre[x] != -1) nxt[pre[x]] = nxt[x];
+    if (nxt[x] != -1) pre[nxt[x]] = pre[x];
+}
+
+signed main() {
+    n = read(), k = read();
+    int last = read();
+    for (int i = 1, t; i &lt; n; ++i)
+        t = read(), val[i] = t - last, last = t,
+        q.push(i);
+
+    val[0] = val[n] = 1e18;
+    for (int i = 1; i &lt; n; ++i)
+        nxt[i] = i + 1, pre[i] = i - 1;
+    
+    int ans = 0, cnt = 0;
+    while (!q.empty()) {
+        auto i = q.top(); q.pop();
+        if (f[i]) continue;
+        ans += val[i];
+        if (++cnt == k) break;
+        val[i] = val[pre[i]] + val[nxt[i]] - val[i];
+
+        del(pre[i]); del(nxt[i]);
+        q.push(i);
+    }
+    printf(&quot;%lld\n&quot;, ans);
+}
+</code></pre>
 
                   </article>
                   <div class="comments-wrap">
