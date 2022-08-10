@@ -4,13 +4,157 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-08-06T23:53:15+08:00</updated>
+  <updated>2022-08-10T23:58:56+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[LGR115]]></title>
+    <link href="oi.afobject.ml/LGR115.html"/>
+    <updated>2022-08-08T22:37:27+08:00</updated>
+    <id>oi.afobject.ml/LGR115.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="f%E7%90%AA%E9%9C%B2%E8%AF%BA%E7%9A%84%E9%80%89%E6%8B%A9%E9%A2%98-p8471" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F 琪露诺的选择题 - P8471</h2>
+<p><tc><m>Medium</m><t>构造</t><t>容斥</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>设正确答案里有 \(x\) 个 A。</p>
+<p>我们只能放 \(a\) 个 A，现在考虑放几个在正确的位置上。假设放 \(u\) 个。那么在错误位置上的就是 \(a-u\) 个。</p>
+<p>放在正确位置上的有 \(u\) 个，那么剩下的 \(x-u\) 个正确答案里的 A 就得对应 B。对最终答案（\(e\)）的贡献，要么是 A 放在了 B 上（\(a-u\)），要么是 B 放在了 A 上（\(x-u\)）。因此 \(e=x-u+a-u=x+a-2u\)。好的，\(u\) 算出来了，是 \(\dfrac{x+a-e}2\)。</p>
+<p>不能解的情况，就是算出来的 \(u&gt;x\)，或者 \(u&gt;a\)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<p>多测给我清空！!1多测给我清空！!1多测给我清空！!1多测给我清空！!1多测给我清空！!1多测给我清空！!1</p>
+<pre class="line-numbers"><code class="language-cpp">int T;
+int n, a, e;
+char s[300001], ans[300001];
+
+int main() {
+    T = read();
+    while (T--) {
+        n = read() &lt;&lt; 1, a = read(), e = read();
+        scanf(&quot;%s&quot;, s + 1);
+        int x = 0;
+        for (int i = 1; i &lt;= n; ++i)
+            x += (s[i] == 'A');
+        int u = (x + a - e) &gt;&gt; 1, v = a - u;
+        if (v &gt; n - x || u &lt; 0 || u &gt; x || u &gt; a || (x + a - e) &amp; 1) {
+            puts(&quot;-1&quot;);
+            continue;
+        }
+        memset(ans, 0, sizeof(ans));
+        for (int i = 1; i &lt;= n; ++i)
+            ans[i] = 'B';
+        for (int i = 1, t = 1; t &lt;= u; ++i)
+            if (s[i] == 'A')
+                ans[i] = 'A', ++t;
+        for (int i = 1, t = 1; t &lt;= a - u; ++i)
+            if (s[i] == 'B')
+                ans[i] = 'A', ++t;
+        puts(ans + 1);
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="h%E7%A0%B4%E7%A2%8E%E7%9A%84%E5%8E%86%E5%8F%B2-p8473" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>H 破碎的历史 - P8473</h2>
+<p><tc><m>Medium</m><t>DS</t><t>线段树</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>每次操作取最有用的一条线段（最左端第一个<strong>黑</strong>到最右端第一个<strong>黑</strong>）。并记录。每次线段树将区间内的数都加一，每次统计是否全部 \(\geq 1\)。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">#define lt(x) ((x) &lt;&lt; 1)
+#define rt(x) (((x) &lt;&lt; 1) + 1)
+
+int n, q;
+int a[500001], c[500001];
+
+namespace SegTree {
+    int tag[2000001], min[2000001];
+    void split(int x) { // 需要 lazytag 捏
+        tag[lt(x)] += tag[x], tag[rt(x)] += tag[x];
+        min[lt(x)] += tag[x], min[rt(x)] += tag[x];
+        min[x] += tag[x], tag[x] = 0;
+    }
+    void merge(int x) {
+        min[x] = std::min(min[lt(x)], min[rt(x)]);
+    }
+    void build(int x, int l, int r) {
+        if (l == r) {
+            min[x] = c[l];
+            return;
+        }
+        int mid = (l + r) &gt;&gt; 1;
+        build(lt(x), l, mid);
+        build(rt(x), mid + 1, r);
+        merge(x);
+    }
+    void add(int x, int l, int r, int ql, int qr, int d) {
+        if (ql &lt;= l &amp;&amp; r &lt;= qr) {
+            tag[x] += d;
+            min[x] += d;
+            return;
+        }
+        split(x);
+        int mid = (l + r) &gt;&gt; 1;
+        if (ql &lt;= mid) add(lt(x), l, mid, ql, qr, d);
+        if (qr &gt; mid) add(rt(x), mid + 1, r, ql, qr, d);
+        merge(x);
+    }
+}
+
+int l[500001], r[500001]; // 这块儿的用处是定位询问区间内两端的特殊点
+int mapL(int x) {
+    return std::lower_bound(a + 1, a + n + 1, x) - a;
+}
+int mapR(int x) {
+    return (std::upper_bound(a + 1, a + n + 1, x) - a) - 1;
+}
+
+int bl[500001], br[500001]; // 预处理一下每个特殊点左右两端的最近的黑点
+void go() {
+    int last = n + 1;
+    for (int i = n; i; --i) {
+        if (c[i]) last = i;
+        bl[i] = last;
+    }
+    last = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        if (c[i]) last = i;
+        br[i] = last;
+    }
+}
+
+int main() {
+    n = read(), q = read();
+    for (int i = 1; i &lt;= n; ++i)
+        a[i] = read();
+    for (int i = 1; i &lt;= n; ++i)
+        c[i] = read();
+
+    go();
+    SegTree::build(1, 1, n);
+
+    for (int i = 1; i &lt;= q; ++i) {
+        puts(SegTree::min[1] ? &quot;Yes&quot; : &quot;No&quot;);
+        int op = read();
+        if (op == 1) {
+            int x = read(), y = read();
+            l[i] = mapL(x), r[i] = mapR(y);
+            SegTree::add(1, 1, n, bl[l[i]], br[r[i]], 1);
+        } else {
+            int x = read();
+            SegTree::add(1, 1, n, bl[l[x]], br[r[x]], -1);
+        }
+    }
+    puts(SegTree::min[1] ? &quot;Yes&quot; : &quot;No&quot;);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ABC262]]></title>
@@ -2716,48 +2860,6 @@ int main() {
     return 0;
 }
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x00 索引]]></title>
-    <link href="oi.afobject.ml/0x00-.html"/>
-    <updated>2022-04-23T11:01:36+08:00</updated>
-    <id>oi.afobject.ml/0x00-.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="0x01" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>0x01</h2>
-<table>
-<thead>
-<tr>
-<th>题目</th>
-<th>一句话题解</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0x0101</td>
-<td>快速幂板子，通过二进制拆分 \(b\) 证明结论。</td>
-</tr>
-<tr>
-<td>0x0102</td>
-<td>模拟。</td>
-</tr>
-<tr>
-<td>0x0103</td>
-<td>快速幂改快速乘。</td>
-</tr>
-<tr>
-<td>0x0104</td>
-<td>状压 DP 板子，设 \(f(i,u)\) 为经过的点集为 \(i\)，且当前点为 \(u\) 时的最短路长度，容易推出转移方程。</td>
-</tr>
-<tr>
-<td>0x0105</td>
-<td>从高到低对于每一位分别讨论，如果该位不确定，则在 \(m\) 的限制条件下尽量让它变成 1。</td>
-</tr>
-</tbody>
-</table>
-<h2><a id="0x02" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>0x02</h2>
 
 ]]></content>
   </entry>
