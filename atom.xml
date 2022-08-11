@@ -4,13 +4,103 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-08-10T23:58:56+08:00</updated>
+  <updated>2022-08-10T23:59:03+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x172 Huffman 树]]></title>
+    <link href="oi.afobject.ml/0x172.html"/>
+    <updated>2022-08-11T21:20:16+08:00</updated>
+    <id>oi.afobject.ml/0x172.html</id>
+    <content type="html"><![CDATA[
+<p>一个包含 \(n\) 个叶子节点的 \(k\) 叉树，第 \(i\) 个叶子节点离根节点 \(l_i\)，权值 \(w_i\)，最小化 \(\sum l_i \cdot w_i\)。</p>
+<h2><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h2>
+<h3><a id="%E4%BA%8C%E5%8F%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>二叉</h3>
+<p>真不熟，我不懂怎么证，反正就是一个堆不断合并来合并去。</p>
+<h3><a id="%E5%A4%9A%E5%8F%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>多叉</h3>
+<p>更不熟，反正就是补几个 \(0\) 使得 \((n-1)\equiv 0\pmod {k-1}\)。</p>
+<hr />
+<h2><a id="%E5%90%88%E5%B9%B6%E6%9E%9C%E5%AD%90" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>合并果子</h2>
+<p><tc><c>NOIP-S 2004</c><c>0x1704</c><e>Easy</e><t>堆</t></tc></p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">signed main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i) q.push(read());
+    int ans = 0;
+    while (q.size() &gt; 1) {
+        int a = q.top(); q.pop();
+        int b = q.top(); q.pop();
+        ans += a + b;
+        q.push(a + b);
+    }
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+
+</code></pre>
+<hr />
+<h2><a id="%E5%90%88%E5%B9%B6%E6%9E%9C%E5%AD%90%EF%BC%88%E5%8A%A0%E5%BC%BA%E7%89%88%EF%BC%89" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>合并果子（加强版）</h2>
+<p><tc><c>LG6033</c><e>Easy</e><t>队列</t><t>排序</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>首先桶一下塞进 \(q_1\)。新造出来的塞进 \(q_2\)，反正有序的。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int top() {
+    int ans = 0;
+    if (q1.empty()) ans = q2.front(), q2.pop();
+    else if (q2.empty()) ans = q1.front(), q1.pop();
+    else if (q1.front() &lt; q2.front()) ans = q1.front(), q1.pop();
+    else ans = q2.front(), q2.pop();
+    return ans;
+}
+
+signed main() {
+    n = read();
+    for (int i = 1; i &lt;= n; ++i) ++b[read()];
+    for (int i = 1; i &lt;= 1e5; ++i)
+        for (int j = 1; j &lt;= b[i]; ++j)
+            q1.push(i);
+    int ans = 0;
+    while (q1.size() + q2.size() &gt; 1) {
+        const int x = top() + top();
+        ans += x;
+        q2.push(x);
+    }
+    printf(&quot;%lld\n&quot;, ans);
+    return 0;
+}
+</code></pre>
+<hr />
+<h2><a id="%E8%8D%B7%E9%A9%AC%E5%8F%B2%E8%AF%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>荷马史诗</h2>
+<p><tc><c>NOI2015</c><c>0x1705</c><m>Medium</m><t>堆</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>题意转化为构造一棵 Trie 树使得所有的单词都在叶子节点上，就是构造一棵 \(k\) 叉 Huffman 树。</p>
+<p>所求即为 \(\sum l_i \cdot w_i\) 以及树的深度。所以尽量选深度少的结点并。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">signed main() {
+    n = read(), k = read();
+    for (int i = 1; i &lt;= n; ++i)
+        q.push({read(), 0});
+    while ((q.size() - 1) % (k - 1)) q.push({0, 0});
+    int ans = 0;
+    while (q.size() &gt;= k) {
+        int x = 0, y = 0;
+        for (int i = 1; i &lt;= k; ++i)
+            x += q.top().first, y = std::max(y, q.top().second), q.pop();
+        ans += x;
+        q.push({x, y + 1});
+    }
+    printf(&quot;%lld\n%lld\n&quot;, ans, q.top().second);
+    return 0;
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[LGR115]]></title>
@@ -2689,176 +2779,6 @@ n = int(input())
 a = factorial(2 * n)
 b = factorial(n)
 print(a // b // b // (n + 1))
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ABC249]]></title>
-    <link href="oi.afobject.ml/abc249.html"/>
-    <updated>2022-04-23T20:54:17+08:00</updated>
-    <id>oi.afobject.ml/abc249.html</id>
-    <content type="html"><![CDATA[
-<p>[6/8] 为什么每次打 ABC 都碰上蓝色的 E（恼）</p>
-<p>Rated, 4/8, 977 \(\to\) 987</p>
-<span id="more"></span><!-- more -->
-<h2><a id="d-index-trio" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>D Index Trio</h2>
-<p><tc><m>Medium- *983</m><t>数论</t><t>组合</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%951" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 1</h3>
-<p>从乘积出发。</p>
-<p>考虑对于每一个数，根号复杂度分解质因数。如果分到的恰好都是数列里的数，则答案加上两边出现次数的乘积再乘以二。有一些小细节。</p>
-<h3><a id="%E7%AE%97%E6%B3%952" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 2</h3>
-<p>从乘数出发。</p>
-<p>在记录每个数的出现次数后，对于每对 \((i,j)\)，答案直接加上 \(c_i \cdot c_j \cdot c_{i \times j}\)。时间复杂度能过。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>（算法 1）</p>
-<pre class="line-numbers"><code class="language-cpp">#define int long long
-
-int n;
-int b[1000001];
-
-signed main() {
-    n = read();
-    for (int i = 1; i &lt;= n; i++)
-        ++b[read()];
-    int ans = 0;
-    for (int i = 1; i &lt;= 200000; i++) {
-        if (!b[i]) continue;
-        for (int x = 1; x * x &lt;= i; ++x)
-            if (i % x == 0)
-                if (b[x] &amp;&amp; b[i / x]) {
-                    if (x * x == i) ans += b[i] * b[x] * b[x];
-                    else ans += b[i] * b[x] * b[i / x] * 2;
-                }
-    }
-    printf(&quot;%lld\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="f-ignore-operations" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>F Ignore Operations</h2>
-<p><tc><m>Medium *1786</m><t>堆</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>考虑一下如果一定要删一个操作，那么肯定是看一下删哪个对最终的结果最好。如果该操作后面有替换操作，那么屁用没有；否则对最终答案的贡献就是进行到那一步和前一步操作后的结果差。</p>
-<p>那如果一定要删两个呢？</p>
-<p>在替换操作前面删屁用没有。所以要么在这之后选 \(y\) 最小的两个修改操作，要么就干脆直接把这个替换操作删了。所以有三种：</p>
-<ul>
-<li>在最后一个替换操作后面选两个 \(y\) 最小的删；</li>
-<li>删了最后一个替换操作，然后在倒数第二个后面选一个最小的删；</li>
-<li>直接删掉最后两个替换操作。</li>
-</ul>
-<p>扩展到选 \(k\) 个删，且没必要删完：</p>
-<ul>
-<li>在最后一个替换操作后面选至多 \(k\) 个 \(y\) 最小且为负的删；</li>
-<li>删了最后一个替换操作，然后在倒数第二个后面选至多 \(k-1\) 个最小且为负的删；</li>
-<li>……</li>
-<li>把最后 \(k\) 个替换操作全删了（如果有）。</li>
-</ul>
-<p>在以上 \(k+1\) 种答案中选一个最小的即可。到这里时间复杂度为 \(O(n \log n + k^2)\)，不太行。</p>
-<p>接下来考虑怎么更高效地维护信息。可以从后往前，动态维护所有修改操作 \(y\) 的前 \(k\) 小，并维护这个顺序，碰到一个替换操作的时候就可以计算出一种可能的答案了。</p>
-<p>设两个相邻的替换操作在 \(i,j\) 这两个位置，并且我已经在 \((j,n]\) 范围内的修改操作中找到了删去最优的 \(k\) 个的和。我现在要找 \((i,n]\) 范围内最优 \(k-1\) 个的和。这个相对比较容易，首先先踢出去一个，然后优先队列（大根堆）维护就行了（同时另外维护一个总和），在 \((i,j)\) 的修改操作中碰到有比优先队列中相对最不优的那个更优的，把它顶掉就行了。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, k;
-std::stack&lt;int&gt; rep;
-std::priority_queue&lt;long long&gt; q;
-long long t[200005], y[200005];
-long long suf[200005];
-
-int main() {
-    n = read(), k = read();
-    rep.push(0);
-    for (int i = 1; i &lt;= n; i++) {
-        t[i] = read(), y[i] = read();
-        if (t[i] == 1)
-            rep.push(i);
-    }
-
-    for (int i = n; i; --i)
-        if (t[i] == 2)
-            suf[i] = suf[i + 1] + y[i];
-        else
-            suf[i] = suf[i + 1];
-
-    int now, last = n;
-    long long sum = 0, ans = -1e18;
-    do {
-        now = rep.top() + 1;
-        rep.pop();
-        for (int i = now; i &lt;= last; ++i)
-            if (t[i] == 2 &amp;&amp; y[i] &lt; 0) {
-                if (q.size() &lt; k) {
-                    sum += y[i];
-                    q.push(y[i]);
-                } else if (k &amp;&amp; q.top() &gt; y[i]) {
-                    sum += y[i] - q.top();
-                    q.pop();
-                    q.push(y[i]);
-                }
-            }
-        ans = std::max(ans, y[now - 1] + suf[now] - sum);
-        last = now - 2;
-        if (k &amp;&amp; q.size() == k) sum -= q.top(), q.pop();
-        --k;
-    } while (k &gt;= 0 &amp;&amp; rep.size());
-
-    printf(&quot;%lld\n&quot;, ans);
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="e-rle" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>E RLE</h2>
-<p><tc><m>Medium+ *1970</m><t>DP</t><t>前缀和</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>设 \(f(i,j)\) 为原长为 \(i\)，压缩后长为 \(j\) 的个数。</p>
-<p>接下来考虑转移。首先假如连续段长度都只有个位数，则</p>
-\[f(i,j)=\sum_{k=1}^9 f(i-k,j-2)
-\]
-<p>扩展：</p>
-\[\begin{aligned}
-f(i,j)&amp;=\sum_{k=1}^i f(i-k,j-\lfloor\log_{10}(k)\rfloor-1)
-\end{aligned}
-\]
-<p>\(k\) 从 \(1\) 到 \(i\) 的遍历相当于逐个尝试这个字符串最后连续相同字符的个数。</p>
-<p>但上面这个方程不完全对，还要考虑到每个字符都不一样，转移时都要乘上系数 \(25\)。</p>
-<p>但是这样的效率还是不够高，我们考虑对于 \(f\) 的每一行进行一个前缀和，由于 \(i,j\) 显然最多只是四位数，状态转移方程变为：</p>
-\[\begin{aligned}
-f(i,j)&amp;=25 \cdot [ s(i-1,j-2)-s(i-10,j-2)\\
-&amp;+s(i-10,j-3)-s(i-100,j-3)\\
-&amp;+s(i-100,j-4)-s(i-1000,j-4)\\
-&amp;+s(i-1000,j-5)-s(i-10000,j-5) ]
-\end{aligned}
-\]
-<p>计数的时候从小到大对于每个 \(i\) 分别讨论，注意到当原长为 \(i\) 时，\(j\) 至少为 \(\lfloor \log_{10}(i)  \rfloor+1\)，因此初始值 \(f(i,\lfloor \log_{10}(i)\rfloor+1)=26\)，其余的直接 \(0\)，懒得考虑边界问题。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">long long n, p; // npk48
-long long f[3005][3005], s[3005][3005];
-
-int len(int x) {
-    if (x &lt; 10) return 2;
-    if (x &lt; 100) return 3;
-    if (x &lt; 1000) return 4;
-    return 5;
-}
-
-int main() {
-    n = read(), p = read();
-    for (int i = 1; i &lt;= n; ++i) {
-        f[i][len(i)] = 26ll;
-        for (int j = 1; j &lt; n; ++j) {
-            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 1)][T(j - 2)]     - s[T(i - 10)][T(j - 2)]));
-            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 10)][T(j - 3)]    - s[T(i - 100)][T(j - 3)]));
-            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 100)][T(j - 4)]   - s[T(i - 1000)][T(j - 4)]));
-            f[i][j] = M(f[i][j] + 25ll * (s[T(i - 1000)][T(j - 5)]  - s[T(i - 3001)][T(j - 5)]));
-            s[i][j] = M(s[i - 1][j] + f[i][j]);
-        }
-    }
-    long long ans = 0;
-    for (int i = 1; i &lt; n; ++i)
-        ans = M(ans + f[n][i]);
-    printf(&quot;%lld\n&quot;, ans);
-    return 0;
-}
 </code></pre>
 
 ]]></content>
