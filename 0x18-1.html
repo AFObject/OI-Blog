@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-    0x113 单调栈 - OI Blog
+    0x1801 ~ 0x1804 - OI Blog
     
     </title>
     <link rel="shortcut icon" href="media/16415680135532/diana2.jpg" type="image/png" />
@@ -91,7 +91,7 @@
                   <div class="post-body single-content">
                     
                     <h1 class="title">
-                            0x113 单调栈   
+                            0x1801 ~ 0x1804   
                       </h1>
                      
                     
@@ -108,10 +108,10 @@
                             <div class="media-content">
                               <div class="content">
                                 <p>
-                                 <span class="date">2022/04/27</span>
+                                 <span class="date">2022/08/12</span>
                                   <span class="tran-posted-in">posted in</span>&nbsp; 
                                   
-                                      <span class="posted-in"><a href='0x11.html'>0x11 栈</a></span>
+                                      <span class="posted-in"><a href='0x18.html'>0x18 总结与练习</a></span>
                                          
                                   
 
@@ -119,6 +119,8 @@
                                       
                                   <br />
                                   <span class="tran-tags">Tags:</span>&nbsp;
+                                  
+                                    <c><a href='tag_%E6%A8%A1%E6%8B%9F.html'>#模拟</a></c>
                                   
                                     <c><a href='tag_%E6%A0%88.html'>#栈</a></c>
                                   
@@ -132,37 +134,121 @@
                     </div>
                 </div>
                   <article class="markdown-body single-content">
-                    <h2><a id="largest-rectangle-in-a-histogram" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Largest Rectangle in a Histogram</h2>
-<p><tc><c>0x1104</c><e>Easy+</e><t>单调栈</t></tc></p>
+                    <h2><a id="%E6%8B%AC%E5%8F%B7%E7%94%BB%E5%AE%B6" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>括号画家</h2>
+<p><tc><c>0x1801</c><h>Hard</h><t>模拟</t><t>栈</t></tc></p>
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>考虑对于每一个 \(x\) 坐标，都尝试找出以它为右边界的最大的矩形的面积。那么可能成为答案的矩形在左侧一定终止于在它左侧，且比它矮的一个位置。所以在它左侧，且比它高的东西没有用，直接用单调栈扔掉就行。</p>
-<p>在原位置在 \(i\) 的一个数 \(k\) 在位置 \(j\) 时被推出栈的时候统计答案，答案为 \((j-i+d(k))\times k\)，其中 \(d(k)\) 代表这个数 \(k\) 顶掉的数的个数（即不在栈中，但可以算进矩形的宽的数，包括直接顶掉和间接顶掉）。在整个数列末尾追加一个 0，顶掉所有数。</p>
-<p>按照书上做法，其实也可以把被顶掉的压一压高度，栈内宽度不变，这样就不用分「直接顶掉」和「间接顶掉」了，不过差不多。（下图书上做法）</p>
-<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h56oms0ss0j20u00v2q9e.jpg" alt="" /></p>
+<p>我不会啊？？？我不会啊？？？我不会啊？？？我不会啊？？？我不会啊？？？我不会啊？？？</p>
+<p>正常模拟，碰到不合法的情况入栈继续。</p>
+<p>当一个右括号把一个左括号抵掉的时候，答案就是右括号对应的下标减去抵掉后栈顶的下标。</p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">int n, a;
-std::stack&lt;std::pair&lt;int, int&gt;&gt; s;
-int d[1000001];
+<pre class="line-numbers"><code class="language-cpp">int main() {
+    scanf(&quot;%s&quot;, s + 1);
+    const int n = strlen(s + 1);
+    int max = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        if (s[i] == '(' || s[i] == '[' || s[i] == '{') {
+            q.push(i);
+        } else {
+            if (q.empty()) continue;
+            char c = s[q.top()];
+            if (s[i] == ')' &amp;&amp; c == '('
+             || s[i] == ']' &amp;&amp; c == '['
+             || s[i] == '}' &amp;&amp; c == '{') {
+                q.pop();
+                if (q.size()) max = std::max(max, i - q.top());
+                else max = std::max(max, i);
+            } else {
+                q.push(i);
+            }
+        }
+    }
+    printf(&quot;%d\n&quot;, max);
+}
+</code></pre>
+<hr />
+<h2><a id="%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AE%A1%E7%AE%974" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>表达式计算 4</h2>
+<p><tc><c>0x1802</c><e>Easy+</e><t>模拟</t><t>栈</t><t>递归</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>不是，还能跟我说允许多余的括号的？？？多余在哪啊？？？</p>
+<p>做这道题反正末尾补括号就行了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int power(int x, int y) {
+    int ans = 1;
+    while (y--) ans *= x;
+    return ans;
+}
+
+int cal(int l, int r) {
+    char op = '%';
+    int q = 0, add = -1, mul = -1, pow = -1;
+    for (int i = l; i &lt;= r; ++i) {
+        if (s[i] == '(') ++q;
+        if (s[i] == ')') --q;
+        if (!q &amp;&amp; (s[i] == '+' || s[i] == '-')) add = i;
+        if (!q &amp;&amp; (s[i] == '*' || s[i] == '/')) mul = i;
+        if (!q &amp;&amp; s[i] == '^') pow = i;
+    }
+    if (add != -1) {
+        if (s[add] == '+') return cal(l, add - 1) + cal(add + 1, r);
+        else return cal(l, add - 1) - cal(add + 1, r);
+    } else if (mul != -1) {
+        if (s[mul] == '*') return cal(l, mul - 1) * cal(mul + 1, r);
+        else return cal(l, mul - 1) / cal(mul + 1, r);
+    } else if (pow != -1) {
+        return power(cal(l, pow - 1), cal(pow + 1, r));
+    } else if (s[l] == '(' &amp;&amp; s[r] == ')') 
+        return cal(l + 1, r - 1);
+    else {
+        int num = 0;
+        for (int i = l; i &lt;= r; ++i)
+            num *= 10, num += s[i] - '0';
+        return num;
+    }
+} 
 
 int main() {
-    while (true) {
-        n = read();
-        if (!n) break;
-        for (int i = 1; i &lt;= n; ++i) d[i] = 0;
-        while (s.size()) s.pop();
-        long long ans = 0;
-        for (int i = 1; i &lt;= n + 1; i++) {
-            a = (i &lt;= n) ? read() : 0;
-            while (s.size() &amp;&amp; s.top().second &gt; a) {
-                const int u = s.top().first, h = s.top().second;
-                ans = std::max(ans, (long long)(i - u + d[u]) * h), d[i] += d[u] + 1;
-                s.pop();
-            }
-            s.push({i, a});
-        }
-        printf(&quot;%lld\n&quot;, ans);
+    scanf(&quot;%s&quot;, s);
+    int n = strlen(s);
+    int q = 0;
+    for (int i = 0; i &lt; n; ++i) {
+        if (s[i] == '(') ++q;
+        if (s[i] == ')') --q;
     }
-    return 0;
+    for (int i = n; i &lt; n + q; ++i) s[i] = ')';
+    n += q;
+    printf(&quot;%d\n&quot;, cal(0, n - 1));
+}
+</code></pre>
+<hr />
+<h2><a id="city-game" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>City Game</h2>
+<p><tc><c>0x1803</c><m>Medium-</m><t>栈</t><t>单调栈</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h56oms0ss0j20u00v2q9e.jpg" alt="" /></p>
+<p>确立一条边为底边，然后按上面这么做。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int main() {
+    std::cin &gt;&gt; n &gt;&gt; m;
+    for (int i = 1; i &lt;= n; ++i)
+        for (int j = 1; j &lt;= m; ++j) {
+            char c;
+            std::cin &gt;&gt; c;
+            if (c == 'R') up[i][j] = 0;
+            else up[i][j] = up[i - 1][j] + 1;
+        }
+    int ans = 0;
+    for (int d = 1; d &lt;= n; ++d) {
+        q = std::stack&lt;std::pair&lt;int, int&gt;&gt;();
+        for (int i = 1; i &lt;= m + 1; ++i) {
+            int x = up[d][i], w = 0;
+            while (q.size() &amp;&amp; q.top().first &gt;= x) {
+                w += q.top().second;
+                ans = std::max(ans, 3 * q.top().first * w);
+                q.pop();
+            }
+            q.push({up[d][i], w + 1});
+        }
+    }
+    printf(&quot;%d\n&quot;, ans);
 }
 </code></pre>
 
@@ -194,9 +280,6 @@ int main() {
       </footer>
 
 
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
 
   
 

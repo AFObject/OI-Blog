@@ -4,13 +4,140 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-08-10T23:59:03+08:00</updated>
+  <updated>2022-08-14T23:10:43+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[0x1801 ~ 0x1804]]></title>
+    <link href="oi.afobject.ml/0x18-1.html"/>
+    <updated>2022-08-12T21:40:46+08:00</updated>
+    <id>oi.afobject.ml/0x18-1.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E6%8B%AC%E5%8F%B7%E7%94%BB%E5%AE%B6" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>括号画家</h2>
+<p><tc><c>0x1801</c><h>Hard</h><t>模拟</t><t>栈</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>我不会啊？？？我不会啊？？？我不会啊？？？我不会啊？？？我不会啊？？？我不会啊？？？</p>
+<p>正常模拟，碰到不合法的情况入栈继续。</p>
+<p>当一个右括号把一个左括号抵掉的时候，答案就是右括号对应的下标减去抵掉后栈顶的下标。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int main() {
+    scanf(&quot;%s&quot;, s + 1);
+    const int n = strlen(s + 1);
+    int max = 0;
+    for (int i = 1; i &lt;= n; ++i) {
+        if (s[i] == '(' || s[i] == '[' || s[i] == '{') {
+            q.push(i);
+        } else {
+            if (q.empty()) continue;
+            char c = s[q.top()];
+            if (s[i] == ')' &amp;&amp; c == '('
+             || s[i] == ']' &amp;&amp; c == '['
+             || s[i] == '}' &amp;&amp; c == '{') {
+                q.pop();
+                if (q.size()) max = std::max(max, i - q.top());
+                else max = std::max(max, i);
+            } else {
+                q.push(i);
+            }
+        }
+    }
+    printf(&quot;%d\n&quot;, max);
+}
+</code></pre>
+<hr />
+<h2><a id="%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AE%A1%E7%AE%974" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>表达式计算 4</h2>
+<p><tc><c>0x1802</c><e>Easy+</e><t>模拟</t><t>栈</t><t>递归</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p>不是，还能跟我说允许多余的括号的？？？多余在哪啊？？？</p>
+<p>做这道题反正末尾补括号就行了。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int power(int x, int y) {
+    int ans = 1;
+    while (y--) ans *= x;
+    return ans;
+}
+
+int cal(int l, int r) {
+    char op = '%';
+    int q = 0, add = -1, mul = -1, pow = -1;
+    for (int i = l; i &lt;= r; ++i) {
+        if (s[i] == '(') ++q;
+        if (s[i] == ')') --q;
+        if (!q &amp;&amp; (s[i] == '+' || s[i] == '-')) add = i;
+        if (!q &amp;&amp; (s[i] == '*' || s[i] == '/')) mul = i;
+        if (!q &amp;&amp; s[i] == '^') pow = i;
+    }
+    if (add != -1) {
+        if (s[add] == '+') return cal(l, add - 1) + cal(add + 1, r);
+        else return cal(l, add - 1) - cal(add + 1, r);
+    } else if (mul != -1) {
+        if (s[mul] == '*') return cal(l, mul - 1) * cal(mul + 1, r);
+        else return cal(l, mul - 1) / cal(mul + 1, r);
+    } else if (pow != -1) {
+        return power(cal(l, pow - 1), cal(pow + 1, r));
+    } else if (s[l] == '(' &amp;&amp; s[r] == ')') 
+        return cal(l + 1, r - 1);
+    else {
+        int num = 0;
+        for (int i = l; i &lt;= r; ++i)
+            num *= 10, num += s[i] - '0';
+        return num;
+    }
+} 
+
+int main() {
+    scanf(&quot;%s&quot;, s);
+    int n = strlen(s);
+    int q = 0;
+    for (int i = 0; i &lt; n; ++i) {
+        if (s[i] == '(') ++q;
+        if (s[i] == ')') --q;
+    }
+    for (int i = n; i &lt; n + q; ++i) s[i] = ')';
+    n += q;
+    printf(&quot;%d\n&quot;, cal(0, n - 1));
+}
+</code></pre>
+<hr />
+<h2><a id="city-game" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>City Game</h2>
+<p><tc><c>0x1803</c><m>Medium-</m><t>栈</t><t>单调栈</t></tc></p>
+<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h56oms0ss0j20u00v2q9e.jpg" alt="" /></p>
+<p>确立一条边为底边，然后按上面这么做。</p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int main() {
+    std::cin &gt;&gt; n &gt;&gt; m;
+    for (int i = 1; i &lt;= n; ++i)
+        for (int j = 1; j &lt;= m; ++j) {
+            char c;
+            std::cin &gt;&gt; c;
+            if (c == 'R') up[i][j] = 0;
+            else up[i][j] = up[i - 1][j] + 1;
+        }
+    int ans = 0;
+    for (int d = 1; d &lt;= n; ++d) {
+        q = std::stack&lt;std::pair&lt;int, int&gt;&gt;();
+        for (int i = 1; i &lt;= m + 1; ++i) {
+            int x = up[d][i], w = 0;
+            while (q.size() &amp;&amp; q.top().first &gt;= x) {
+                w += q.top().second;
+                ans = std::max(ans, 3 * q.top().first * w);
+                q.pop();
+            }
+            q.push({up[d][i], w + 1});
+        }
+    }
+    printf(&quot;%d\n&quot;, ans);
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[0x172 Huffman 树]]></title>
@@ -2526,7 +2653,8 @@ signed main() {
 <h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
 <p>考虑对于每一个 \(x\) 坐标，都尝试找出以它为右边界的最大的矩形的面积。那么可能成为答案的矩形在左侧一定终止于在它左侧，且比它矮的一个位置。所以在它左侧，且比它高的东西没有用，直接用单调栈扔掉就行。</p>
 <p>在原位置在 \(i\) 的一个数 \(k\) 在位置 \(j\) 时被推出栈的时候统计答案，答案为 \((j-i+d(k))\times k\)，其中 \(d(k)\) 代表这个数 \(k\) 顶掉的数的个数（即不在栈中，但可以算进矩形的宽的数，包括直接顶掉和间接顶掉）。在整个数列末尾追加一个 0，顶掉所有数。</p>
-<p>按照书上做法，其实也可以把被顶掉的压一压高度，栈内宽度不变，这样就不用分「直接顶掉」和「间接顶掉」了，不过差不多。</p>
+<p>按照书上做法，其实也可以把被顶掉的压一压高度，栈内宽度不变，这样就不用分「直接顶掉」和「间接顶掉」了，不过差不多。（下图书上做法）</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h56oms0ss0j20u00v2q9e.jpg" alt="" /></p>
 <h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
 <pre class="line-numbers"><code class="language-cpp">int n, a;
 std::stack&lt;std::pair&lt;int, int&gt;&gt; s;
@@ -2661,124 +2789,6 @@ int main() {
     std::cout &lt;&lt; solve(0, s.size() - 1) &lt;&lt; std::endl;
     return 0;
 }
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[0x111 栈基础]]></title>
-    <link href="oi.afobject.ml/0x111.html"/>
-    <updated>2022-04-25T08:20:03+08:00</updated>
-    <id>oi.afobject.ml/0x111.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="push-pop-getmin" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Push, Pop, GetMin</h2>
-<p><tc><c>0x1101</c><e>Easy-</e><t>栈</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>维护两个栈，一个是题目中给出的栈，一个保存每个时刻最小值。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<pre class="line-numbers"><code class="language-cpp">class MinStack {
-public:
-    std::stack&lt;int&gt; o, m;
-    MinStack() {}
-    void push(int x) {
-        o.push(x);
-        if (m.size())
-            m.push(std::min(m.top(), x));
-        else
-            m.push(x);
-    }
-    void pop() {
-        o.pop();
-        m.pop();
-    }
-    int top() {
-        return o.top();
-    }
-    int getMin() {
-        return m.top();
-    }
-};
-</code></pre>
-<hr />
-<h2><a id="editor" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Editor</h2>
-<p><tc><c>0x1102</c><e>Easy</e><t>栈</t><t>模拟</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法</h3>
-<p>考虑建立对顶栈，这样前四种操作都可以实现。</p>
-<p>对于第五种操作，可以再建立两个栈，一个保存所有时刻的前缀和，另一个用 0x1101 的方式维护最小值，只不过这里要用数组模拟栈（需要直接访问）。</p>
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>注意第一个数为负数时的处理。</p>
-<pre class="line-numbers"><code class="language-cpp">int n;
-std::stack&lt;int&gt; a, b;
-int s[1000001], f[1000001], top;
-
-void pushA(int t) {
-    a.push(t);
-    s[top + 1] = s[top] + t;
-    if (top) f[top + 1] = std::max(f[top], s[top + 1]);
-    else f[top + 1] = s[top + 1];
-    ++top;
-}
-
-void popA() {
-    a.pop();
-    --top;
-}
-
-int main() {
-    std::cin &gt;&gt; n;
-    while (n--) {
-        char c; int t;
-        std::cin &gt;&gt; c;
-        switch (c) {
-            case 'I':
-                std::cin &gt;&gt; t; pushA(t);
-                break;
-            case 'D':
-                if (a.size()) popA();
-                break;
-            case 'L':
-                if (a.size()) b.push(a.top()), popA();
-                break;
-            case 'R':
-                if (b.size()) pushA(b.top()), b.pop();
-                break;
-            case 'Q':
-                std::cin &gt;&gt; t;
-                std::cout &lt;&lt; f[t] &lt;&lt; std::endl;
-                break;
-        }
-    }
-    return 0;
-}
-</code></pre>
-<hr />
-<h2><a id="%E8%BF%9B%E5%87%BA%E6%A0%88%E5%BA%8F%E5%88%97%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>进出栈序列问题</h2>
-<p><tc><c>0x1103</c><m>Medium</m><t>栈</t><t>数学</t><t>DP</t></tc></p>
-<h3><a id="%E7%AE%97%E6%B3%951" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 1</h3>
-<p>\(O(n^2)\)。</p>
-<p>设 \(f(k)\) 为 \(n=k\) 时的答案。显然，\(f(0)=f(1)=1,f(2)=2\)。</p>
-<p>假设最后一个出栈的选手是 \(k\)。一个数入栈时，栈里不可能有比它还大的数，如果想要压着 \(k\) 留到最后一个出栈，那必须把比它小的先踢掉，让它到栈底。因此在它之前入栈的共有 \(f(k-1)\) 种排列方式，跳过它，比它大的共有 \(f(n-k)\) 种方式。总方案数是</p>
-\[\sum_{k=1}^nf(k-1) \cdot f(n-k)
-\]
-<p>这样的拆分是可行的。同样，也可以分析 \(1\) 来得到这个结论。</p>
-<h3><a id="%E7%AE%97%E6%B3%952" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 2</h3>
-<p>\(O(n^2)\)。</p>
-<p>设 \(f(i,j)\) 为其中出了 \(i\) 个，还有 \(j\) 个没出的方案数。目标状态为 \(f(n,0)\)。</p>
-<p>每一步要么弹入一个，要么弹出栈顶。</p>
-\[f(i,j)=f(i-1,j+1)+f(i,j-1)
-\]
-<h3><a id="%E7%AE%97%E6%B3%953" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>算法 3</h3>
-<p>这玩意就是卡特兰数。</p>
-\[Cat_n=\dfrac{2n \choose n}{n+1}
-\]
-<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
-<p>贺就完了。</p>
-<pre class="line-numbers"><code class="language-python">from math import factorial
-n = int(input())
-a = factorial(2 * n)
-b = factorial(n)
-print(a // b // b // (n + 1))
 </code></pre>
 
 ]]></content>
