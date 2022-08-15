@@ -4,7 +4,7 @@
   <title><![CDATA[OI Blog]]></title>
   <link href="oi.afobject.ml/atom.xml" rel="self"/>
   <link href="oi.afobject.ml/"/>
-  <updated>2022-08-14T23:10:43+08:00</updated>
+  <updated>2022-08-14T23:10:47+08:00</updated>
   <id>oi.afobject.ml/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -13,7 +13,7 @@
   <generator uri="http://www.mweb.im/">MWeb</generator>
   
   <entry>
-    <title type="html"><![CDATA[0x1801 ~ 0x1804]]></title>
+    <title type="html"><![CDATA[0x18 简单题]]></title>
     <link href="oi.afobject.ml/0x18-1.html"/>
     <updated>2022-08-12T21:40:46+08:00</updated>
     <id>oi.afobject.ml/0x18-1.html</id>
@@ -133,6 +133,33 @@ int main() {
         }
     }
     printf(&quot;%d\n&quot;, ans);
+}
+</code></pre>
+<hr />
+<h2><a id="sliding-window" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sliding Window</h2>
+<p><tc><c>0x1805</c><e>Easy</e><t>队列</t><t>单调队列</t></tc></p>
+<h3><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h3>
+<pre class="line-numbers"><code class="language-cpp">int main() {
+    n = read(), k = read();
+    for (int i = 1; i &lt;= n; ++i) {
+        a[i] = read();
+        while (q1.size() &amp;&amp; a[q1.back()] &gt; a[i]) q1.pop_back();
+        q1.push_back(i); 
+        while (q1.size() &amp;&amp; q1.front() &lt;= i - k) q1.pop_front();
+
+        while (q2.size() &amp;&amp; a[q2.back()] &lt; a[i]) q2.pop_back();
+        q2.push_back(i);
+        while (q2.size() &amp;&amp; q2.front() &lt;= i - k) q2.pop_front();
+
+        min[i] = a[q1.front()];
+        max[i] = a[q2.front()];
+    }
+    for (int i = k; i &lt;= n; ++i)
+        printf(&quot;%d &quot;, min[i]);
+    puts(&quot;&quot;);
+    for (int i = k; i &lt;= n; ++i)
+        printf(&quot;%d &quot;, max[i]);
+    puts(&quot;&quot;);
 }
 </code></pre>
 
